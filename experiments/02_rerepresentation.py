@@ -27,12 +27,12 @@ def load_scenarios() -> list[Scenario]:
 
 
 def query_model(prompt: str) -> str:
-    """Send a prompt to the model and return its answer.
+    """Send a prompt to Jev and return its answer.
 
-    TODO: wire up the provider, reading ANTHROPIC_API_KEY and JEV_MODEL
-    from the environment (see .env.example).
+    TODO: wire up typesafe_sdk.TypeSafeClient. It reads TYPESAFE_API_KEY
+    from the environment and defaults to the jev-latest model.
     """
-    raise NotImplementedError("TODO: wire up the model call")
+    raise NotImplementedError("TODO: wire up the Jev call")
 
 
 PAIRS = [("sparse", "rich"), ("rich", "sparse")]
