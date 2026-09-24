@@ -105,6 +105,13 @@ def claim_of(proposition: Proposition) -> str:
     )
 
 
+#: The only attitude the flattened representation can express. See
+#: notes/graph_ontology.md — collapsing a chain to a holders list keeps only
+#: who holds the claim, so every level must be the same attitude.
+ATTITUDE = "belief"
+NESTING_PREDICATE = "believes"
+
+
 def unfold(mental: MentalState) -> tuple[list[str], Proposition]:
     """Split a mental state into its chain of holders and its claim.
 
@@ -112,10 +119,28 @@ def unfold(mental: MentalState) -> tuple[list[str], Proposition]:
     `(["sam", "alex"], located(...))`. The innermost proposition is the only
     one making a claim about the world; every level above it attributes an
     attitude, and becomes a holder.
+
+    Raises on any attitude other than belief. Flattening discards the
+    attitude type, so storing `knowledge` would make it indistinguishable
+    from belief — and knowledge implies truth where belief does not. Better
+    to refuse than to represent it wrongly in silence.
     """
+    if mental.type != ATTITUDE:
+        raise ValueError(
+            f"{mental.agent} holds a {mental.type!r}; the flattened representation "
+            f"can only express {ATTITUDE!r}. Reify the nesting to support more "
+            f"(see notes/graph_ontology.md)."
+        )
+
     holders = [mental.agent]
     proposition = mental.proposition
     while proposition.proposition is not None:
+        if proposition.predicate != NESTING_PREDICATE:
+            raise ValueError(
+                f"nested proposition uses {proposition.predicate!r}; the flattened "
+                f"representation keeps only the subject of each level and so can "
+                f"only express {NESTING_PREDICATE!r}."
+            )
         holders.append(proposition.subject)
         proposition = proposition.proposition
     return holders, proposition
