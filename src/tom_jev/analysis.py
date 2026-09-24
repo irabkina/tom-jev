@@ -1,8 +1,9 @@
 """Comparing a sparse pass against a rich pass.
 
-Four measures. The first three run in increasing strength over the
-probability mass on the correct answers; the fourth is orthogonal to
-correctness entirely:
+Five measures. Influence, utility and outcome run in increasing strength
+over the probability mass on the correct answers; acceptable mass is the
+level utility measures a change in; entropy is orthogonal to correctness
+entirely:
 
     influence   1/2 * sum_a |P_rich(a) - P_sparse(a)|
                 Total variation distance between the two distributions.
