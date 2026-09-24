@@ -2,13 +2,19 @@
 
 Two passes over each scenario:
 
-    sparse   what action does Jev predict from the limited representation?
-    rich     what action does Jev predict once the agent's belief is
-             explicitly represented?
+    sparse   what does Jev answer from the limited representation?
+    rich     what does Jev answer once the agent's belief is explicitly
+             represented?
 
-The comparison is reported as four separate quantities — theoretical
-relevance, representational influence, utility, answer correction — rather
-than collapsed into one accuracy figure. See tom_jev/analysis.py.
+Each scenario's own `question` fixes the task — goal recognition for the
+coffee set, action prediction for the report set — so representation
+richness is the only thing that varies between the passes.
+
+The comparison is reported as four measures — influence, utility, outcome
+and entropy — rather than collapsed into one accuracy figure. The
+`belief_changes_expected_action` annotation is shown beside them for
+reference; it is an a priori design claim, not a measure. See
+tom_jev/analysis.py.
 
     python experiments/01_sparse_vs_rich.py
 """
