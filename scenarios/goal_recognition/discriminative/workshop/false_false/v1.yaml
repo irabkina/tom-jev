@@ -1,0 +1,112 @@
+# workshop — discriminative goal recognition, false false
+#
+# Kira is seen walking toward the paint booth.
+#
+# The world and the observation are constant across all four cells:
+#   world         respirator at the storeroom, Nils at the paint booth
+#   observation   Kira walks toward the paint booth
+#
+# Only what the agent believes varies, over whether each belief matches
+# the world. Whichever thing they believe is at the destination is the
+# goal the walk serves, so belief can point somewhere the world does not.
+#
+#   Kira believes   respirator at the paint booth, Nils at the storeroom
+#
+# Here the belief replaces the reading outright.
+
+id: workshop_false_false
+description: >
+  Kira is seen walking toward the paint booth. They believe respirator is
+  at the paint booth and Nils is at the storeroom.
+
+scenario_set: workshop
+
+variant:
+  type: false_false
+
+entities:
+  agents:
+    - id: kira
+      name: Kira
+    - id: nils
+      name: Nils
+
+  locations:
+    - id: paint_booth
+      name: paint booth
+    - id: storeroom
+      name: storeroom
+
+  objects:
+    - id: respirator
+      name: respirator
+
+observations:
+  - type: walks_to
+    agent: kira
+    destination: paint_booth
+
+world_state:
+  - predicate: located
+    subject: respirator
+    location: storeroom
+    value: true
+
+  - predicate: located
+    subject: respirator
+    location: paint_booth
+    value: false
+
+  - predicate: located
+    subject: nils
+    location: paint_booth
+    value: true
+
+  - predicate: located
+    subject: nils
+    location: storeroom
+    value: false
+
+mental_state:
+  - type: belief
+    agent: kira
+    proposition:
+      predicate: located
+      subject: respirator
+      location: paint_booth
+      value: true
+
+  - type: belief
+    agent: kira
+    proposition:
+      predicate: located
+      subject: nils
+      location: storeroom
+      value: true
+
+question:
+  type: goal
+  agent: kira
+  options:
+    - fetch_respirator
+    - consult_nils
+
+ground_truth:
+  answer: fetch_respirator
+  explanation: >
+    Kira wrongly believes respirator is at the paint booth and Nils is
+    not, so the walk is going to fetch respirator — though Nils really is
+    there and respirator is not.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - belief_redirects
+    - belief_reality_mismatch
+    - rerepresentation_target

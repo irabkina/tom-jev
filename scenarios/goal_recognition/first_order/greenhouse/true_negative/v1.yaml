@@ -1,0 +1,112 @@
+# greenhouse — goal recognition, true negative
+#
+# A gardener is seen heading for the greenhouse with an empty watering can.
+#
+# The observation is constant across all four conditions:
+#   Bo walks to the greenhouse carrying the watering can.
+#
+# reality        water supply unavailable
+# belief         water supply unavailable
+#
+# With water supply ruled out the remaining goals are underdetermined,
+# so several answers count as correct.
+
+id: greenhouse_true_negative
+description: >
+  A gardener is seen heading for the greenhouse with an empty watering
+  can. The water supply is unavailable, and they believe it is
+  unavailable.
+
+scenario_set: greenhouse
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: bo
+      name: Bo
+
+  locations:
+    - id: greenhouse
+      name: greenhouse
+
+  objects:
+    - id: can
+      name: watering can
+    - id: tomato_bed
+      name: tomato bed
+    - id: potting_bench
+      name: potting bench
+    - id: twine_box
+      name: twine box
+
+observations:
+  - type: walks_to
+    agent: bo
+    destination: greenhouse
+
+  - type: carries
+    agent: bo
+    object: can
+
+world_state:
+  - predicate: available
+    subject: water
+    location: greenhouse
+    value: false
+
+  - predicate: located
+    subject: tomato_bed
+    location: greenhouse
+    value: true
+
+  - predicate: located
+    subject: potting_bench
+    location: greenhouse
+    value: true
+
+  - predicate: located
+    subject: twine_box
+    location: greenhouse
+    value: true
+
+mental_state:
+  - type: belief
+    agent: bo
+    proposition:
+      predicate: available
+      subject: water
+      location: greenhouse
+      value: false
+
+question:
+  type: goal
+  agent: bo
+  options:
+    - water_seedlings
+    - harvest_tomatoes
+    - repot_cuttings
+    - fetch_twine
+
+ground_truth:
+  answer: harvest_tomatoes
+  acceptable:
+    - harvest_tomatoes
+    - repot_cuttings
+    - fetch_twine
+  explanation: >
+    Bo believes there is no water supply, so the goal is not
+    water_seedlings. What remains is underdetermined and the observation
+    does not distinguish it, so every remaining goal counts.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - first_order
+    - goal_recognition
+    - ambiguous_by_design
+    - rerepresentation_target

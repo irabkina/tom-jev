@@ -1,0 +1,97 @@
+# ferry — second-order belief, true negative
+#
+# Before the crossing, a deckhand sets out to track down the pilot.
+#
+# reality                    mess
+# Noor believes Wen believes  mess
+#
+# Wen's own belief is not represented, so the attribution cannot be
+# wrong about Wen — only about the world.
+
+id: ferry_v2_true_negative
+description: >
+  Before the crossing, a deckhand sets out to track down the pilot. Noor
+  believes Wen expects it in the mess.
+
+scenario_set: ferry
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: noor
+      name: Noor
+    - id: wen
+      name: Wen
+
+  locations:
+    - id: wheelhouse
+      name: bridge
+    - id: galley
+      name: mess
+    - id: cargo_deck
+      name: vehicle deck
+
+  objects:
+    - id: briefing
+      name: pre-sailing briefing
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: briefing
+    location: wheelhouse
+    value: false
+
+  - predicate: located
+    subject: briefing
+    location: galley
+    value: true
+
+  - predicate: located
+    subject: briefing
+    location: cargo_deck
+    value: false
+
+goals:
+  - agent: noor
+    type: meet
+    target_agent: wen
+
+mental_state:
+  - type: belief
+    agent: noor
+    proposition:
+      predicate: believes
+      subject: wen
+      proposition:
+        predicate: located
+        subject: briefing
+        location: galley
+        value: true
+
+question:
+  type: action_prediction
+  agent: noor
+  options:
+    - go_to_wheelhouse
+    - go_to_galley
+    - go_to_cargo_deck
+
+ground_truth:
+  answer: go_to_galley
+  explanation: >
+    Noor expects Wen where Noor believes Wen thinks it is, the mess.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - nested_belief
+    - social_prediction
+    - belief_reality_match
+    - control

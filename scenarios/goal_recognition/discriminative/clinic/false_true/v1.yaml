@@ -1,0 +1,117 @@
+# clinic — discriminative goal recognition, false true
+#
+# Devi is seen walking toward the dispensary.
+#
+# The world and the observation are constant across all four cells:
+#   world         patient chart at the records room, Hale at the dispensary
+#   observation   Devi walks toward the dispensary
+#
+# Only what the agent believes varies, over whether each belief matches
+# the world. Whichever thing they believe is at the destination is the
+# goal the walk serves, so belief can point somewhere the world does not.
+#
+#   Devi believes   patient chart at the dispensary, Hale at the dispensary
+#
+# Here the belief adds a second, equally good reading.
+#
+# Both options are acceptable, so `outcome` cannot fail and carries no
+# information. Entropy is the measure that does.
+
+id: clinic_false_true
+description: >
+  Devi is seen walking toward the dispensary. They believe patient chart
+  is at the dispensary and Hale is at the dispensary.
+
+scenario_set: clinic
+
+variant:
+  type: false_true
+
+entities:
+  agents:
+    - id: devi
+      name: Devi
+    - id: hale
+      name: Hale
+
+  locations:
+    - id: dispensary
+      name: dispensary
+    - id: records_room
+      name: records room
+
+  objects:
+    - id: chart
+      name: patient chart
+
+observations:
+  - type: walks_to
+    agent: devi
+    destination: dispensary
+
+world_state:
+  - predicate: located
+    subject: chart
+    location: records_room
+    value: true
+
+  - predicate: located
+    subject: chart
+    location: dispensary
+    value: false
+
+  - predicate: located
+    subject: hale
+    location: dispensary
+    value: true
+
+  - predicate: located
+    subject: hale
+    location: records_room
+    value: false
+
+mental_state:
+  - type: belief
+    agent: devi
+    proposition:
+      predicate: located
+      subject: chart
+      location: dispensary
+      value: true
+
+  - type: belief
+    agent: devi
+    proposition:
+      predicate: located
+      subject: hale
+      location: dispensary
+      value: true
+
+question:
+  type: goal
+  agent: devi
+  options:
+    - collect_chart
+    - consult_hale
+
+ground_truth:
+  answer: consult_hale
+  acceptable:
+    - consult_hale
+    - collect_chart
+  explanation: >
+    Devi believes both patient chart and Hale are at the dispensary, so
+    either goal explains the walk and nothing distinguishes them. The
+    ambiguity is the point.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - ambiguous_by_design
+    - belief_adds_ambiguity

@@ -78,13 +78,47 @@ class Proposition(BaseModel):
     Used both for objective world-state facts and for the content of a
     mental state — the same shape, differing only in whether it is asserted
     as true of the world or merely held by an agent.
+
+    A proposition may take another proposition as its content instead of a
+    value, which is how second-order belief is written: the outer
+    proposition attributes an attitude to an agent, the inner one says what
+    that agent holds.
+
+        predicate: believes
+        subject: alex
+        proposition:
+          predicate: located
+          subject: meeting
+          location: office
+          value: true
+
+    Exactly one of `value` or `proposition` must be given.
     """
 
     predicate: str
     subject: str
     object: str | None = None
     location: str | None = None
-    value: bool | float | str
+    value: bool | float | str | None = None
+    proposition: Proposition | None = None
+
+    @model_validator(mode="after")
+    def _value_or_nested(self) -> Proposition:
+        if (self.value is None) == (self.proposition is None):
+            raise ValueError(
+                f"proposition {self.predicate}({self.subject}) needs exactly one of "
+                "`value` or a nested `proposition`"
+            )
+        return self
+
+    @property
+    def depth(self) -> int:
+        """1 for a plain proposition, 2 for one embedding another, and so on."""
+        return 1 if self.proposition is None else 1 + self.proposition.depth
+
+    def innermost(self) -> Proposition:
+        """The proposition at the bottom of the nesting — the one with a value."""
+        return self if self.proposition is None else self.proposition.innermost()
 
 
 class Goal(BaseModel):
@@ -162,6 +196,21 @@ class Annotations(BaseModel):
     tags: list[str] = Field(default_factory=list)
 
 
+class Taxonomy(BaseModel):
+    """Where a scenario sits in the corpus, read off its directory path.
+
+    Not written in the scenario file: the path is the source of truth, so
+    moving a file reclassifies it and a file cannot disagree with its own
+    directory. See `scenarios.taxonomy`.
+    """
+
+    task_family: str | None = None
+    template: str | None = None
+    domain: str | None = None
+    condition: str | None = None
+    lexicalization: str | None = None
+
+
 class Scenario(BaseModel):
     """One scenario, as stored under scenarios/."""
 
@@ -169,6 +218,7 @@ class Scenario(BaseModel):
     description: str | None = None
     scenario_set: str | None = None
     variant: Variant | None = None
+    taxonomy: Taxonomy = Field(default_factory=Taxonomy)
 
     entities: Entities = Field(default_factory=Entities)
     observations: list[Observation] = Field(default_factory=list)
