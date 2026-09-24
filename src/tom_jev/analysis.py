@@ -102,24 +102,28 @@ def world_conflict(scenario: Scenario) -> bool:
     fact share a proposition — same predicate, subject, object and
     location — but disagree on its value.
 
+    Second-order beliefs are skipped. A belief *about another agent's
+    belief* makes no claim about the world — the nested belief could
+    itself be wrong without anyone being mistaken about how things are —
+    so there is no known conflict to detect.
+
     Computed here in memory. `compare` accepts a `conflict` override so
     the same question can instead be answered by a store that holds the
     world state, with this kept as the reference implementation.
     """
-    facts = {(p.predicate, p.subject, p.object, p.location): p.value for p in scenario.world_state}
-    return any(
-        facts.get(
-            (
-                m.proposition.predicate,
-                m.proposition.subject,
-                m.proposition.object,
-                m.proposition.location,
-            ),
-            m.proposition.value,
-        )
-        != m.proposition.value
-        for m in scenario.mental_state
-    )
+    facts = {
+        (p.predicate, p.subject, p.object, p.location): p.value
+        for p in scenario.world_state
+        if p.proposition is None
+    }
+    for mental in scenario.mental_state:
+        held = mental.proposition
+        if held.proposition is not None:
+            continue
+        key = (held.predicate, held.subject, held.object, held.location)
+        if key in facts and facts[key] != held.value:
+            return True
+    return False
 
 
 def _argmax(prediction: Prediction, question_type: str) -> str | None:

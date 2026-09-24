@@ -36,13 +36,22 @@ def _describe_observation(obs: Observation, names: dict[str, str]) -> str:
 
 
 def _describe_proposition(prop: Proposition, names: dict[str, str]) -> str:
-    """Render one proposition as `predicate(subject, ...) = value`."""
+    """Render one proposition as `predicate(subject, ...) = value`.
+
+    A proposition holding another renders its content in brackets rather
+    than a value, so second-order belief reads as one nested expression:
+
+        believes(Alex)[located(meeting, at office) = True]
+    """
     parts = [names.get(prop.subject, prop.subject)]
     if prop.object is not None:
         parts.append(names.get(prop.object, prop.object))
     if prop.location is not None:
         parts.append(f"at {names.get(prop.location, prop.location)}")
-    return f"{prop.predicate}({', '.join(parts)}) = {prop.value}"
+    head = f"{prop.predicate}({', '.join(parts)})"
+    if prop.proposition is not None:
+        return f"{head}[{_describe_proposition(prop.proposition, names)}]"
+    return f"{head} = {prop.value}"
 
 
 def _describe_goal(goal: Goal, names: dict[str, str]) -> str:

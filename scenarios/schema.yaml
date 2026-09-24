@@ -119,8 +119,8 @@ goals:
 # Initial supported type:
 #   belief
 #
-# Additional types (knowledge, uncertainty, nested belief, preference, etc.)
-# can be introduced later if required.
+# Additional types (knowledge, uncertainty, preference, etc.) can be
+# introduced later if required.
 
 mental_state:
   - type: string
@@ -132,6 +132,31 @@ mental_state:
       object: string | null
       location: string | null
       value: boolean | string | number
+
+# A proposition may take another proposition as its content instead of a
+# value. That is how second-order belief is written — the outer proposition
+# attributes an attitude to an agent, the inner one says what that agent
+# holds:
+#
+#   mental_state:
+#     - type: belief
+#       agent: sam
+#       proposition:
+#         predicate: believes
+#         subject: alex
+#         proposition:
+#           predicate: located
+#           subject: meeting
+#           location: office
+#           value: true
+#
+# Exactly one of `value` or a nested `proposition` must be given, at every
+# level.
+#
+# Second-order beliefs are not treated as conflicting with world_state. A
+# belief about another agent's belief makes no claim about the world: the
+# nested belief may simply be wrong. So `world_conflict` reports false for
+# such a scenario even when the nested belief contradicts the facts.
 
 # ---------------------------------------------------------------------------
 # QUESTION
