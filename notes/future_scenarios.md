@@ -78,4 +78,7 @@ measures influence ~0.05 where its group averages 0.80, and stays
 though Sam's belief rules coffee out. The belief registers in entropy
 (0.19 -> 0.41) without dislodging the argmax.
 
-Worth diagnosing before more items are built on the same pattern.
+Left unfixed on purpose. Revising it until it behaves would fit the stimulus
+to the hypothesis — see "Not tuning stimuli to results" in
+experimental_design.md, which also records which sets are independent of
+their own measurements and which are not.
