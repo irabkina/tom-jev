@@ -72,6 +72,34 @@ world_state:
     location: dormitory
     value: false
 
+  # Where Saoirse actually is. Saoirse acts on Saoirse's own belief,
+  # so this follows from it — and without it the world says nothing about
+  # the goal's target, which is what Pell is trying to reach.
+  - predicate: located
+    subject: saoirse
+    location: dome
+    value: false
+
+  - predicate: located
+    subject: saoirse
+    location: control_room
+    value: false
+
+  - predicate: located
+    subject: saoirse
+    location: spectrograph_lab
+    value: true
+
+  - predicate: located
+    subject: saoirse
+    location: tape_vault
+    value: false
+
+  - predicate: located
+    subject: saoirse
+    location: dormitory
+    value: false
+
 goals:
   - agent: pell
     type: meet

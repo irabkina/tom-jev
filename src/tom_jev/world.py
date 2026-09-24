@@ -71,6 +71,7 @@ from __future__ import annotations
 import os
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
+from enum import StrEnum
 
 from neo4j import Driver, GraphDatabase
 
@@ -336,6 +337,157 @@ def attributions(driver: Driver, scenario_id: str) -> list[dict]:
         belief=BELIEF,
     )
     return [record.data() for record in records]
+
+
+class Consistency(StrEnum):
+    """Whether a predicted action squares with the objective world.
+
+    Three-valued on purpose. `not_applicable` is not a quiet `consistent`:
+    it says no rule applies, and collapsing the two would let "we cannot
+    tell" be counted as "nothing is wrong".
+    """
+
+    CONFLICT = "conflict"  # the world says the action does not serve the goal
+    CONSISTENT = "consistent"  # the world says it does
+    NOT_APPLICABLE = "not_applicable"  # no defensible rule for this scenario
+
+
+#: Action options are named `go_to_<location id>`. Brittle, and the only
+#: place meaning is read out of an option string — an action named another
+#: way falls through to NOT_APPLICABLE rather than being judged wrongly.
+GO_TO = "go_to_"
+
+
+def candidates(driver: Driver, scenario_id: str, agent: str) -> list[str]:
+    """Everything the world gives this agent a reason to seek.
+
+    Two sources, and the rule is deliberately indifferent to which
+    predicate supplies the link:
+
+      - whatever a goal targets, via HAS_GOAL
+      - whatever any true world proposition relates to something the agent
+        is carrying, via an OBJECT argument
+
+    The second is what makes `requires(coffee, mug)` work without the rule
+    knowing the word `requires`. `needs`, `fits`, `opens` or anything else
+    an OBJECT argument can express counts the same way, so extending the
+    vocabulary is a data change rather than a code change.
+    """
+    goals, _, _ = driver.execute_query(
+        """
+        MATCH (agent:Entity:Agent {scenario: $scenario, id: $agent})-[:HAS_GOAL]->(target)
+        RETURN target.id AS candidate
+        """,
+        scenario=scenario_id,
+        agent=agent,
+    )
+    carried, _, _ = driver.execute_query(
+        """
+        MATCH (agent:Entity:Agent {scenario: $scenario, id: $agent})
+              -[:ACTOR_OF]->(:Event)-[:OBJECT]->(thing)
+        MATCH (resource)-[:SUBJECT_OF]->(link:Proposition)-[:OBJECT]->(thing)
+        WHERE link.perspective = $world AND link.value = true
+        RETURN resource.id AS candidate
+        """,
+        scenario=scenario_id,
+        agent=agent,
+        world=WORLD,
+    )
+    return sorted({r["candidate"] for r in (*goals, *carried)})
+
+
+def accounted_for(driver: Driver, scenario_id: str, agent: str, place: str) -> Consistency:
+    """Does the world account for this agent being at this place?
+
+    One rule behind both questions the analysis asks. Gather everything the
+    world gives the agent a reason to seek, then ask where the world puts
+    it:
+
+      CONSISTENT      at least one of those things is there
+      CONFLICT        the world explicitly places every one of them
+                      elsewhere, so being here serves nothing it accounts for
+      NOT_APPLICABLE  there is nothing to seek, or the world is simply
+                      silent about where it is
+
+    Silence is not conflict. A world that never says where something is
+    cannot be said to deny it is here, so only an explicit `false` counts —
+    otherwise every unstated fact would read as an anomaly.
+
+    Predicate-agnostic at both steps: any true world proposition with an
+    OBJECT argument can supply a reason, and any world proposition with a
+    LOCATION argument can place it. `located`, `available` and whatever
+    comes next all work without the rule naming them.
+    """
+    wanted = candidates(driver, scenario_id, agent)
+    if not wanted:
+        return Consistency.NOT_APPLICABLE
+
+    records, _, _ = driver.execute_query(
+        """
+        MATCH (candidate:Entity {scenario: $scenario})
+        WHERE candidate.id IN $wanted
+        MATCH (candidate)-[:SUBJECT_OF]->(p:Proposition)-[:LOCATION]->(
+            :Entity {scenario: $scenario, id: $place})
+        WHERE p.perspective = $world
+        RETURN candidate.id AS candidate, p.value AS present
+        """,
+        scenario=scenario_id,
+        wanted=wanted,
+        place=place,
+        world=WORLD,
+    )
+    if not records:
+        return Consistency.NOT_APPLICABLE
+    if any(record["present"] for record in records):
+        return Consistency.CONSISTENT
+    return Consistency.CONFLICT
+
+
+def action_consistency(driver: Driver, scenario: Scenario, action: str) -> Consistency:
+    """Is a predicted action unaccounted for by the world?
+
+    `accounted_for` asked of the answer. The action names where the agent
+    would go; the world says whether anything they have reason to seek is
+    there.
+
+    Empirically this is quiet on a sparse answer, which is derived from the
+    world and so rarely contradicts it. It bites on a rich answer, which
+    follows a belief that may.
+    """
+    if scenario.question.type != "action_prediction" or not action.startswith(GO_TO):
+        return Consistency.NOT_APPLICABLE
+    return accounted_for(driver, scenario.id, scenario.question.agent, action[len(GO_TO) :])
+
+
+def observation_anomaly(driver: Driver, scenario: Scenario) -> Consistency:
+    """Is the observed action unaccounted for by the world?
+
+    `accounted_for` asked of what was seen rather than of what was
+    predicted, which makes it the only one of these computable *before*
+    re-representing: observation and world are both in the sparse
+    representation, and no belief or model answer is involved.
+
+    This is the motivating example in graph form. An agent is seen walking
+    somewhere carrying something; the world says that something is for a
+    resource; the world says the resource is elsewhere. The walk then
+    serves nothing the world accounts for — the moment at which an observer
+    might start reasoning about what the agent believes.
+
+    CONFLICT if any observed movement is unaccounted for.
+    """
+    records, _, _ = driver.execute_query(
+        """
+        MATCH (agent:Entity:Agent {scenario: $scenario})-[:ACTOR_OF]->(:Event)-[:TO]->(place)
+        RETURN DISTINCT agent.id AS agent, place.id AS place
+        """,
+        scenario=scenario.id,
+    )
+    verdicts = [accounted_for(driver, scenario.id, r["agent"], r["place"]) for r in records]
+    if Consistency.CONFLICT in verdicts:
+        return Consistency.CONFLICT
+    if Consistency.CONSISTENT in verdicts:
+        return Consistency.CONSISTENT
+    return Consistency.NOT_APPLICABLE
 
 
 def clear(driver: Driver, scenario_id: str | None = None) -> int:

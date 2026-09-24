@@ -56,6 +56,13 @@ observations:
     object: mug
 
 world_state:
+  # What the mug is for. Without this the walk cannot be judged against the
+  # world at all — see world.observation_anomaly.
+  - predicate: requires
+    subject: coffee
+    object: mug
+    value: true
+
   - predicate: empty
     subject: mug
     value: true

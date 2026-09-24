@@ -367,6 +367,11 @@ observations: []
 world_state:
 {_located(spec.subject, spec.locations, world)}
 
+  # Where {other[1]} actually is. {other[1]} acts on {other[1]}'s own belief,
+  # so this follows from it — and without it the world says nothing about
+  # the goal's target, which is what {spec.agent[1]} is trying to reach.
+{_located(other[0], spec.locations, other_belief)}
+
 goals:
   - agent: {spec.agent[0]}
     type: meet
@@ -500,6 +505,13 @@ observations:
     object: {carried}
 
 world_state:
+  # What the carried object is for. Without this the walk cannot be judged
+  # against the world at all — see world.observation_anomaly.
+  - predicate: requires
+    subject: {resource}
+    object: {carried}
+    value: true
+
   - predicate: available
     subject: {resource}
     location: {place}

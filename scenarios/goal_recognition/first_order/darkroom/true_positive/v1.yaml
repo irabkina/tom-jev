@@ -50,6 +50,13 @@ observations:
     object: roll
 
 world_state:
+  # What the carried object is for. Without this the walk cannot be judged
+  # against the world at all — see world.observation_anomaly.
+  - predicate: requires
+    subject: developer
+    object: roll
+    value: true
+
   - predicate: available
     subject: developer
     location: darkroom

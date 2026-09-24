@@ -66,6 +66,23 @@ world_state:
     subject: meeting
     location: garden
     value: false
+  # Where Alex actually is. Alex acts on Alex's own belief, so this
+  # follows from it — and without it the world says nothing about the
+  # goal's target, which is what Sam is trying to reach.
+  - predicate: located
+    subject: alex
+    location: office
+    value: true
+
+  - predicate: located
+    subject: alex
+    location: conference_room
+    value: false
+
+  - predicate: located
+    subject: alex
+    location: garden
+    value: false
 
 goals:
   - agent: sam
