@@ -1,7 +1,20 @@
+# Report scenario set — B. FALSE POSITIVE
+#
+# Sam wants to retrieve a report, which is in one of two rooms.
+# Across all four conditions Sam has the same goal and the same two
+# candidate destinations. Only the report's actual location and Sam's
+# belief about it vary.
+#
+# Reality: report in the conference room
+# Belief:  report in the office
+#
+# Sam's false belief predicts the office, while the world state alone
+# points to the conference room.
+
 id: report_false_positive
 description: >
-  Sam wants to retrieve a report. The report is not in the office, but Sam
-  incorrectly believes that the report is in the office.
+  Sam wants to retrieve a report. The report is in the conference room,
+  but Sam incorrectly believes that the report is in the office.
 
 scenario_set: report
 
@@ -15,6 +28,8 @@ entities:
   locations:
     - id: office
       name: office
+    - id: conference_room
+      name: conference room
   objects:
     - id: report
       name: report
@@ -26,6 +41,11 @@ world_state:
     subject: report
     location: office
     value: false
+
+  - predicate: located
+    subject: report
+    location: conference_room
+    value: true
 
 goals:
   - agent: sam
@@ -46,13 +66,14 @@ question:
   agent: sam
   options:
     - go_to_office
-    - do_not_go_to_office
+    - go_to_conference_room
 
 ground_truth:
   answer: go_to_office
   explanation: >
-    Sam wants to retrieve the report and falsely believes that the report
-    is in the office, so Sam should act according to that belief.
+    Sam falsely believes the report is in the office, so Sam should act on
+    that belief and go to the office, even though the report is actually
+    in the conference room.
 
 annotations:
   world_supports_action: false

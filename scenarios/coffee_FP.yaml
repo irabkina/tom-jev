@@ -1,21 +1,26 @@
 # Coffee scenario set — B. FALSE POSITIVE
 #
-# Sam wants to obtain coffee from the kitchen but needs a cup to do so.
-# Across all four conditions Sam has the same goal, coffee is available in
-# the kitchen, Sam does not have a cup, and the same action is predicted.
-# Only cup availability and Sam's belief about it vary.
+# Goal recognition, after the motivating example: an observer sees Sam
+# walking toward the kitchen carrying an empty mug and must infer why.
 #
-# Reality: cup unavailable
-# Belief:  cup available
+# The observation is held constant across all four conditions:
+#   Sam walks toward the kitchen carrying an empty mug.
 #
-# Sam's false belief predicts that Sam will go to the kitchen even though
-# objective world state makes that action appear unsuccessful.
+# Only whether coffee is actually available in the kitchen, and whether Sam
+# believes it is, vary. Ground truth follows Sam's belief, since Sam acts on
+# what Sam takes to be true.
+#
+# Reality: coffee unavailable
+# Belief:  coffee available
+#
+# This is the case the example turns on. From the world state alone the
+# walk is anomalous — there is no coffee to fetch. Only Sam's mistaken
+# belief explains it.
 
 id: coffee_false_positive
 description: >
-  Sam wants coffee. Sam does not have a cup. Coffee is available in
-  the kitchen, but there are no cups there. Sam incorrectly believes
-  that cups are available in the kitchen.
+  Sam walks toward the kitchen carrying an empty mug. There is no coffee
+  there, but Sam incorrectly believes there is.
 
 scenario_set: coffee
 
@@ -26,63 +31,78 @@ entities:
   agents:
     - id: sam
       name: Sam
-
   locations:
     - id: kitchen
       name: kitchen
-
   objects:
-    - id: cup
-      name: cup
+    - id: mug
+      name: mug
     - id: coffee
       name: coffee
+    - id: food
+      name: food
+    - id: sink
+      name: sink
+    - id: refrigerator
+      name: refrigerator
 
-observations: []
+observations:
+  - type: walks_to
+    agent: sam
+    destination: kitchen
+
+  - type: carries
+    agent: sam
+    object: mug
 
 world_state:
-  - predicate: has
-    subject: sam
-    object: cup
-    value: false
+  - predicate: empty
+    subject: mug
+    value: true
 
-  - predicate: available
-    subject: coffee
+  - predicate: located
+    subject: sink
+    location: kitchen
+    value: true
+
+  - predicate: located
+    subject: refrigerator
     location: kitchen
     value: true
 
   - predicate: available
-    subject: cup
+    subject: coffee
     location: kitchen
     value: false
 
-goals:
-  - agent: sam
-    type: obtain
-    object: coffee
+  - predicate: available
+    subject: food
+    location: kitchen
+    value: true
 
 mental_state:
   - type: belief
     agent: sam
     proposition:
       predicate: available
-      subject: cup
+      subject: coffee
       location: kitchen
       value: true
 
 question:
-  type: action_prediction
+  type: goal
   agent: sam
-
   options:
-    - go_to_kitchen
-    - do_not_go_to_kitchen
+    - get_coffee
+    - get_food
+    - wash_mug
 
 ground_truth:
-  answer: go_to_kitchen
+  answer: get_coffee
   explanation: >
-    Sam falsely believes the kitchen contains the cup needed to obtain
-    coffee, so Sam should act according to that belief despite the
-    conflicting objective world state.
+    Sam falsely believes coffee is available and is carrying an empty mug
+    to fill, so the goal is coffee despite the kitchen having none. Without
+    the belief the walk cannot be explained as coffee-seeking.
 
 annotations:
   world_supports_action: false

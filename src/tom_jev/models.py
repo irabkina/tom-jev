@@ -132,10 +132,24 @@ class Question(BaseModel):
 
 
 class GroundTruth(BaseModel):
-    """The correct answer, for evaluation. Never sent to the model."""
+    """The correct answer, for evaluation. Never sent to the model.
+
+    `answer` is the single best reading. `acceptable` widens that to every
+    option that should count as correct, for scenarios that are ambiguous
+    by design — where the stimulus genuinely underdetermines the goal and a
+    spread distribution is the right response rather than a failure.
+
+    Omit `acceptable` and it defaults to just `answer`, which is the
+    unambiguous case.
+    """
 
     answer: str
+    acceptable: list[str] = Field(default_factory=list)
     explanation: str | None = None
+
+    def answers(self) -> list[str]:
+        """Every option that counts as correct."""
+        return self.acceptable or [self.answer]
 
 
 class Annotations(BaseModel):
@@ -167,11 +181,19 @@ class Scenario(BaseModel):
     annotations: Annotations = Field(default_factory=Annotations)
 
     @model_validator(mode="after")
-    def _answer_must_be_an_option(self) -> Scenario:
-        if self.ground_truth.answer not in self.question.options:
+    def _answers_must_be_options(self) -> Scenario:
+        unknown = [a for a in self.ground_truth.answers() if a not in self.question.options]
+        if unknown:
+            raise ValueError(
+                f"{self.id}: ground truth {unknown} "
+                f"not among question.options {self.question.options}"
+            )
+        if self.ground_truth.acceptable and self.ground_truth.answer not in (
+            self.ground_truth.acceptable
+        ):
             raise ValueError(
                 f"{self.id}: ground_truth.answer {self.ground_truth.answer!r} "
-                f"is not among question.options {self.question.options}"
+                f"is not among its own acceptable set {self.ground_truth.acceptable}"
             )
         return self
 

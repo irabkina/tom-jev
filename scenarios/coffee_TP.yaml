@@ -1,19 +1,25 @@
 # Coffee scenario set — A. TRUE POSITIVE
 #
-# Sam wants to obtain coffee from the kitchen but needs a cup to do so.
-# Across all four conditions Sam has the same goal, coffee is available in
-# the kitchen, Sam does not have a cup, and the same action is predicted.
-# Only cup availability and Sam's belief about it vary.
+# Goal recognition, after the motivating example: an observer sees Sam
+# walking toward the kitchen carrying an empty mug and must infer why.
 #
-# Reality: cup available
-# Belief:  cup available
+# The observation is held constant across all four conditions:
+#   Sam walks toward the kitchen carrying an empty mug.
 #
-# Reality and belief agree that going to the kitchen can achieve the goal.
+# Only whether coffee is actually available in the kitchen, and whether Sam
+# believes it is, vary. Ground truth follows Sam's belief, since Sam acts on
+# what Sam takes to be true.
+#
+# Reality: coffee available
+# Belief:  coffee available
+#
+# Reality and belief agree, so the observation needs no belief reasoning
+# to make sense.
 
 id: coffee_true_positive
 description: >
-  Sam wants coffee. Sam does not have a cup. Coffee and cups are
-  available in the kitchen, and Sam believes cups are available there.
+  Sam walks toward the kitchen carrying an empty mug. Coffee is available
+  there, and Sam believes it is.
 
 scenario_set: coffee
 
@@ -24,24 +30,44 @@ entities:
   agents:
     - id: sam
       name: Sam
-
   locations:
     - id: kitchen
       name: kitchen
-
   objects:
-    - id: cup
-      name: cup
+    - id: mug
+      name: mug
     - id: coffee
       name: coffee
+    - id: food
+      name: food
+    - id: sink
+      name: sink
+    - id: refrigerator
+      name: refrigerator
 
-observations: []
+observations:
+  - type: walks_to
+    agent: sam
+    destination: kitchen
+
+  - type: carries
+    agent: sam
+    object: mug
 
 world_state:
-  - predicate: has
-    subject: sam
-    object: cup
-    value: false
+  - predicate: empty
+    subject: mug
+    value: true
+
+  - predicate: located
+    subject: sink
+    location: kitchen
+    value: true
+
+  - predicate: located
+    subject: refrigerator
+    location: kitchen
+    value: true
 
   - predicate: available
     subject: coffee
@@ -49,37 +75,33 @@ world_state:
     value: true
 
   - predicate: available
-    subject: cup
+    subject: food
     location: kitchen
     value: true
-
-goals:
-  - agent: sam
-    type: obtain
-    object: coffee
 
 mental_state:
   - type: belief
     agent: sam
     proposition:
       predicate: available
-      subject: cup
+      subject: coffee
       location: kitchen
       value: true
 
 question:
-  type: action_prediction
+  type: goal
   agent: sam
-
   options:
-    - go_to_kitchen
-    - do_not_go_to_kitchen
+    - get_coffee
+    - get_food
+    - wash_mug
 
 ground_truth:
-  answer: go_to_kitchen
+  answer: get_coffee
   explanation: >
-    Sam wants coffee and correctly believes that the kitchen contains
-    the cup needed to obtain it.
+    Sam carries an empty mug toward a kitchen that has coffee, and
+    correctly believes the coffee is there, so the mug is being taken to
+    be filled.
 
 annotations:
   world_supports_action: true

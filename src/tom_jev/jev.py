@@ -25,6 +25,9 @@ from .representation import State
 Questions = Mapping[str, Any]
 
 INSTRUCTIONS = {
+    # Goal recognition: the action is observed, the goal is inferred.
+    "goal": "Given the situation, what is {agent} trying to do?",
+    # Action prediction: the goal is given, the action is inferred.
     "action_prediction": "Given the situation, what will {agent} do?",
 }
 

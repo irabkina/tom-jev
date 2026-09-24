@@ -136,13 +136,22 @@ mental_state:
 # ---------------------------------------------------------------------------
 # QUESTION
 # ---------------------------------------------------------------------------
-# Decision Jev is asked to make.
+# Decision Jev is asked to make. Two types:
 #
-# The pilot uses action_prediction: given an agent's goal and the available
-# representation, predict what the agent will do.
+#   goal               The action is observed, the goal is inferred.
+#                      `observations` carries what the agent was seen doing;
+#                      `goals` is omitted, since the goal is the answer.
+#
+#   action_prediction  The goal is given, the action is inferred.
+#                      `goals` carries it, in both representations, so the
+#                      reasoning task stays constant while representation
+#                      richness changes.
+#
+# Options should be symmetric competing alternatives rather than an action
+# and its negation — see notes/experimental_design.md.
 
 question:
-  type: action_prediction
+  type: goal | action_prediction
   agent: string
 
   # Candidate actions to which Jev assigns probabilities.
@@ -154,8 +163,19 @@ question:
 # ---------------------------------------------------------------------------
 
 ground_truth:
-  # Correct predicted action. Must occur in `options`.
+  # The single best answer. Must occur in `options`.
   answer: string
+
+  # Optional. Every option that counts as correct, for scenarios that are
+  # ambiguous by design — where the stimulus genuinely underdetermines the
+  # answer and a spread distribution is the right response rather than a
+  # failure. Must all occur in `options`, and must include `answer`.
+  #
+  # Omit it and it defaults to just `answer`. Utility then measures mass on
+  # the whole set, and outcome tests membership in it, so distributing
+  # probability among equally correct readings is neither gain nor loss.
+  acceptable:
+    - string
 
   # Researcher-facing explanation. Must NOT be supplied to Jev.
   explanation: string

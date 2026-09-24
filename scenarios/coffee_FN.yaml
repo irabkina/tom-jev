@@ -1,21 +1,25 @@
 # Coffee scenario set — C. FALSE NEGATIVE
 #
-# Sam wants to obtain coffee from the kitchen but needs a cup to do so.
-# Across all four conditions Sam has the same goal, coffee is available in
-# the kitchen, Sam does not have a cup, and the same action is predicted.
-# Only cup availability and Sam's belief about it vary.
+# Goal recognition, after the motivating example: an observer sees Sam
+# walking toward the kitchen carrying an empty mug and must infer why.
 #
-# Reality: cup available
-# Belief:  cup unavailable
+# The observation is held constant across all four conditions:
+#   Sam walks toward the kitchen carrying an empty mug.
 #
-# Objective reality supports going to the kitchen, but Sam's false belief
-# predicts that Sam will not do so.
+# Only whether coffee is actually available in the kitchen, and whether Sam
+# believes it is, vary. Ground truth follows Sam's belief, since Sam acts on
+# what Sam takes to be true.
+#
+# Reality: coffee available
+# Belief:  coffee unavailable
+#
+# The world state alone suggests coffee. Sam's belief says otherwise, so
+# the empty mug is being carried for another reason.
 
 id: coffee_false_negative
 description: >
-  Sam wants coffee. Sam does not have a cup. Coffee and cups are
-  available in the kitchen, but Sam incorrectly believes that no cups
-  are available there.
+  Sam walks toward the kitchen carrying an empty mug. Coffee is available
+  there, but Sam incorrectly believes there is none.
 
 scenario_set: coffee
 
@@ -26,24 +30,44 @@ entities:
   agents:
     - id: sam
       name: Sam
-
   locations:
     - id: kitchen
       name: kitchen
-
   objects:
-    - id: cup
-      name: cup
+    - id: mug
+      name: mug
     - id: coffee
       name: coffee
+    - id: food
+      name: food
+    - id: sink
+      name: sink
+    - id: refrigerator
+      name: refrigerator
 
-observations: []
+observations:
+  - type: walks_to
+    agent: sam
+    destination: kitchen
+
+  - type: carries
+    agent: sam
+    object: mug
 
 world_state:
-  - predicate: has
-    subject: sam
-    object: cup
-    value: false
+  - predicate: empty
+    subject: mug
+    value: true
+
+  - predicate: located
+    subject: sink
+    location: kitchen
+    value: true
+
+  - predicate: located
+    subject: refrigerator
+    location: kitchen
+    value: true
 
   - predicate: available
     subject: coffee
@@ -51,42 +75,43 @@ world_state:
     value: true
 
   - predicate: available
-    subject: cup
+    subject: food
     location: kitchen
     value: true
-
-goals:
-  - agent: sam
-    type: obtain
-    object: coffee
 
 mental_state:
   - type: belief
     agent: sam
     proposition:
       predicate: available
-      subject: cup
+      subject: coffee
       location: kitchen
       value: false
 
 question:
-  type: action_prediction
+  type: goal
   agent: sam
-
   options:
-    - go_to_kitchen
-    - do_not_go_to_kitchen
+    - get_coffee
+    - get_food
+    - wash_mug
 
 ground_truth:
-  answer: do_not_go_to_kitchen
+  answer: wash_mug
+  acceptable:
+    - wash_mug
+    - get_food
   explanation: >
-    Although a cup is actually available, Sam believes that the
-    necessary cup is unavailable and therefore should not expect going
-    to the kitchen to achieve the coffee goal.
+    Although coffee is available, Sam believes it is not, so the empty mug
+    is not being carried to be filled. What remains is underdetermined:
+    the kitchen has both a sink and a refrigerator, and the observation
+    does not distinguish washing the mug from getting food. Both count as
+    correct; the ambiguity is the point. What should not survive the
+    belief is get_coffee.
 
 annotations:
-  world_supports_action: true
-  agent_believes_action_supported: false
+  world_supports_action: false
+  agent_believes_action_supported: true
   belief_matches_reality: false
   belief_changes_expected_action: true
   tags:

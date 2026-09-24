@@ -1,3 +1,15 @@
+# Report scenario set — A. TRUE POSITIVE
+#
+# Sam wants to retrieve a report, which is in one of two rooms.
+# Across all four conditions Sam has the same goal and the same two
+# candidate destinations. Only the report's actual location and Sam's
+# belief about it vary.
+#
+# Reality: report in the office
+# Belief:  report in the office
+#
+# Reality and belief agree, so acting on either leads to the same place.
+
 id: report_true_positive
 description: >
   Sam wants to retrieve a report. The report is in the office, and Sam
@@ -15,6 +27,8 @@ entities:
   locations:
     - id: office
       name: office
+    - id: conference_room
+      name: conference room
   objects:
     - id: report
       name: report
@@ -26,6 +40,11 @@ world_state:
     subject: report
     location: office
     value: true
+
+  - predicate: located
+    subject: report
+    location: conference_room
+    value: false
 
 goals:
   - agent: sam
@@ -46,13 +65,13 @@ question:
   agent: sam
   options:
     - go_to_office
-    - do_not_go_to_office
+    - go_to_conference_room
 
 ground_truth:
   answer: go_to_office
   explanation: >
-    Sam wants to retrieve the report and correctly believes that the report
-    is in the office.
+    Sam wants the report and correctly believes it is in the office, so
+    Sam should go to the office.
 
 annotations:
   world_supports_action: true
