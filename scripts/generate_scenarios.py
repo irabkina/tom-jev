@@ -80,7 +80,7 @@ class Spec:
     domain: str
     blurb: str
     agent: Named
-    locations: list[Named]
+    locations: list[Named] = field(default_factory=list)
     objects: list[Named] = field(default_factory=list)
     other: Named | None = None  # second agent, for second_order / attribution
     subject: str = ""  # the thing whose location varies
@@ -91,6 +91,13 @@ class Spec:
     primary_goal: str = ""
     other_goals: list[str] = field(default_factory=list)
     affordances: list[Named] = field(default_factory=list)
+    # discriminative only
+    destination: Named = ("", "")
+    elsewhere: Named = ("", "")
+    away: Named = ("", "")  # goal-relevant thing that is NOT at the destination
+    away_goal: str = ""
+    present: Named = ("", "")  # goal-relevant agent who IS at the destination
+    present_goal: str = ""
     lex: str = "v1"
 
     @property
@@ -550,6 +557,172 @@ ground_truth:
 """
 
 
+def discriminative(spec: Spec, condition: str) -> str:
+    """Two positively supported competing explanations for one fixed walk.
+
+    The destination is observed and constant; two goal-relevant entities sit
+    one at it and one away from it. Whichever the agent *believes* is at the
+    destination is the goal the walk serves, so belief can license a
+    different answer rather than only subtracting one.
+    """
+    dest, dest_name = spec.destination
+    other, other_name = spec.elsewhere
+    away, away_name = spec.away
+    present, present_name = spec.present
+
+    away_belief, present_belief = {
+        "true_true": (other, dest),
+        "true_false": (other, other),
+        "false_true": (dest, dest),
+        "false_false": (dest, other),
+    }[condition]
+
+    at_dest = [
+        g
+        for e, g in ((away_belief, spec.away_goal), (present_belief, spec.present_goal))
+        if e == dest
+    ]
+    ambiguous = len(at_dest) != 1
+    acceptable = [spec.present_goal, spec.away_goal] if ambiguous else at_dest
+    names = {dest: dest_name, other: other_name}
+
+    role = {
+        "true_true": "confirms the reading the world already gave",
+        "true_false": "removes that reading without offering another",
+        "false_true": "adds a second, equally good reading",
+        "false_false": "replaces the reading outright",
+    }[condition]
+
+    head = _header(
+        [
+            f"{spec.domain} — discriminative goal recognition, {condition.replace('_', ' ')}",
+            "",
+            spec.blurb,
+            "",
+            "The world and the observation are constant across all four cells:",
+            f"  world         {away_name} at the {other_name}, {present_name} at the {dest_name}",
+            f"  observation   {spec.agent[1]} walks toward the {dest_name}",
+            "",
+            "Only what the agent believes varies, over whether each belief matches",
+            "the world. Whichever thing they believe is at the destination is the",
+            "goal the walk serves, so belief can point somewhere the world does not.",
+            "",
+            (
+                f"  {spec.agent[1]} believes   {away_name} at the {names[away_belief]}, "
+                f"{present_name} at the {names[present_belief]}"
+            ),
+            "",
+            f"Here the belief {role}.",
+        ]
+        + (
+            [
+                "",
+                "Both options are acceptable, so `outcome` cannot fail and carries no",
+                "information. Entropy is the measure that does.",
+            ]
+            if ambiguous
+            else []
+        )
+    )
+
+    world = "\n\n".join(
+        f"  - predicate: located\n    subject: {subj}\n    location: {loc}\n    value: {val}"
+        for subj, loc, val in (
+            (away, other, "true"),
+            (away, dest, "false"),
+            (present, dest, "true"),
+            (present, other, "false"),
+        )
+    )
+    beliefs = "\n\n".join(
+        f"  - type: belief\n    agent: {spec.agent[0]}\n    proposition:\n"
+        f"      predicate: located\n      subject: {subj}\n      location: {loc}\n"
+        f"      value: true"
+        for subj, loc in ((away, away_belief), (present, present_belief))
+    )
+    truth = (
+        f"  answer: {acceptable[0]}\n  acceptable:\n" + "\n".join(f"    - {g}" for g in acceptable)
+        if ambiguous
+        else f"  answer: {acceptable[0]}"
+    )
+    why = {
+        "true_true": f"{spec.agent[1]} correctly believes {present_name} is at the {dest_name} and "
+        f"{away_name} is not, so the walk is going to {spec.present_goal.replace('_', ' ')}. The "
+        "world licenses the same reading, so the belief adds nothing.",
+        "true_false": f"On their own beliefs neither {away_name} nor {present_name} is at the "
+        f"{dest_name}, so neither goal explains the walk. No answer is licensed and both are "
+        "acceptable; what matters is whether the richer representation registers the anomaly by "
+        "becoming less certain.",
+        "false_true": f"{spec.agent[1]} believes both {away_name} and {present_name} are at the "
+        f"{dest_name}, so either goal explains the walk and nothing distinguishes them. The "
+        "ambiguity is the point.",
+        "false_false": f"{spec.agent[1]} wrongly believes {away_name} is at the {dest_name} and "
+        f"{present_name} is not, so the walk is going to {spec.away_goal.replace('_', ' ')} — "
+        f"though {present_name} really is there and {away_name} is not.",
+    }[condition]
+
+    return f"""{head}
+
+id: {spec.slug}_{condition}
+description: >
+{
+        _wrap(
+            spec.blurb
+            + f" They believe {away_name} is at the {names[away_belief]} and {present_name} is at the {names[present_belief]}.",
+            "  ",
+        )
+    }
+
+scenario_set: {spec.domain}
+
+variant:
+  type: {condition}
+
+{_entities([spec.agent, spec.present], [spec.destination, spec.elsewhere], [spec.away])}
+
+observations:
+  - type: walks_to
+    agent: {spec.agent[0]}
+    destination: {dest}
+
+world_state:
+{world}
+
+mental_state:
+{beliefs}
+
+question:
+  type: goal
+  agent: {spec.agent[0]}
+  options:
+    - {spec.away_goal}
+    - {spec.present_goal}
+
+ground_truth:
+{truth}
+  explanation: >
+{_wrap(why, "    ")}
+
+{
+        _annotations(
+            supports=condition == "true_true",
+            matches=condition == "true_true",
+            changes=condition != "true_true",
+            tags=["first_order", "goal_recognition", "discriminative"]
+            + (
+                ["belief_reality_match", "control"]
+                if condition == "true_true"
+                else ["ambiguous_by_design", "anomalous_observation"]
+                if condition == "true_false"
+                else ["ambiguous_by_design", "belief_adds_ambiguity"]
+                if condition == "false_true"
+                else ["belief_redirects", "belief_reality_mismatch", "rerepresentation_target"]
+            ),
+        )
+    }
+"""
+
+
 TEMPLATES = {
     "first_order": (
         first_order,
@@ -570,6 +743,11 @@ TEMPLATES = {
             "false_attribution_true_belief",
             "false_attribution_false_belief",
         ],
+    ),
+    "discriminative": (
+        discriminative,
+        "goal_recognition",
+        ["true_true", "true_false", "false_true", "false_false"],
     ),
     "goal_recognition": (
         goal_recognition,
@@ -757,6 +935,49 @@ DOMAINS: list[tuple[str, Spec]] = [
                 ("cargo_deck", "vehicle deck"),
             ],
             objects=[("briefing", "pre-sailing briefing")],
+        ),
+    ),
+    # ---- discriminative goal recognition: two competing explanations -----
+    (
+        "discriminative",
+        Spec(
+            domain="workshop",
+            blurb="Kira is seen walking toward the paint booth.",
+            agent=("kira", "Kira"),
+            destination=("paint_booth", "paint booth"),
+            elsewhere=("storeroom", "storeroom"),
+            away=("respirator", "respirator"),
+            away_goal="fetch_respirator",
+            present=("nils", "Nils"),
+            present_goal="consult_nils",
+        ),
+    ),
+    (
+        "discriminative",
+        Spec(
+            domain="clinic",
+            blurb="Devi is seen walking toward the dispensary.",
+            agent=("devi", "Devi"),
+            destination=("dispensary", "dispensary"),
+            elsewhere=("records_room", "records room"),
+            away=("chart", "patient chart"),
+            away_goal="collect_chart",
+            present=("hale", "Hale"),
+            present_goal="consult_hale",
+        ),
+    ),
+    (
+        "discriminative",
+        Spec(
+            domain="station",
+            blurb="Rowan is seen walking toward platform three.",
+            agent=("rowan", "Rowan"),
+            destination=("platform_three", "platform three"),
+            elsewhere=("left_luggage", "left-luggage office"),
+            away=("bicycle", "bicycle"),
+            away_goal="retrieve_bicycle",
+            present=("amara", "Amara"),
+            present_goal="find_amara",
         ),
     ),
 ]

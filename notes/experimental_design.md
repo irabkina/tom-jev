@@ -176,3 +176,47 @@ part of the influence in every cell is therefore this effect rather than
 the manipulation, and the control gives a rough floor to subtract — around
 0.27 on this domain. Reported influences should be read against it, not
 against zero.
+
+### Replication across four domains
+
+`clinic`, `station` and `workshop` were generated from the same template and
+each written once and run once, with no revision. They reproduce the
+`mailroom` pattern exactly.
+
+| cell | belief does | mean influence (n=3) | mean entropy change |
+|---|---|---|---|
+| true_true | confirms the sparse reading | 0.15 | +0.27 |
+| true_false | removes it, offers nothing | 0.20 | +0.37 |
+| false_true | adds a competing reading | **0.76** | −0.09 |
+| false_false | replaces it outright | **0.72** | +0.02 |
+
+The split is the same in every domain: where the belief puts something at
+the observed destination, influence is 0.68–0.81; where it does not, 0.07–
+0.29. Nothing about a particular story is carrying the effect.
+
+The new domains sharpen the claim in a way `mailroom` alone did not.
+`true_false` — belief undermines the sparse reading and supplies nothing —
+has the **largest entropy rise of any cell** (+0.37), and in all three
+domains the model still answered the goal its own belief rules out. So the
+conflict *is* detected: the model becomes visibly less certain. It simply
+has nowhere to go.
+
+That is close to a direct measurement of the distinction above. Detection is
+cheap and happens on its own. Constructing the alternative is the part that
+requires the richer representation to actually contain one, and entropy
+without a correction is what "triggered but unresolved" looks like in the
+data.
+
+`mailroom` is the exception worth noting: its `true_false` entropy *fell*,
+which read as the belief being ignored. Across four domains that is a
+minority behaviour, and the replication is the better guide.
+
+### Caveats on these numbers
+
+`true_true` is not inert in any domain — 0.15 mean, up to 0.29 on
+`workshop`, with entropy rising +0.27. A belief that merely agrees with the
+world still perturbs the distribution, so the floor to read influence
+against is roughly 0.15 here, not zero.
+
+Three domains per cell, one run each. The direction is consistent across
+every domain; the magnitudes are not stable enough to quote to two figures.
