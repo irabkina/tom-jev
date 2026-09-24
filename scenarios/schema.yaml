@@ -1,0 +1,184 @@
+# Schema for Jev re-representation experiment scenarios.
+#
+# Scenarios separate:
+#   1. Observable events/actions
+#   2. Objective world state
+#   3. Agent goals
+#   4. Agents' explicit mental states
+#   5. Ground-truth answers
+#
+# Sparse representations use (1), (2), and (3).
+# Rich representations additionally use (4).
+#
+# Mental states should never be inferred from world_state when constructing
+# representations. This separation is the core experimental manipulation.
+
+id: string
+
+# Human-readable description for researchers.
+# Metadata only; must NOT be passed to Jev.
+description: string
+
+# Identifier grouping structurally matched scenarios.
+scenario_set: string
+
+# Experimental condition within a matched scenario set.
+variant:
+  # Initial pilot values:
+  #   true_positive   - world supports action; agent believes it does
+  #   false_positive  - world conflicts; agent believes it supports action
+  #   false_negative  - world supports action; agent believes it conflicts
+  #   true_negative   - world conflicts; agent believes it conflicts
+  type: string
+
+# ---------------------------------------------------------------------------
+# ENTITIES
+# ---------------------------------------------------------------------------
+
+entities:
+  agents:
+    - id: string
+      name: string
+
+  locations:
+    - id: string
+      name: string
+
+  objects:
+    - id: string
+      name: string
+
+# ---------------------------------------------------------------------------
+# OBSERVATIONS
+# ---------------------------------------------------------------------------
+# Observable events that have occurred before the target action.
+# Included in both sparse and rich representations.
+#
+# Event arguments are intentionally flexible during the pilot.
+
+observations:
+  - type: string
+    agent: string
+    destination: string | null
+    object: string | null
+    target_agent: string | null
+
+# ---------------------------------------------------------------------------
+# WORLD STATE
+# ---------------------------------------------------------------------------
+# Objective facts about the environment.
+#
+# These describe what is actually true independently of what an agent
+# believes. Included in both sparse and rich representations.
+
+world_state:
+  - predicate: string
+    subject: string
+    object: string | null
+    location: string | null
+    value: boolean | string | number
+
+# ---------------------------------------------------------------------------
+# GOALS
+# ---------------------------------------------------------------------------
+# Goals attributed to agents in the scenario.
+#
+# For the pilot experiment, goals are given as part of the input rather than
+# inferred. This allows us to test whether different representations of the
+# world and the agent's beliefs lead to different predictions about how the
+# agent will act to achieve the same goal.
+#
+# Goals are included in both sparse and rich representations.
+#
+# Example:
+#   goals:
+#     - agent: sam
+#       type: obtain
+#       object: coffee
+
+goals:
+  - agent: string
+    type: string
+
+    # Optional target arguments.
+    object: string | null
+    location: string | null
+    target_agent: string | null
+
+# ---------------------------------------------------------------------------
+# MENTAL STATE
+# ---------------------------------------------------------------------------
+# Explicit representations of agents' mental states.
+#
+# OMITTED from sparse representations.
+# INCLUDED in rich representations.
+#
+# An agent's represented belief may conflict with objective world_state.
+# This divergence is a primary experimental manipulation.
+#
+# Initial supported type:
+#   belief
+#
+# Additional types (knowledge, uncertainty, nested belief, preference, etc.)
+# can be introduced later if required.
+
+mental_state:
+  - type: string
+    agent: string
+
+    proposition:
+      predicate: string
+      subject: string
+      object: string | null
+      location: string | null
+      value: boolean | string | number
+
+# ---------------------------------------------------------------------------
+# QUESTION
+# ---------------------------------------------------------------------------
+# Decision Jev is asked to make.
+#
+# The pilot uses action_prediction: given an agent's goal and the available
+# representation, predict what the agent will do.
+
+question:
+  type: action_prediction
+  agent: string
+
+  # Candidate actions to which Jev assigns probabilities.
+  options:
+    - string
+
+# ---------------------------------------------------------------------------
+# GROUND TRUTH
+# ---------------------------------------------------------------------------
+
+ground_truth:
+  # Correct predicted action. Must occur in `options`.
+  answer: string
+
+  # Researcher-facing explanation. Must NOT be supplied to Jev.
+  explanation: string
+
+# ---------------------------------------------------------------------------
+# EXPERIMENTAL ANNOTATIONS
+# ---------------------------------------------------------------------------
+# Researcher metadata. Never supplied to Jev.
+
+annotations:
+  # Does the relevant objective world state support the target action?
+  world_supports_action: boolean
+
+  # Does the agent believe the relevant world state supports the action?
+  agent_believes_action_supported: boolean
+
+  # Does the agent's belief agree with objective reality?
+  belief_matches_reality: boolean
+
+  # Should explicit mental-state representation be necessary to correctly
+  # predict the action?
+  mental_state_required: boolean
+
+  # Free-form analysis tags.
+  tags:
+    - string

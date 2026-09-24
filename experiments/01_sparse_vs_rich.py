@@ -1,7 +1,7 @@
 """Experiment 01 — sparse vs. rich representation.
 
-Puts the same scenarios to Jev under both representations and compares the
-structured answers.
+Puts the same scenarios to Jev with and without explicit mental states, and
+compares the predicted actions against ground truth.
 
     python experiments/01_sparse_vs_rich.py
 """
@@ -11,12 +11,9 @@ from __future__ import annotations
 import json
 import pathlib
 
-import yaml
 from dotenv import load_dotenv
-from typesafe_sdk import Choice, Noul
 
-from tom_jev import jev, representation
-from tom_jev.models import Scenario
+from tom_jev import jev, scenarios
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
@@ -24,51 +21,48 @@ SCENARIOS = ROOT / "scenarios"
 
 CONDITIONS = ["sparse", "rich"]
 
-# TODO: replace with the measures under study. Noul returns a 0-1 truth
-# value with no confidence; Choice and Score also return confidence and a
-# probability distribution.
-QUESTIONS = {
-    "informed": Noul(instructions="Does every participant know the key fact?"),
-    "holder": Choice(
-        instructions="Who holds the true belief?",
-        criteria={"first": None, "second": None, "both": None, "neither": None},
-    ),
-}
-
-
-def load_scenarios() -> list[Scenario]:
-    """Load scenarios from scenarios/*.yaml and scenarios/*.yml."""
-    paths = sorted(p for pattern in ("*.yaml", "*.yml") for p in SCENARIOS.glob(pattern))
-    return [Scenario.model_validate(yaml.safe_load(p.read_text())) for p in paths]
-
 
 def main() -> None:
     load_dotenv()
-    scenarios = load_scenarios()
-    if not scenarios:
+    items = scenarios.load(SCENARIOS)
+    if not items:
         raise SystemExit(f"no scenarios found in {SCENARIOS}")
 
     predictions = []
     with jev.client() as c:
-        for scenario in scenarios:
+        for scenario in items:
             for condition in CONDITIONS:
-                state = representation.render(scenario, condition)
-                predictions.append(
-                    jev.evaluate(
-                        c,
-                        state,
-                        QUESTIONS,
-                        scenario_id=scenario.id,
-                        condition=condition,
-                    )
-                )
+                predictions.append(jev.ask(c, scenario, condition))
 
     RESULTS.mkdir(exist_ok=True)
     out = RESULTS / "01_sparse_vs_rich.json"
     out.write_text(json.dumps([p.model_dump(mode="json") for p in predictions], indent=2))
 
-    for row in (p.flat() for p in predictions):
-        print(row)
+    for p in predictions:
+        print(p.flat())
+
+    print()
+    for condition in CONDITIONS:
+        scored = [p for p in predictions if p.condition == condition and p.correct is not None]
+        if scored:
+            hits = sum(p.correct for p in scored)
+            print(f"{condition:7} {hits}/{len(scored)} correct")
+
+    # Where mental state is required, sparse should do worse than rich.
+    needs_mental = {s.id for s in items if s.annotations.mental_state_required}
+    if needs_mental:
+        print(f"\nscenarios annotated mental_state_required ({len(needs_mental)}):")
+        for condition in CONDITIONS:
+            scored = [
+                p
+                for p in predictions
+                if p.condition == condition and p.scenario_id in needs_mental
+                if p.correct is not None
+            ]
+            if scored:
+                hits = sum(p.correct for p in scored)
+                print(f"  {condition:7} {hits}/{len(scored)} correct")
+
     print(f"\nwrote {len(predictions)} predictions to {out}")
 
 

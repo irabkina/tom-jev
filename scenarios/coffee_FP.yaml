@@ -1,0 +1,95 @@
+# Coffee scenario set — B. FALSE POSITIVE
+#
+# Sam wants to obtain coffee from the kitchen but needs a cup to do so.
+# Across all four conditions Sam has the same goal, coffee is available in
+# the kitchen, Sam does not have a cup, and the same action is predicted.
+# Only cup availability and Sam's belief about it vary.
+#
+# Reality: cup unavailable
+# Belief:  cup available
+#
+# Sam's false belief predicts that Sam will go to the kitchen even though
+# objective world state makes that action appear unsuccessful.
+
+id: coffee_false_positive
+description: >
+  Sam wants coffee. Sam does not have a cup. Coffee is available in
+  the kitchen, but there are no cups there. Sam incorrectly believes
+  that cups are available in the kitchen.
+
+scenario_set: coffee
+
+variant:
+  type: false_positive
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+
+  locations:
+    - id: kitchen
+      name: kitchen
+
+  objects:
+    - id: cup
+      name: cup
+    - id: coffee
+      name: coffee
+
+observations: []
+
+world_state:
+  - predicate: has
+    subject: sam
+    object: cup
+    value: false
+
+  - predicate: available
+    subject: coffee
+    location: kitchen
+    value: true
+
+  - predicate: available
+    subject: cup
+    location: kitchen
+    value: false
+
+goals:
+  - agent: sam
+    type: obtain
+    object: coffee
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: available
+      subject: cup
+      location: kitchen
+      value: true
+
+question:
+  type: action_prediction
+  agent: sam
+
+  options:
+    - go_to_kitchen
+    - do_not_go_to_kitchen
+
+ground_truth:
+  answer: go_to_kitchen
+  explanation: >
+    Sam falsely believes the kitchen contains the cup needed to obtain
+    coffee, so Sam should act according to that belief despite the
+    conflicting objective world state.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  mental_state_required: true
+  tags:
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target

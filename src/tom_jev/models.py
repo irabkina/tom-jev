@@ -1,40 +1,179 @@
-"""Core data models.
+"""Core data models, mirroring scenarios/schema.yaml.
 
-Typed containers shared across the package so scenarios, representations,
-and results all agree on shape. Kept free of logic on purpose.
+A scenario keeps observable fact, agent goals, and agents' mental states
+apart so they can be fed to Jev independently — that split is the
+experimental manipulation. `ground_truth` and `annotations` are researcher
+metadata and must never reach the model; `representation.py` enforces that.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Entity(BaseModel):
-    """A participant or object referenced by a scenario."""
+    """An agent, location, or object referenced by a scenario."""
 
     id: str
     name: str
-    attributes: dict[str, str] = Field(default_factory=dict)
 
 
-class Relation(BaseModel):
-    """A directed relation between two entities."""
+class Entities(BaseModel):
+    """The cast of a scenario, grouped by kind."""
 
-    source: str
-    target: str
-    kind: str
-    attributes: dict[str, str] = Field(default_factory=dict)
+    agents: list[Entity] = Field(default_factory=list)
+    locations: list[Entity] = Field(default_factory=list)
+    objects: list[Entity] = Field(default_factory=list)
+
+    def names(self) -> dict[str, str]:
+        """Map every entity id to its display name."""
+        return {
+            e.id: e.name for group in (self.agents, self.locations, self.objects) for e in group
+        }
+
+
+class Variant(BaseModel):
+    """Experimental condition within a matched scenario set.
+
+    Pilot values: true_positive, false_positive, false_negative,
+    true_negative — the 2x2 of whether the world supports the action and
+    whether the agent believes it does.
+    """
+
+    type: str
+
+
+class Observation(BaseModel):
+    """An observable event that occurred before the target action.
+
+    `type` names the event; which further arguments apply depends on it.
+    Extra fields are allowed on purpose — event arguments are deliberately
+    flexible during the pilot.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    type: str
+    agent: str
+    destination: str | None = None
+    object: str | None = None
+    target_agent: str | None = None
+
+    def arguments(self) -> dict[str, Any]:
+        """Every argument that is actually set, excluding `type` and `agent`."""
+        named = {
+            "destination": self.destination,
+            "object": self.object,
+            "target_agent": self.target_agent,
+        }
+        extra = self.model_extra or {}
+        return {k: v for k, v in {**named, **extra}.items() if v is not None}
+
+
+class Proposition(BaseModel):
+    """A predicate applied to a subject, with optional relational arguments.
+
+    Used both for objective world-state facts and for the content of a
+    mental state — the same shape, differing only in whether it is asserted
+    as true of the world or merely held by an agent.
+    """
+
+    predicate: str
+    subject: str
+    object: str | None = None
+    location: str | None = None
+    value: bool | float | str
+
+
+class Goal(BaseModel):
+    """A goal attributed to an agent.
+
+    Goals are given as input rather than inferred, so that representation
+    richness varies while the reasoning task stays fixed. They appear in
+    both sparse and rich representations.
+    """
+
+    agent: str
+    type: str
+    object: str | None = None
+    location: str | None = None
+    target_agent: str | None = None
+
+    def arguments(self) -> dict[str, Any]:
+        """Every target argument that is actually set."""
+        named = {
+            "object": self.object,
+            "location": self.location,
+            "target_agent": self.target_agent,
+        }
+        return {k: v for k, v in named.items() if v is not None}
+
+
+class MentalState(BaseModel):
+    """A mental state held by an agent — `belief` for the pilot.
+
+    Its proposition may conflict with objective world_state; that
+    divergence is a primary experimental manipulation.
+    """
+
+    type: str
+    agent: str
+    proposition: Proposition
+
+
+class Question(BaseModel):
+    """The decision Jev is asked to make."""
+
+    type: str = "action_prediction"
+    agent: str
+    options: list[str]
+
+
+class GroundTruth(BaseModel):
+    """The correct answer, for evaluation. Never sent to the model."""
+
+    answer: str
+    explanation: str | None = None
+
+
+class Annotations(BaseModel):
+    """Researcher metadata about what a scenario tests. Never model input."""
+
+    world_supports_action: bool | None = None
+    agent_believes_action_supported: bool | None = None
+    belief_matches_reality: bool | None = None
+    mental_state_required: bool | None = None
+    tags: list[str] = Field(default_factory=list)
 
 
 class Scenario(BaseModel):
-    """A single scenario: the narrative plus its structured content."""
+    """One scenario, as stored under scenarios/."""
 
     id: str
-    text: str
-    entities: list[Entity] = Field(default_factory=list)
-    relations: list[Relation] = Field(default_factory=list)
+    description: str | None = None
+    scenario_set: str | None = None
+    variant: Variant | None = None
+
+    entities: Entities = Field(default_factory=Entities)
+    observations: list[Observation] = Field(default_factory=list)
+    world_state: list[Proposition] = Field(default_factory=list)
+    goals: list[Goal] = Field(default_factory=list)
+    mental_state: list[MentalState] = Field(default_factory=list)
+
+    question: Question
+    ground_truth: GroundTruth
+    annotations: Annotations = Field(default_factory=Annotations)
+
+    @model_validator(mode="after")
+    def _answer_must_be_an_option(self) -> Scenario:
+        if self.ground_truth.answer not in self.question.options:
+            raise ValueError(
+                f"{self.id}: ground_truth.answer {self.ground_truth.answer!r} "
+                f"is not among question.options {self.question.options}"
+            )
+        return self
 
 
 class Prediction(BaseModel):
@@ -59,6 +198,10 @@ class Prediction(BaseModel):
     usage: dict[str, int] = Field(default_factory=dict)
     request_id: str | None = None
 
+    variant: str | None = None
+    ground_truth: str | None = None
+    correct: bool | None = None
+
     def flat(self) -> dict[str, Any]:
         """Flatten to one row of scalars, for tabular analysis.
 
@@ -67,9 +210,13 @@ class Prediction(BaseModel):
         questions report no confidence, so they contribute a value only.
         """
         row: dict[str, Any] = {"scenario": self.scenario_id, "condition": self.condition}
+        if self.variant:
+            row["variant"] = self.variant
         for key, answer in self.answers.items():
             kind = answer.get("type")
             row[key] = answer.get(kind) if kind else None
             if "confidence" in answer:
                 row[f"{key}_confidence"] = answer["confidence"]
+        if self.correct is not None:
+            row["correct"] = self.correct
         return row

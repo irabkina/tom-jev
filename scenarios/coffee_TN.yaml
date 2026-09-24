@@ -1,0 +1,94 @@
+# Coffee scenario set — D. TRUE NEGATIVE
+#
+# Sam wants to obtain coffee from the kitchen but needs a cup to do so.
+# Across all four conditions Sam has the same goal, coffee is available in
+# the kitchen, Sam does not have a cup, and the same action is predicted.
+# Only cup availability and Sam's belief about it vary.
+#
+# Reality: cup unavailable
+# Belief:  cup unavailable
+#
+# Reality and belief agree that going to the kitchen cannot achieve the
+# goal.
+
+id: coffee_true_negative
+description: >
+  Sam wants coffee. Sam does not have a cup. Coffee is available in
+  the kitchen, but there are no cups there. Sam correctly believes that
+  no cups are available in the kitchen.
+
+scenario_set: coffee
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+
+  locations:
+    - id: kitchen
+      name: kitchen
+
+  objects:
+    - id: cup
+      name: cup
+    - id: coffee
+      name: coffee
+
+observations: []
+
+world_state:
+  - predicate: has
+    subject: sam
+    object: cup
+    value: false
+
+  - predicate: available
+    subject: coffee
+    location: kitchen
+    value: true
+
+  - predicate: available
+    subject: cup
+    location: kitchen
+    value: false
+
+goals:
+  - agent: sam
+    type: obtain
+    object: coffee
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: available
+      subject: cup
+      location: kitchen
+      value: false
+
+question:
+  type: action_prediction
+  agent: sam
+
+  options:
+    - go_to_kitchen
+    - do_not_go_to_kitchen
+
+ground_truth:
+  answer: do_not_go_to_kitchen
+  explanation: >
+    Sam correctly believes that the kitchen lacks the cup needed to
+    obtain coffee, so going to the kitchen should not be expected to
+    achieve the goal.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: true
+  mental_state_required: false
+  tags:
+    - belief_reality_match
+    - negative_control
