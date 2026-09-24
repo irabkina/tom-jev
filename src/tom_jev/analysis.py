@@ -1,16 +1,24 @@
 """Comparing a sparse pass against a rich pass.
 
-Four measures. The first three run in increasing strength over the
-probability mass on the correct answers; the fourth is orthogonal to
-correctness entirely:
+Five measures. Influence, utility and outcome run in increasing strength
+over the probability mass on the correct answers; acceptable mass is the
+level utility measures a change in; entropy is orthogonal to correctness
+entirely:
 
     influence   1/2 * sum_a |P_rich(a) - P_sparse(a)|
                 Total variation distance between the two distributions.
                 Did re-representation move the model at all, anywhere?
 
+    acceptable  sum over acceptable a of P(a), per pass
+    mass        How much weight each pass put on answers that count as
+                correct. A level, not a change. Reported for both passes
+                because a utility of +0.10 means one thing rising from
+                0.05 and quite another rising from 0.85.
+
     utility      P_rich(y*) - P_sparse(y*)
-                Signed change in mass on the correct answer. Did that
-                movement go the right way?
+                Signed change in acceptable mass. Did that movement go the
+                right way? Exactly acceptable_mass_rich minus
+                acceptable_mass_sparse.
 
     outcome     categorical change in argmax correctness
                 One of correction, regression, stable_correct,
@@ -120,6 +128,23 @@ def _argmax(prediction: Prediction, question_type: str) -> str | None:
     return prediction.answers.get(question_type, {}).get("choice")
 
 
+def acceptable_mass(
+    prediction: Prediction, question_type: str, answers: Sequence[str]
+) -> float | None:
+    """Total probability the pass put on answers that count as correct.
+
+    A level rather than a change: 0.0 means the pass placed no weight on
+    any acceptable answer, 1.0 means all of it. Utility is the difference
+    between the rich and sparse levels, so this is what utility is a
+    change *in* — reported alongside it because a +0.10 shift means
+    something very different from 0.05 than from 0.85.
+    """
+    p = _distribution(prediction, question_type)
+    if not p:
+        return None
+    return sum(p.get(a, 0.0) for a in answers)
+
+
 def utility(
     sparse: Prediction, rich: Prediction, question_type: str, answers: Sequence[str]
 ) -> float | None:
@@ -131,10 +156,11 @@ def utility(
     set, so spreading probability among equally correct readings counts as
     neither gain nor loss.
     """
-    p, q = _distribution(sparse, question_type), _distribution(rich, question_type)
-    if not p or not q:
+    before = acceptable_mass(sparse, question_type, answers)
+    after = acceptable_mass(rich, question_type, answers)
+    if before is None or after is None:
         return None
-    return sum(q.get(a, 0.0) for a in answers) - sum(p.get(a, 0.0) for a in answers)
+    return after - before
 
 
 def entropy(prediction: Prediction, question_type: str) -> float | None:
@@ -188,6 +214,9 @@ class Comparison(BaseModel):
 
     influence: float | None = None
     utility: float | None = None
+
+    acceptable_mass_sparse: float | None = None
+    acceptable_mass_rich: float | None = None
 
     entropy_sparse: float | None = None
     entropy_rich: float | None = None
@@ -264,6 +293,8 @@ def compare(
         world_conflict=world_conflict(scenario) if conflict is None else conflict,
         influence=influence(sparse, rich, question_type),
         utility=utility(sparse, rich, question_type, acceptable),
+        acceptable_mass_sparse=acceptable_mass(sparse, question_type, acceptable),
+        acceptable_mass_rich=acceptable_mass(rich, question_type, acceptable),
         entropy_sparse=entropy(sparse, question_type),
         entropy_rich=entropy(rich, question_type),
         sparse_choice=_argmax(sparse, question_type),
@@ -278,23 +309,26 @@ def summarise(comparisons: list[Comparison]) -> str:
     if not comparisons:
         return "(no comparisons)"
 
+    # `variant` is omitted: the scenario id already ends in it.
     header = (
-        f"{'scenario':24} {'variant':16} {'relevant':>9} | {'conflict':>8} "
-        f"{'influence':>9} {'utility':>8} {'H sp':>6} {'H rich':>6}  outcome"
+        f"{'scenario':24} {'relevant':>8} | {'conflict':>8} {'influence':>9} "
+        f"{'utility':>8} {'acc sp':>7} {'acc ri':>7} {'H sp':>6} {'H ri':>6}  outcome"
     )
     lines = [
-        f"{'':41} {'annotated':>9} | {'measured':<60}",
+        f"{'':24} {'annotated':>8} | {'measured':<64}",
         header,
-        "-" * 110,
+        "-" * 112,
     ]
     for c in comparisons:
         relevant = c.belief_changes_expected_action
         lines.append(
-            f"{c.scenario_id:24} {c.variant or '':16} "
-            f"{'' if relevant is None else str(relevant):>9} | "
+            f"{c.scenario_id:24} "
+            f"{'' if relevant is None else str(relevant):>8} | "
             f"{'' if c.world_conflict is None else str(c.world_conflict):>8} "
             f"{'' if c.influence is None else format(c.influence, '9.2f')} "
             f"{'' if c.utility is None else format(c.utility, '+8.2f')} "
+            f"{'' if c.acceptable_mass_sparse is None else format(c.acceptable_mass_sparse, '7.2f')} "
+            f"{'' if c.acceptable_mass_rich is None else format(c.acceptable_mass_rich, '7.2f')} "
             f"{'' if c.entropy_sparse is None else format(c.entropy_sparse, '6.2f')} "
             f"{'' if c.entropy_rich is None else format(c.entropy_rich, '6.2f')}  "
             f"{c.outcome or ''}{' *' if c.ambiguous else ''}"
@@ -304,6 +338,7 @@ def summarise(comparisons: list[Comparison]) -> str:
     if scored:
         lines.append("")
         with_entropy = [c for c in scored if c.entropy_change is not None]
+        with_mass = [c for c in scored if c.acceptable_mass_sparse is not None]
         lines.append(
             f"n={len(scored)}  "
             f"mean influence {sum(c.influence for c in scored) / len(scored):.2f}  "
@@ -311,6 +346,13 @@ def summarise(comparisons: list[Comparison]) -> str:
             f"mean entropy change "
             f"{sum(c.entropy_change for c in with_entropy) / len(with_entropy):+.2f}"
         )
+        if with_mass:
+            lines.append(
+                "mean acceptable mass "
+                f"{sum(c.acceptable_mass_sparse for c in with_mass) / len(with_mass):.2f}"
+                " sparse -> "
+                f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} rich"
+            )
         counts = {o: sum(c.outcome is o for c in comparisons) for o in Outcome}
         lines.append("  ".join(f"{name} {count}" for name, count in counts.items()))
         lines.append("")

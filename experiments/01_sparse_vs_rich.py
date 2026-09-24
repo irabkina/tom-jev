@@ -10,10 +10,10 @@ Each scenario's own `question` fixes the task — goal recognition for the
 coffee set, action prediction for the report set — so representation
 richness is the only thing that varies between the passes.
 
-The comparison is reported as four measures — influence, utility, outcome
-and entropy — rather than collapsed into one accuracy figure. The
-`belief_changes_expected_action` annotation is shown beside them for
-reference; it is an a priori design claim, not a measure. See
+The comparison is reported as five measures — influence, acceptable mass,
+utility, outcome and entropy — rather than collapsed into one accuracy
+figure. The `belief_changes_expected_action` annotation is shown beside
+them for reference; it is an a priori design claim, not a measure. See
 tom_jev/analysis.py.
 
 World/belief conflict is computed by querying the Neo4j graph the world
