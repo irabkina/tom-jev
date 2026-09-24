@@ -1,0 +1,120 @@
+# Coffee scenario set — C. FALSE NEGATIVE
+#
+# Goal recognition, after the motivating example: an observer sees Sam
+# walking toward the kitchen carrying an empty mug and must infer why.
+#
+# The observation is held constant across all four conditions:
+#   Sam walks toward the kitchen carrying an empty mug.
+#
+# Only whether coffee is actually available in the kitchen, and whether Sam
+# believes it is, vary. Ground truth follows Sam's belief, since Sam acts on
+# what Sam takes to be true.
+#
+# Reality: coffee available
+# Belief:  coffee unavailable
+#
+# The world state alone suggests coffee. Sam's belief says otherwise, so
+# the empty mug is being carried for another reason.
+
+id: coffee_false_negative
+description: >
+  Sam walks toward the kitchen carrying an empty mug. Coffee is available
+  there, but Sam incorrectly believes there is none.
+
+scenario_set: coffee
+
+variant:
+  type: false_negative
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+  locations:
+    - id: kitchen
+      name: kitchen
+  objects:
+    - id: mug
+      name: mug
+    - id: coffee
+      name: coffee
+    - id: food
+      name: food
+    - id: sink
+      name: sink
+    - id: refrigerator
+      name: refrigerator
+
+observations:
+  - type: walks_to
+    agent: sam
+    destination: kitchen
+
+  - type: carries
+    agent: sam
+    object: mug
+
+world_state:
+  - predicate: empty
+    subject: mug
+    value: true
+
+  - predicate: located
+    subject: sink
+    location: kitchen
+    value: true
+
+  - predicate: located
+    subject: refrigerator
+    location: kitchen
+    value: true
+
+  - predicate: available
+    subject: coffee
+    location: kitchen
+    value: true
+
+  - predicate: available
+    subject: food
+    location: kitchen
+    value: true
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: available
+      subject: coffee
+      location: kitchen
+      value: false
+
+question:
+  type: goal
+  agent: sam
+  options:
+    - get_coffee
+    - get_food
+    - wash_mug
+
+ground_truth:
+  answer: wash_mug
+  acceptable:
+    - wash_mug
+    - get_food
+  explanation: >
+    Although coffee is available, Sam believes it is not, so the empty mug
+    is not being carried to be filled. What remains is underdetermined:
+    the kitchen has both a sink and a refrigerator, and the observation
+    does not distinguish washing the mug from getting food. Both count as
+    correct; the ambiguity is the point. What should not survive the
+    belief is get_coffee.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target

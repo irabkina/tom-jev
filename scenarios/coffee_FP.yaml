@@ -1,0 +1,115 @@
+# Coffee scenario set — B. FALSE POSITIVE
+#
+# Goal recognition, after the motivating example: an observer sees Sam
+# walking toward the kitchen carrying an empty mug and must infer why.
+#
+# The observation is held constant across all four conditions:
+#   Sam walks toward the kitchen carrying an empty mug.
+#
+# Only whether coffee is actually available in the kitchen, and whether Sam
+# believes it is, vary. Ground truth follows Sam's belief, since Sam acts on
+# what Sam takes to be true.
+#
+# Reality: coffee unavailable
+# Belief:  coffee available
+#
+# This is the case the example turns on. From the world state alone the
+# walk is anomalous — there is no coffee to fetch. Only Sam's mistaken
+# belief explains it.
+
+id: coffee_false_positive
+description: >
+  Sam walks toward the kitchen carrying an empty mug. There is no coffee
+  there, but Sam incorrectly believes there is.
+
+scenario_set: coffee
+
+variant:
+  type: false_positive
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+  locations:
+    - id: kitchen
+      name: kitchen
+  objects:
+    - id: mug
+      name: mug
+    - id: coffee
+      name: coffee
+    - id: food
+      name: food
+    - id: sink
+      name: sink
+    - id: refrigerator
+      name: refrigerator
+
+observations:
+  - type: walks_to
+    agent: sam
+    destination: kitchen
+
+  - type: carries
+    agent: sam
+    object: mug
+
+world_state:
+  - predicate: empty
+    subject: mug
+    value: true
+
+  - predicate: located
+    subject: sink
+    location: kitchen
+    value: true
+
+  - predicate: located
+    subject: refrigerator
+    location: kitchen
+    value: true
+
+  - predicate: available
+    subject: coffee
+    location: kitchen
+    value: false
+
+  - predicate: available
+    subject: food
+    location: kitchen
+    value: true
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: available
+      subject: coffee
+      location: kitchen
+      value: true
+
+question:
+  type: goal
+  agent: sam
+  options:
+    - get_coffee
+    - get_food
+    - wash_mug
+
+ground_truth:
+  answer: get_coffee
+  explanation: >
+    Sam falsely believes coffee is available and is carrying an empty mug
+    to fill, so the goal is coffee despite the kitchen having none. Without
+    the belief the walk cannot be explained as coffee-seeking.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target
