@@ -69,16 +69,26 @@ information; they only separate at three or more. `coffee` and
 `attribution` have three. Prefer three for new items where the task admits
 it.
 
-## Open problem: coffee_false_negative
+## Resolved: coffee_false_negative was not an item problem
 
-The one failing cell in the corpus, and the only place design intent and
-measurement disagree. Annotated `belief_changes_expected_action: true`, it
-measures influence ~0.05 where its group averages 0.80, and stays
-`stable_incorrect`: the rich pass still answers `get_coffee` at ~0.92 even
-though Sam's belief rules coffee out. The belief registers in entropy
-(0.19 -> 0.41) without dislodging the argmax.
+Previously recorded here as the one failing cell. With `darkroom` and
+`greenhouse` added, it is the first observed instance of a systematic
+effect: belief moves action prediction substantially and goal recognition
+barely at all, across three domains with no shared vocabulary. See "Belief
+moves action prediction, not goal recognition" in experimental_design.md.
 
-Left unfixed on purpose. Revising it until it behaves would fit the stimulus
-to the hypothesis — see "Not tuning stimuli to results" in
-experimental_design.md, which also records which sets are independent of
-their own measurements and which are not.
+It stays unmodified.
+
+## Next: separating observation from belief
+
+Every goal-recognition item states an observation that already implies the
+primary goal, so the two are confounded — the observation may simply be
+winning, rather than belief failing. Two items would separate them:
+
+- an observed action compatible with several goals equally, so the
+  observation carries no preference for the belief to override
+- belief and observation pointing at *different* goals, rather than belief
+  merely subtracting one from the remainder
+
+Neither exists yet, and both are cheap to add to `scripts/generate_scenarios.py`
+as a fifth template.

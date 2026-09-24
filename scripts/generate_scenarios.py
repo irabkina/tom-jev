@@ -428,6 +428,10 @@ def goal_recognition(spec: Spec, condition: str) -> str:
     resource, resource_name = spec.resource
     options = [spec.primary_goal, *spec.other_goals]
     ambiguous = not believes
+    # Belief changes the expected goal exactly when it diverges from the
+    # world: agreeing with the world adds nothing the world state did not
+    # already give.
+    belief_matters = available != believes
 
     head = _header(
         [
@@ -534,7 +538,7 @@ ground_truth:
         _annotations(
             supports=available == believes,
             matches=available == believes,
-            changes=not believes,
+            changes=belief_matters,
             tags=["first_order", "goal_recognition"]
             + (
                 ["ambiguous_by_design", "rerepresentation_target"]

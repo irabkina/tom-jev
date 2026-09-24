@@ -98,7 +98,7 @@ annotations:
   world_supports_action: false
   agent_believes_action_supported: true
   belief_matches_reality: false
-  belief_changes_expected_action: false
+  belief_changes_expected_action: true
   tags:
     - first_order
     - goal_recognition
