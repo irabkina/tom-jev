@@ -175,9 +175,13 @@ annotations:
   # Does the agent's belief agree with objective reality?
   belief_matches_reality: boolean
 
-  # Should explicit mental-state representation be necessary to correctly
-  # predict the action?
-  mental_state_required: boolean
+  # Does representing the agent's belief change which action is expected?
+  #
+  # A claim of theoretical relevance, made a priori by the scenario
+  # designer. It is not a prediction about the model: whether belief
+  # actually moves Jev is measured rather than annotated, by the influence,
+  # utility and correction measures in analysis.py.
+  belief_changes_expected_action: boolean
 
   # Free-form analysis tags.
   tags:

@@ -88,7 +88,7 @@ annotations:
   world_supports_action: false
   agent_believes_action_supported: false
   belief_matches_reality: true
-  mental_state_required: false
+  belief_changes_expected_action: false
   tags:
     - belief_reality_match
     - negative_control

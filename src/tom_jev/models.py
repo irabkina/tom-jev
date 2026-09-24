@@ -144,7 +144,7 @@ class Annotations(BaseModel):
     world_supports_action: bool | None = None
     agent_believes_action_supported: bool | None = None
     belief_matches_reality: bool | None = None
-    mental_state_required: bool | None = None
+    belief_changes_expected_action: bool | None = None
     tags: list[str] = Field(default_factory=list)
 
 
