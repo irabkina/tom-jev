@@ -196,6 +196,21 @@ class Annotations(BaseModel):
     tags: list[str] = Field(default_factory=list)
 
 
+class Taxonomy(BaseModel):
+    """Where a scenario sits in the corpus, read off its directory path.
+
+    Not written in the scenario file: the path is the source of truth, so
+    moving a file reclassifies it and a file cannot disagree with its own
+    directory. See `scenarios.taxonomy`.
+    """
+
+    task_family: str | None = None
+    template: str | None = None
+    domain: str | None = None
+    condition: str | None = None
+    lexicalization: str | None = None
+
+
 class Scenario(BaseModel):
     """One scenario, as stored under scenarios/."""
 
@@ -203,6 +218,7 @@ class Scenario(BaseModel):
     description: str | None = None
     scenario_set: str | None = None
     variant: Variant | None = None
+    taxonomy: Taxonomy = Field(default_factory=Taxonomy)
 
     entities: Entities = Field(default_factory=Entities)
     observations: list[Observation] = Field(default_factory=list)

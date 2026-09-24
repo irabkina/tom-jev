@@ -1,12 +1,23 @@
 """Loading scenarios from disk.
 
-A scenario file is YAML (`.yaml` or `.yml`) and holds either a single
-scenario mapping, or a set of them under a top-level `scenarios:` key — the
-latter keeps structurally matched variants side by side in one file, which
-is how `coffee.yaml` is organised.
+Scenario files live under a taxonomy that the directory path encodes:
 
-`schema.yaml` documents the format and is not itself a scenario, so it is
-skipped.
+    scenarios/<task_family>/<template>/<domain>/<condition>/<lex>.yaml
+
+    task_family     what Jev is asked — goal_recognition, action_prediction
+    template        belief structure — first_order, second_order, attribution
+    domain          surface content — bakery, clinic, workshop, ...
+    condition       the cell of the template's 2x2
+    lexicalization  wording variant of the same condition
+
+The path is the source of truth for those five, so a scenario file carries
+only its content and the loader fills the taxonomy in from where the file
+sits. That keeps one fact in one place: moving a file reclassifies it, and
+a file cannot disagree with its own directory.
+
+A file holds either a single scenario mapping or several under a top-level
+`scenarios:` key. `schema.yaml` and `README.md` document the format and are
+skipped, as is anything whose name starts with `_`.
 """
 
 from __future__ import annotations
@@ -16,19 +27,36 @@ from typing import Any
 
 import yaml
 
-from .models import Scenario
+from .models import Scenario, Taxonomy
 
 SUFFIXES = (".yaml", ".yml")
 NOT_SCENARIOS = {"schema", "README"}
 
+#: Path levels below the scenarios root, in order.
+LEVELS = ("task_family", "template", "domain", "condition", "lexicalization")
 
-def scenario_files(directory: pathlib.Path) -> list[pathlib.Path]:
-    """Every scenario file in `directory`, sorted, excluding documentation."""
+
+def scenario_files(root: pathlib.Path) -> list[pathlib.Path]:
+    """Every scenario file under `root`, at any depth, sorted by path."""
     return sorted(
         p
-        for p in directory.iterdir()
-        if p.suffix in SUFFIXES and p.stem not in NOT_SCENARIOS and not p.name.startswith("_")
+        for p in root.rglob("*")
+        if p.is_file()
+        and p.suffix in SUFFIXES
+        and p.stem not in NOT_SCENARIOS
+        and not p.name.startswith("_")
     )
+
+
+def taxonomy(path: pathlib.Path, root: pathlib.Path) -> Taxonomy:
+    """Read the taxonomy off a file's location under `root`.
+
+    A file sitting shallower than the full depth leaves the deeper levels
+    unset rather than failing, so a flat directory still loads.
+    """
+    parts = path.relative_to(root).parts
+    values = dict(zip(LEVELS, (*parts[:-1], path.stem), strict=False))
+    return Taxonomy(**values)
 
 
 def parse(document: Any, source: pathlib.Path) -> list[Scenario]:
@@ -46,8 +74,8 @@ def parse(document: Any, source: pathlib.Path) -> list[Scenario]:
     return [Scenario.model_validate(entry) for entry in entries]
 
 
-def load(directory: pathlib.Path) -> list[Scenario]:
-    """Load every scenario under `directory`.
+def load(root: pathlib.Path) -> list[Scenario]:
+    """Load every scenario under `root`, tagging each with its taxonomy.
 
     Raises on a duplicate id — two scenarios sharing one would silently
     collapse together in analysis.
@@ -55,13 +83,15 @@ def load(directory: pathlib.Path) -> list[Scenario]:
     scenarios: list[Scenario] = []
     origin: dict[str, pathlib.Path] = {}
 
-    for path in scenario_files(directory):
+    for path in scenario_files(root):
+        where = taxonomy(path, root)
         for scenario in parse(yaml.safe_load(path.read_text()), path):
             if scenario.id in origin:
                 raise ValueError(
                     f"duplicate scenario id {scenario.id!r} in {path} and {origin[scenario.id]}"
                 )
             origin[scenario.id] = path
+            scenario.taxonomy = where
             scenarios.append(scenario)
 
     return scenarios

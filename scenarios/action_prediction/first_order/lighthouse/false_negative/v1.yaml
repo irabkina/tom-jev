@@ -1,0 +1,100 @@
+# lighthouse — first-order belief, false negative
+#
+# The keeper needs the fog-signal crank before the weather closes in.
+#
+# reality        lamp room
+# belief         engine shed
+#
+# Truth follows the belief: the agent goes where they think it is.
+
+id: lighthouse_false_negative
+description: >
+  The keeper needs the fog-signal crank before the weather closes in. They
+  believe it is in the engine shed.
+
+scenario_set: lighthouse
+
+variant:
+  type: false_negative
+
+entities:
+  agents:
+    - id: mira
+      name: Mira
+
+  locations:
+    - id: lamp_room
+      name: lamp room
+    - id: engine_shed
+      name: engine shed
+    - id: boat_store
+      name: boat store
+    - id: cellar
+      name: cellar
+
+  objects:
+    - id: crank
+      name: fog-signal crank
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: crank
+    location: lamp_room
+    value: true
+
+  - predicate: located
+    subject: crank
+    location: engine_shed
+    value: false
+
+  - predicate: located
+    subject: crank
+    location: boat_store
+    value: false
+
+  - predicate: located
+    subject: crank
+    location: cellar
+    value: false
+
+goals:
+  - agent: mira
+    type: obtain
+    object: crank
+
+mental_state:
+  - type: belief
+    agent: mira
+    proposition:
+      predicate: located
+      subject: crank
+      location: engine_shed
+      value: true
+
+question:
+  type: action_prediction
+  agent: mira
+  options:
+    - go_to_lamp_room
+    - go_to_engine_shed
+    - go_to_boat_store
+    - go_to_cellar
+
+ground_truth:
+  answer: go_to_engine_shed
+  explanation: >
+    Mira believes the crank is in the engine shed and should go there,
+    though it is actually in the lamp room.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target

@@ -1,0 +1,127 @@
+# observatory — attribution, true attribution true belief
+#
+# The astronomer wants to find the night assistant before the slot opens.
+#
+# reality                    dome
+# Saoirse believes             dome
+# Pell believes Saoirse believes  dome
+#
+# Truth follows the attribution. Saoirse's actual belief and the world are
+# both stated in the rich representation and unavailable to Pell;
+# reading either as theirs is a perspective error.
+
+id: observatory_true_attribution_true_belief
+description: >
+  The astronomer wants to find the night assistant before the slot opens.
+  Pell believes Saoirse expects it in the dome, while Saoirse actually
+  expects the dome.
+
+scenario_set: observatory
+
+variant:
+  type: true_attribution_true_belief
+
+entities:
+  agents:
+    - id: pell
+      name: Pell
+    - id: saoirse
+      name: Saoirse
+
+  locations:
+    - id: dome
+      name: dome
+    - id: control_room
+      name: control room
+    - id: spectrograph_lab
+      name: spectrograph lab
+    - id: tape_vault
+      name: tape vault
+    - id: dormitory
+      name: dormitory
+
+  objects:
+    - id: changeover
+      name: shift changeover
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: changeover
+    location: dome
+    value: true
+
+  - predicate: located
+    subject: changeover
+    location: control_room
+    value: false
+
+  - predicate: located
+    subject: changeover
+    location: spectrograph_lab
+    value: false
+
+  - predicate: located
+    subject: changeover
+    location: tape_vault
+    value: false
+
+  - predicate: located
+    subject: changeover
+    location: dormitory
+    value: false
+
+goals:
+  - agent: pell
+    type: meet
+    target_agent: saoirse
+
+mental_state:
+  - type: belief
+    agent: pell
+    proposition:
+      predicate: believes
+      subject: saoirse
+      proposition:
+        predicate: located
+        subject: changeover
+        location: dome
+        value: true
+
+  - type: belief
+    agent: saoirse
+    proposition:
+      predicate: located
+      subject: changeover
+      location: dome
+      value: true
+
+question:
+  type: action_prediction
+  agent: pell
+  options:
+    - go_to_dome
+    - go_to_control_room
+    - go_to_spectrograph_lab
+    - go_to_tape_vault
+    - go_to_dormitory
+
+ground_truth:
+  answer: go_to_dome
+  explanation: >
+    Pell goes where Pell believes Saoirse expects it, the dome. Saoirse
+    actually expects the dome, and it is really in the dome; neither is
+    available to Pell.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - nested_belief
+    - attribution_error
+    - social_prediction
+    - perspective_taking
+    - control

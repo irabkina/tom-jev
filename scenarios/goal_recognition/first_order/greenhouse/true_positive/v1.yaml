@@ -1,0 +1,106 @@
+# greenhouse — goal recognition, true positive
+#
+# A gardener is seen heading for the greenhouse with an empty watering can.
+#
+# The observation is constant across all four conditions:
+#   Bo walks to the greenhouse carrying the watering can.
+#
+# reality        water supply available
+# belief         water supply available
+#
+# The belief supports water_seedlings.
+#
+
+id: greenhouse_true_positive
+description: >
+  A gardener is seen heading for the greenhouse with an empty watering
+  can. The water supply is available, and they believe it is available.
+
+scenario_set: greenhouse
+
+variant:
+  type: true_positive
+
+entities:
+  agents:
+    - id: bo
+      name: Bo
+
+  locations:
+    - id: greenhouse
+      name: greenhouse
+
+  objects:
+    - id: can
+      name: watering can
+    - id: tomato_bed
+      name: tomato bed
+    - id: potting_bench
+      name: potting bench
+    - id: twine_box
+      name: twine box
+
+observations:
+  - type: walks_to
+    agent: bo
+    destination: greenhouse
+
+  - type: carries
+    agent: bo
+    object: can
+
+world_state:
+  - predicate: available
+    subject: water
+    location: greenhouse
+    value: true
+
+  - predicate: located
+    subject: tomato_bed
+    location: greenhouse
+    value: true
+
+  - predicate: located
+    subject: potting_bench
+    location: greenhouse
+    value: true
+
+  - predicate: located
+    subject: twine_box
+    location: greenhouse
+    value: true
+
+mental_state:
+  - type: belief
+    agent: bo
+    proposition:
+      predicate: available
+      subject: water
+      location: greenhouse
+      value: true
+
+question:
+  type: goal
+  agent: bo
+  options:
+    - water_seedlings
+    - harvest_tomatoes
+    - repot_cuttings
+    - fetch_twine
+
+ground_truth:
+  answer: water_seedlings
+  explanation: >
+    Bo believes the water supply is there and is carrying what it takes to
+    use it, so the goal is water_seedlings.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - first_order
+    - goal_recognition
+    - belief_reality_match
+    - control

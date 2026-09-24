@@ -1,0 +1,108 @@
+# bakery — first-order belief, false positive
+#
+# The baker needs the proofing basket before the next batch rises.
+#
+# reality        flour store
+# belief         cold room
+#
+# Truth follows the belief: the agent goes where they think it is.
+
+id: bakery_false_positive
+description: >
+  The baker needs the proofing basket before the next batch rises. They
+  believe it is in the cold room.
+
+scenario_set: bakery
+
+variant:
+  type: false_positive
+
+entities:
+  agents:
+    - id: osei
+      name: Osei
+
+  locations:
+    - id: cold_room
+      name: cold room
+    - id: flour_store
+      name: flour store
+    - id: back_bench
+      name: back bench
+    - id: delivery_van
+      name: delivery van
+    - id: pantry
+      name: pantry
+
+  objects:
+    - id: basket
+      name: proofing basket
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: basket
+    location: cold_room
+    value: false
+
+  - predicate: located
+    subject: basket
+    location: flour_store
+    value: true
+
+  - predicate: located
+    subject: basket
+    location: back_bench
+    value: false
+
+  - predicate: located
+    subject: basket
+    location: delivery_van
+    value: false
+
+  - predicate: located
+    subject: basket
+    location: pantry
+    value: false
+
+goals:
+  - agent: osei
+    type: obtain
+    object: basket
+
+mental_state:
+  - type: belief
+    agent: osei
+    proposition:
+      predicate: located
+      subject: basket
+      location: cold_room
+      value: true
+
+question:
+  type: action_prediction
+  agent: osei
+  options:
+    - go_to_cold_room
+    - go_to_flour_store
+    - go_to_back_bench
+    - go_to_delivery_van
+    - go_to_pantry
+
+ground_truth:
+  answer: go_to_cold_room
+  explanation: >
+    Osei believes the basket is in the cold room and should go there,
+    though it is actually in the flour store.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target

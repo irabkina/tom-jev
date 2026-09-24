@@ -1,0 +1,98 @@
+# darkroom — goal recognition, true positive
+#
+# A photographer is seen heading for the darkroom with an exposed roll.
+#
+# The observation is constant across all four conditions:
+#   Ruth walks to the darkroom carrying the exposed roll.
+#
+# reality        developer available
+# belief         developer available
+#
+# The belief supports develop_film.
+#
+
+id: darkroom_true_positive
+description: >
+  A photographer is seen heading for the darkroom with an exposed roll.
+  The developer is available, and they believe it is available.
+
+scenario_set: darkroom
+
+variant:
+  type: true_positive
+
+entities:
+  agents:
+    - id: ruth
+      name: Ruth
+
+  locations:
+    - id: darkroom
+      name: darkroom
+
+  objects:
+    - id: roll
+      name: exposed roll
+    - id: drying_line
+      name: drying line
+    - id: wash_sink
+      name: wash sink
+
+observations:
+  - type: walks_to
+    agent: ruth
+    destination: darkroom
+
+  - type: carries
+    agent: ruth
+    object: roll
+
+world_state:
+  - predicate: available
+    subject: developer
+    location: darkroom
+    value: true
+
+  - predicate: located
+    subject: drying_line
+    location: darkroom
+    value: true
+
+  - predicate: located
+    subject: wash_sink
+    location: darkroom
+    value: true
+
+mental_state:
+  - type: belief
+    agent: ruth
+    proposition:
+      predicate: available
+      subject: developer
+      location: darkroom
+      value: true
+
+question:
+  type: goal
+  agent: ruth
+  options:
+    - develop_film
+    - collect_prints
+    - clean_trays
+
+ground_truth:
+  answer: develop_film
+  explanation: >
+    Ruth believes the developer is there and is carrying what it takes to
+    use it, so the goal is develop_film.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - first_order
+    - goal_recognition
+    - belief_reality_match
+    - control
