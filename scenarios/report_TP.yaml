@@ -1,0 +1,64 @@
+id: report_true_positive
+description: >
+  Sam wants to retrieve a report. The report is in the office, and Sam
+  believes that the report is in the office.
+
+scenario_set: report
+
+variant:
+  type: true_positive
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+  locations:
+    - id: office
+      name: office
+  objects:
+    - id: report
+      name: report
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: report
+    location: office
+    value: true
+
+goals:
+  - agent: sam
+    type: obtain
+    object: report
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: report
+      location: office
+      value: true
+
+question:
+  type: action_prediction
+  agent: sam
+  options:
+    - go_to_office
+    - do_not_go_to_office
+
+ground_truth:
+  answer: go_to_office
+  explanation: >
+    Sam wants to retrieve the report and correctly believes that the report
+    is in the office.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  mental_state_required: false
+  tags:
+    - belief_reality_match
+    - positive_control

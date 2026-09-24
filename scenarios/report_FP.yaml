@@ -1,0 +1,65 @@
+id: report_false_positive
+description: >
+  Sam wants to retrieve a report. The report is not in the office, but Sam
+  incorrectly believes that the report is in the office.
+
+scenario_set: report
+
+variant:
+  type: false_positive
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+  locations:
+    - id: office
+      name: office
+  objects:
+    - id: report
+      name: report
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: report
+    location: office
+    value: false
+
+goals:
+  - agent: sam
+    type: obtain
+    object: report
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: report
+      location: office
+      value: true
+
+question:
+  type: action_prediction
+  agent: sam
+  options:
+    - go_to_office
+    - do_not_go_to_office
+
+ground_truth:
+  answer: go_to_office
+  explanation: >
+    Sam wants to retrieve the report and falsely believes that the report
+    is in the office, so Sam should act according to that belief.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  mental_state_required: true
+  tags:
+    - false_belief
+    - belief_reality_mismatch
+    - rerepresentation_target
