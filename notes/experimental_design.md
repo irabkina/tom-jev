@@ -1,5 +1,40 @@
 # Experimental design
 
+## Findings so far
+
+Stated as they currently stand, newest understanding first. Each links to the
+section that establishes it; where a later section refines an earlier one, the
+later wording is the one to use.
+
+**For goal recognition, explicit mental-state re-representation strongly
+changes inference when it supplies a competing explanation, but has much
+weaker effects when it merely undermines the sparse explanation without
+supporting an alternative.** Across four domains, influence is 0.68–0.81
+where the belief licenses a different answer and 0.07–0.29 where it only
+removes the sparse one. See *Re-representation needs an alternative, not just a problem* and its
+*Replication across four domains*.
+
+**Detecting a conflict is not the same as resolving it.** Where the belief
+undermines the sparse reading without supplying an alternative, entropy rises
+more than in any other cell and the model still answers the goal its own
+belief rules out. Conflict detection may suffice to *trigger*
+re-representation; succeeding needs the richer representation to contain
+enough to construct the alternative. See *Consequence for the two-systems
+framing*.
+
+**Belief moves action prediction substantially** — 0.46–0.69 mean influence
+across first-order, second-order and attribution templates, 23 corrections
+and no regressions. See *Belief moves action prediction, not goal
+recognition*, whose title states the goal-recognition half too strongly; the
+first finding above is the corrected form.
+
+**Prefer symmetric competing alternatives (A vs. B) to an action and its
+negation.** See *Symmetric action alternatives*.
+
+**Scenarios revised in response to their own measurements are not
+independent evidence.** See *Not tuning stimuli to results*, which records
+which parts of the corpus are and are not.
+
 ## Symmetric action alternatives
 
 Early pilot scenarios framed action prediction as a binary choice between an affirmative action and its negation (e.g., `go_to_office` vs. `do_not_go_to_office`). This design produced a strong affirmative-action bias: Jev assigned very high probability to the goal-consistent affirmative action across world states. As a result, adding an explicit positive belief often had almost no effect, while explicit negative beliefs sometimes substantially reduced the probability of the affirmative action.
@@ -59,6 +94,10 @@ the *result* is wrong is overfitting. The first is legitimate at any time; the
 second invalidates the item as evidence.
 
 ## Belief moves action prediction, not goal recognition
+
+> Refined below. The goal-recognition half of this title is too strong: what
+> matters is whether the belief supplies a competing explanation, not the task
+> family. See *Re-representation needs an alternative, not just a problem*.
 
 Measured over 52 scenarios in four templates, the effect of adding an
 agent's belief depends almost entirely on what Jev is asked:
