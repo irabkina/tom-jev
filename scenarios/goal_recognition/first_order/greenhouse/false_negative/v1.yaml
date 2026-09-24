@@ -33,6 +33,8 @@ entities:
   objects:
     - id: can
       name: watering can
+    - id: water
+      name: water supply
     - id: tomato_bed
       name: tomato bed
     - id: potting_bench
