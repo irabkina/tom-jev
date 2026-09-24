@@ -218,6 +218,13 @@ annotations:
   agent_believes_action_supported: boolean
 
   # Does the agent's belief agree with objective reality?
+  #
+  # Presumes a single believer, and is ambiguous where a scenario
+  # represents more than one. In the attribution set, one agent can be
+  # wrong about another while that other is right about the world, and
+  # this field cannot say which it means. Where two agents hold beliefs,
+  # prefer the measured pair — analysis.world_conflict for belief against
+  # world, analysis.attribution_conflict for belief against person.
   belief_matches_reality: boolean
 
   # Does representing the agent's belief change which action is expected?
