@@ -112,3 +112,67 @@ options anywhere in the corpus: answers either move to the correct one or
 do not move. The two measures were meant to separate at three or more
 options. They have not, and until they do, TV distance is carrying no
 information that the signed change does not.
+
+## Re-representation needs an alternative, not just a problem
+
+The goal-recognition result above — belief barely moves goal inference —
+turns out to be too coarse. The `mailroom` 2x2 holds the world and the
+observation fixed across all four cells and varies only what Sam believes,
+so sparse is *identical* in every cell and all variation is attributable to
+belief. It separates two things the earlier sets confounded.
+
+| what the belief does | cells | influence |
+|---|---|---|
+| licenses a *different* answer | `mailroom` false_false, false_true | 0.47, 0.60 |
+| only removes the sparse answer | `mailroom` true_false | 0.18 |
+| only subtracts the primary goal | `coffee`, `darkroom`, `greenhouse` | 0.07 |
+
+In `false_false` the belief says the package is at the front desk — a
+positive claim that supports a competing reading of the walk, and the model
+moves to it (correction, P 0.36 -> 0.83). In `true_false` the belief says
+neither the package nor Alex is at the front desk. That *undermines* the
+sparse reading without supplying anything in its place, and the model did
+not merely fail to switch: entropy fell from 0.94 to 0.68 and it answered
+`meet_alex` more confidently — the very reading the belief rules out. The
+subtractive goal-recognition domains behave the same way, at 0.07.
+
+**Re-representation is most effective when the richer representation
+supports a competing inference, rather than merely revealing a problem with
+the sparse inference.**
+
+### Consequence for the two-systems framing
+
+This bears directly on the motivating idea, and sharpens it. Detecting that
+the System 1 answer conflicts with something may well be enough to *trigger*
+re-representation — the conflict is locally detectable, and the sparse
+answer does not need an alternative in hand to be recognised as suspect.
+
+But triggering is not succeeding. Re-representation only pays when the
+richer representation contains enough to construct and support an
+alternative. A representation that is rich enough to expose the problem can
+still be too poor to solve it, and `true_false` is that case: the belief is
+present, it is used well enough to contradict the sparse reading, and the
+model still has nowhere to go.
+
+So the effortful second pass has two distinct failure modes, and they want
+separating in any policy:
+
+- **not triggered** — the conflict was never detected, and the sparse
+  answer stands unexamined
+- **triggered but unresolved** — the conflict was detected and the richer
+  representation had no alternative to offer
+
+A re-representation policy that decides *when to escalate* is addressing
+only the first. The second is a question about what the richer
+representation must contain, which is a design question about the
+representation rather than about the policy.
+
+### Caveat: the control cell is not inert
+
+`mailroom` true_true has belief and world agreeing, so re-representation
+should change nothing. It measured influence 0.27, with entropy falling
+0.94 -> 0.44. The belief acted as confirmation, not just redirection. Some
+part of the influence in every cell is therefore this effect rather than
+the manipulation, and the control gives a rough floor to subtract — around
+0.27 on this domain. Reported influences should be read against it, not
+against zero.

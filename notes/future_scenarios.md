@@ -79,16 +79,34 @@ moves action prediction, not goal recognition" in experimental_design.md.
 
 It stays unmodified.
 
-## Next: separating observation from belief
+## Built: separating observation from belief
 
-Every goal-recognition item states an observation that already implies the
-primary goal, so the two are confounded — the observation may simply be
-winning, rather than belief failing. Two items would separate them:
+The `mailroom` 2x2 under `goal_recognition/discriminative/` does this. The
+world and the observation are held constant across all four cells — package
+at the mailroom, Alex at the front desk, Sam walking toward the front desk
+— and only Sam's beliefs vary, over whether each of the two beliefs matches
+the world. Sparse is therefore *identical* in every cell, so all variation
+is attributable to belief.
 
-- an observed action compatible with several goals equally, so the
-  observation carries no preference for the belief to override
-- belief and observation pointing at *different* goals, rather than belief
-  merely subtracting one from the remainder
+| cell | Sam believes | belief does | influence |
+|---|---|---|---|
+| true_true | pkg@mailroom, Alex@desk | confirms the sparse reading | 0.27 |
+| true_false | pkg@mailroom, Alex@mailroom | removes it, offers nothing | 0.18 |
+| false_true | pkg@desk, Alex@desk | adds a competing reading | 0.60 |
+| false_false | pkg@desk, Alex@mailroom | replaces it outright | 0.47 |
 
-Neither exists yet, and both are cheap to add to `scripts/generate_scenarios.py`
-as a fifth template.
+This is what showed that "belief does not move goal recognition" was too
+coarse — see "Re-representation needs an alternative, not just a problem"
+in experimental_design.md. Hand-written rather than generated: the
+structure had no siblings, and generating a family of one would fix a shape
+before it was known to work. Now that it does work, it is a candidate fifth
+template.
+
+## Still open: an observation compatible with several goals
+
+The other half of the confound. Every goal-recognition item still states an
+observation that on its own implies one goal more than the others — the
+`mailroom` walk is neutral between its two options only because both
+candidate targets are locations Sam might walk to, which is a property of
+that story rather than a designed feature. An item where the observed
+action genuinely carries no preference would isolate belief further.

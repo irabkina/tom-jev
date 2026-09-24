@@ -1,0 +1,129 @@
+# mailroom — discriminative goal recognition, TRUE package / FALSE Alex
+#
+# Sam is seen walking toward the front desk. Why?
+#
+# The world and the observation are constant across all four cells:
+#
+#   world          package at the mailroom, Alex at the front desk
+#   observation    Sam walks toward the front desk
+#
+# Only what Sam believes varies, over two axes: whether Sam's belief about
+# the package matches the world, and whether Sam's belief about Alex does.
+#
+#   Sam believes   package at the mailroom, Alex at the mailroom
+#
+# Sam is right about the package and wrong about Alex, so Sam believes both
+# are in the mailroom — and neither is where Sam is walking. On Sam's own
+# beliefs the walk serves neither goal, which makes the observation
+# anomalous rather than ambiguous.
+#
+# The degenerate corner of the 2x2, and included because it is the mirror
+# of false_false: there belief supplies an explanation the world did not,
+# here it removes the one the world offered. Neither option is licensed, so
+# both are marked acceptable — no answer is more defensible than the other,
+# and scoring one right would be arbitrary.
+#
+# What to watch is entropy. Sparse has Alex at the front desk and should be
+# fairly confident about meeting Alex; rich should be less certain, having
+# been told Sam does not think Alex is there. Confidence that survives the
+# belief means the belief was not used.
+
+id: mailroom_true_false
+description: >
+  Sam walks toward the front desk. The package is in the mailroom, which
+  Sam correctly believes, but Sam also believes Alex is in the mailroom
+  when Alex is in fact at the front desk.
+
+scenario_set: mailroom
+
+variant:
+  type: true_false
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+    - id: alex
+      name: Alex
+  locations:
+    - id: front_desk
+      name: front desk
+    - id: mailroom
+      name: mailroom
+  objects:
+    - id: package
+      name: package
+
+observations:
+  - type: walks_to
+    agent: sam
+    destination: front_desk
+
+world_state:
+  - predicate: located
+    subject: package
+    location: mailroom
+    value: true
+
+  - predicate: located
+    subject: package
+    location: front_desk
+    value: false
+
+  - predicate: located
+    subject: alex
+    location: front_desk
+    value: true
+
+  - predicate: located
+    subject: alex
+    location: mailroom
+    value: false
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: package
+      location: mailroom
+      value: true
+
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: alex
+      location: mailroom
+      value: true
+
+question:
+  type: goal
+  agent: sam
+  options:
+    - pick_up_package
+    - meet_alex
+
+ground_truth:
+  answer: meet_alex
+  acceptable:
+    - meet_alex
+    - pick_up_package
+  explanation: >
+    On Sam's own beliefs neither the package nor Alex is at the front desk,
+    so neither goal explains the walk. No answer is licensed and both are
+    marked acceptable; what matters is whether the rich representation
+    registers the anomaly by becoming less certain than the sparse one,
+    which had Alex at the front desk and a straightforward reading.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - ambiguous_by_design
+    - anomalous_observation
