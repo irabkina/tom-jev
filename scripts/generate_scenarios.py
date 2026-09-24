@@ -488,7 +488,7 @@ scenario_set: {spec.domain}
 variant:
   type: {condition}
 
-{_entities([spec.agent], spec.locations, spec.objects + spec.affordances)}
+{_entities([spec.agent], spec.locations, [*spec.objects, spec.resource, *spec.affordances])}
 
 observations:
   - type: {event}

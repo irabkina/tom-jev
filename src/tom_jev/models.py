@@ -121,6 +121,17 @@ class Proposition(BaseModel):
         return self if self.proposition is None else self.proposition.innermost()
 
 
+def _mentions(proposition: Proposition) -> set[str]:
+    """Every entity id a proposition names, following any nesting."""
+    ids = {proposition.subject}
+    for argument in (proposition.object, proposition.location):
+        if argument is not None:
+            ids.add(argument)
+    if proposition.proposition is not None:
+        ids |= _mentions(proposition.proposition)
+    return ids
+
+
 class Goal(BaseModel):
     """A goal attributed to an agent.
 
@@ -229,6 +240,50 @@ class Scenario(BaseModel):
     question: Question
     ground_truth: GroundTruth
     annotations: Annotations = Field(default_factory=Annotations)
+
+    def declared(self) -> set[str]:
+        """Every entity id the scenario introduces."""
+        return {
+            e.id
+            for group in (
+                self.entities.agents,
+                self.entities.locations,
+                self.entities.objects,
+            )
+            for e in group
+        }
+
+    def referenced(self) -> set[str]:
+        """Every entity id the scenario's content mentions."""
+        ids: set[str] = set()
+        for proposition in self.world_state:
+            ids |= _mentions(proposition)
+        for mental in self.mental_state:
+            ids.add(mental.agent)
+            ids |= _mentions(mental.proposition)
+        for observation in self.observations:
+            ids.add(observation.agent)
+            ids |= {str(v) for v in observation.arguments().values()}
+        for goal in self.goals:
+            ids.add(goal.agent)
+            ids |= {str(v) for v in goal.arguments().values()}
+        return ids
+
+    @model_validator(mode="after")
+    def _entities_must_be_declared(self) -> Scenario:
+        """Everything mentioned must be in the cast.
+
+        An undeclared entity is invisible to anything that builds a
+        structure from the scenario rather than reading its propositions as
+        tuples — a graph, say, which has no node to attach the fact to and
+        silently drops it.
+        """
+        undeclared = self.referenced() - self.declared()
+        if undeclared:
+            raise ValueError(
+                f"{self.id}: mentions {sorted(undeclared)}, which entities does not declare"
+            )
+        return self
 
     @model_validator(mode="after")
     def _answers_must_be_options(self) -> Scenario:

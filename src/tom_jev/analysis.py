@@ -126,6 +126,46 @@ def world_conflict(scenario: Scenario) -> bool:
     return False
 
 
+def attribution_conflict(scenario: Scenario) -> bool | None:
+    """Does any attribution disagree with what the attributed agent holds?
+
+    The second-order counterpart of `world_conflict`, and a different
+    question: that one asks whether a belief matches the world, this one
+    whether it matches a person. `sam believes alex believes X` can be
+    wrong about Alex while Sam is perfectly right about the world, and the
+    two come apart — across the attribution set they are exactly
+    orthogonal.
+
+    Returns None when no attribution is checkable, which is the usual case:
+    an attribution can only be wrong about someone whose own belief the
+    scenario represents. The `meeting` set has attributions but no second
+    agent's beliefs, so nothing there can be checked.
+
+    Computed here in memory. `compare` accepts an `attribution` override
+    so a store holding both agents' beliefs can answer it instead.
+    """
+    own: dict[tuple[str, str, str], set[str | None]] = {}
+    for mental in scenario.mental_state:
+        held = mental.proposition
+        if held.proposition is not None or held.value is not True:
+            continue
+        own.setdefault((mental.agent, held.predicate, held.subject), set()).add(held.location)
+
+    checked = False
+    for mental in scenario.mental_state:
+        outer = mental.proposition
+        if outer.proposition is None:
+            continue
+        claim = outer.proposition
+        theirs = own.get((outer.subject, claim.predicate, claim.subject))
+        if theirs is None:
+            continue
+        checked = True
+        if claim.location not in theirs:
+            return True
+    return False if checked else None
+
+
 def _argmax(prediction: Prediction, question_type: str) -> str | None:
     """The option the model selected."""
     return prediction.answers.get(question_type, {}).get("choice")
@@ -212,8 +252,11 @@ class Comparison(BaseModel):
     belief_changes_expected_action: bool | None = None
 
     # Computed from the scenario's own content (the Neo4j world graph),
-    # not annotated.
+    # not annotated. `world_conflict` asks whether a belief matches the
+    # world; `attribution_conflict` whether it matches a person. None when
+    # no attribution is checkable.
     world_conflict: bool | None = None
+    attribution_conflict: bool | None = None
 
     influence: float | None = None
     utility: float | None = None
@@ -279,12 +322,14 @@ def compare(
     scenario: Scenario,
     *,
     conflict: bool | None = None,
+    attribution: bool | None = None,
 ) -> Comparison:
     """Measure one scenario's sparse pass against its rich pass.
 
-    `conflict` is the world/belief conflict for this scenario, for callers
-    that compute it from a store holding the world state. When omitted it
-    falls back to the in-memory `world_conflict` above.
+    `conflict` and `attribution` are the two conflict dimensions. Either
+    may be supplied by a store that holds the world state and the agents'
+    beliefs; when omitted each falls back to its in-memory equivalent
+    above.
     """
     question_type = scenario.question.type
     acceptable = scenario.ground_truth.answers()
@@ -294,6 +339,9 @@ def compare(
         variant=scenario.variant.type if scenario.variant else None,
         belief_changes_expected_action=scenario.annotations.belief_changes_expected_action,
         world_conflict=world_conflict(scenario) if conflict is None else conflict,
+        attribution_conflict=(
+            attribution_conflict(scenario) if attribution is None else attribution
+        ),
         influence=influence(sparse, rich, question_type),
         utility=utility(sparse, rich, question_type, acceptable),
         acceptable_mass_sparse=acceptable_mass(sparse, question_type, acceptable),
@@ -314,7 +362,7 @@ def summarise(comparisons: list[Comparison]) -> str:
 
     # `variant` is omitted: the scenario id already ends in it.
     header = (
-        f"{'scenario':24} {'relevant':>8} | {'conflict':>8} {'influence':>9} "
+        f"{'scenario':24} {'relevant':>8} | {'world':>6} {'attr':>5} {'influence':>9} "
         f"{'utility':>8} {'acc sp':>7} {'acc ri':>7} {'H sp':>6} {'H ri':>6}  outcome"
     )
     lines = [
@@ -327,7 +375,8 @@ def summarise(comparisons: list[Comparison]) -> str:
         lines.append(
             f"{c.scenario_id:24} "
             f"{'' if relevant is None else str(relevant):>8} | "
-            f"{'' if c.world_conflict is None else str(c.world_conflict):>8} "
+            f"{'' if c.world_conflict is None else str(c.world_conflict):>6} "
+            f"{'-' if c.attribution_conflict is None else str(c.attribution_conflict):>5} "
             f"{'' if c.influence is None else format(c.influence, '9.2f')} "
             f"{'' if c.utility is None else format(c.utility, '+8.2f')} "
             f"{'' if c.acceptable_mass_sparse is None else format(c.acceptable_mass_sparse, '7.2f')} "
