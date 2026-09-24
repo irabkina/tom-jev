@@ -90,10 +90,13 @@ is attributable to belief.
 
 | cell | Sam believes | belief does | influence |
 |---|---|---|---|
-| true_true | pkg@mailroom, Alex@desk | confirms the sparse reading | 0.27 |
-| true_false | pkg@mailroom, Alex@mailroom | removes it, offers nothing | 0.18 |
-| false_true | pkg@desk, Alex@desk | adds a competing reading | 0.60 |
-| false_false | pkg@desk, Alex@mailroom | replaces it outright | 0.47 |
+| true_true | pkg@mailroom, Alex@desk | confirms the sparse reading | 0.34 |
+| true_false | pkg@mailroom, Alex@mailroom | removes it, offers nothing | 0.12 |
+| false_true | pkg@desk, Alex@desk | adds a competing reading | 0.58 |
+| false_false | pkg@desk, Alex@mailroom | replaces it outright | 0.53 |
+
+(One run each; these move by ~0.05 between runs. The ordering is stable,
+the second decimal is not.)
 
 This is what showed that "belief does not move goal recognition" was too
 coarse — see "Re-representation needs an alternative, not just a problem"

@@ -9,8 +9,8 @@ later wording is the one to use.
 **For goal recognition, explicit mental-state re-representation strongly
 changes inference when it supplies a competing explanation, but has much
 weaker effects when it merely undermines the sparse explanation without
-supporting an alternative.** Across four domains, influence is 0.68–0.81
-where the belief licenses a different answer and 0.07–0.29 where it only
+supporting an alternative.** Across four domains, influence is 0.65–0.71
+where the belief licenses a different answer and 0.17–0.19 where it only
 removes the sparse one. See *Re-representation needs an alternative, not just a problem* and its
 *Replication across four domains*.
 
@@ -22,11 +22,11 @@ re-representation; succeeding needs the richer representation to contain
 enough to construct the alternative. See *Consequence for the two-systems
 framing*.
 
-**Belief moves action prediction substantially** — 0.46–0.69 mean influence
-across first-order, second-order and attribution templates, 23 corrections
-and no regressions. See *Belief moves action prediction, not goal
-recognition*, whose title states the goal-recognition half too strongly; the
-first finding above is the corrected form.
+**Belief moves action prediction substantially** — 0.43–0.48 mean influence
+across every action-prediction template, 24 corrections and no regressions
+in 68 scenarios. See *Belief moves action prediction, not goal recognition*,
+whose title states the goal-recognition half too strongly; the first finding
+above is the corrected form.
 
 **Prefer symmetric competing alternatives (A vs. B) to an action and its
 negation.** See *Symmetric action alternatives*.
@@ -104,10 +104,20 @@ agent's belief depends almost entirely on what Jev is asked:
 
 | task family | template | n | mean TV influence | corrections |
 |---|---|---|---|---|
-| action prediction | attribution | 12 | 0.69 | 9 |
+| action prediction | attribution | 12 | 0.48 | 6 |
 | action prediction | first order | 12 | 0.48 | 6 |
-| action prediction | second order | 16 | 0.46 | 8 |
-| **goal recognition** | first order | 12 | **0.07** | **1** |
+| action prediction | second order | 16 | 0.45 | 8 |
+| goal recognition | discriminative | 16 | 0.43 | 4 |
+| **goal recognition** | first order | 12 | **0.00** | **0** |
+
+Two of those figures moved after the numbers below were first recorded, and
+both moves were data fixes rather than model behaviour. Attribution fell
+from 0.69 because its worlds never said where the agent being met actually
+was, so sparse failed those cells for an unrelated reason and rich looked
+like it was correcting more than it was. Goal-recognition first-order fell
+from 0.07 to nothing at all once the scenarios stated what the carried
+object was for, which gave sparse more to work with. Both are recorded in
+the commit log; the qualitative claims are unchanged.
 
 All five failing cells in the corpus are goal recognition. This is not one
 bad item: it replicates across `coffee`, `darkroom` and `greenhouse`, three
@@ -123,7 +133,7 @@ where anything moves at all, which is why it looked like an outlier before
 the other two existed.
 
 Read alongside the action-prediction results, where the same manipulation
-moves 0.46–0.69 and produces 23 corrections with no regressions, the
+moves 0.43–0.48 and produces 24 corrections with no regressions, the
 contrast is the finding rather than a defect:
 
 **An observed action appears to determine goal inference strongly enough
@@ -164,7 +174,7 @@ belief. It separates two things the earlier sets confounded.
 |---|---|---|
 | licenses a *different* answer | `mailroom` false_false, false_true | 0.47, 0.60 |
 | only removes the sparse answer | `mailroom` true_false | 0.18 |
-| only subtracts the primary goal | `coffee`, `darkroom`, `greenhouse` | 0.07 |
+| only subtracts the primary goal | `coffee`, `darkroom`, `greenhouse` | 0.00 |
 
 In `false_false` the belief says the package is at the front desk — a
 positive claim that supports a competing reading of the walk, and the model
@@ -173,7 +183,9 @@ neither the package nor Alex is at the front desk. That *undermines* the
 sparse reading without supplying anything in its place, and the model did
 not merely fail to switch: entropy fell from 0.94 to 0.68 and it answered
 `meet_alex` more confidently — the very reading the belief rules out. The
-subtractive goal-recognition domains behave the same way, at 0.07.
+subtractive goal-recognition domains behave the same way, and have since
+fallen to 0.00 flat — once those scenarios stated what the carried object
+was for, sparse had more to work with and belief moved it not at all.
 
 **Re-representation is most effective when the richer representation
 supports a competing inference, rather than merely revealing a problem with
@@ -230,8 +242,8 @@ each written once and run once, with no revision. They reproduce the
 | false_false | replaces it outright | **0.72** | +0.02 |
 
 The split is the same in every domain: where the belief puts something at
-the observed destination, influence is 0.68–0.81; where it does not, 0.07–
-0.29. Nothing about a particular story is carrying the effect.
+the observed destination, influence is 0.65–0.76; where it does not, 0.12–
+0.34. Nothing about a particular story is carrying the effect.
 
 The new domains sharpen the claim in a way `mailroom` alone did not.
 `true_false` — belief undermines the sparse reading and supplies nothing —
