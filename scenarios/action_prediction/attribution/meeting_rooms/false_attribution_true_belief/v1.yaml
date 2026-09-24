@@ -1,0 +1,122 @@
+# Attribution scenario set — C. FALSE attribution, TRUE belief
+#
+# Sam wants to meet Alex, who is somewhere among three rooms. The set is a
+# 2x2 over two independent questions:
+#
+#   attribution   does Sam's belief about Alex's belief match what Alex
+#                 actually believes?
+#   belief        does Alex's belief match the world?
+#
+# Ground truth is always where Sam believes Alex believes the meeting is:
+# Sam acts on the belief Sam holds. What Alex actually believes, and where
+# the meeting really is, are both unavailable to Sam and must not move the
+# prediction of Sam's action — the rich representation states them anyway,
+# so reading either as Sam's is a perspective error.
+#
+#   reality              office
+#   Alex believes        office
+#   Sam believes Alex    conference room
+#     believes
+#
+# Sam is wrong about Alex while Alex is right about the world. The error is
+# purely social: nothing about the world misleads Sam, and both the world
+# state and Alex's own belief point at the office, yet Sam should still be
+# predicted to go to the conference room.
+
+id: attribution_false_attribution_true_belief
+description: >
+  Sam wants to meet Alex. The meeting is in the office and Alex believes
+  it is in the office, but Sam incorrectly believes that Alex believes it
+  is in the conference room.
+
+scenario_set: attribution
+
+variant:
+  type: false_attribution_true_belief
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+    - id: alex
+      name: Alex
+  locations:
+    - id: office
+      name: office
+    - id: conference_room
+      name: conference room
+    - id: garden
+      name: garden
+  objects:
+    - id: meeting
+      name: meeting
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: meeting
+    location: office
+    value: true
+
+  - predicate: located
+    subject: meeting
+    location: conference_room
+    value: false
+
+  - predicate: located
+    subject: meeting
+    location: garden
+    value: false
+
+goals:
+  - agent: sam
+    type: meet
+    target_agent: alex
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: believes
+      subject: alex
+      proposition:
+        predicate: located
+        subject: meeting
+        location: conference_room
+        value: true
+
+  - type: belief
+    agent: alex
+    proposition:
+      predicate: located
+      subject: meeting
+      location: office
+      value: true
+
+question:
+  type: action_prediction
+  agent: sam
+  options:
+    - go_to_office
+    - go_to_conference_room
+    - go_to_garden
+
+ground_truth:
+  answer: go_to_conference_room
+  explanation: >
+    Sam wrongly believes Alex expects the meeting in the conference room,
+    so Sam should go there. Both the world and Alex's actual belief point
+    at the office; neither is available to Sam.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - nested_belief
+    - attribution_error
+    - social_prediction
+    - perspective_taking
+    - rerepresentation_target

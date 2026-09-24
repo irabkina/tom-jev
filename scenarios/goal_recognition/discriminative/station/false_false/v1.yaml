@@ -1,0 +1,112 @@
+# station — discriminative goal recognition, false false
+#
+# Rowan is seen walking toward platform three.
+#
+# The world and the observation are constant across all four cells:
+#   world         bicycle at the left-luggage office, Amara at the platform three
+#   observation   Rowan walks toward the platform three
+#
+# Only what the agent believes varies, over whether each belief matches
+# the world. Whichever thing they believe is at the destination is the
+# goal the walk serves, so belief can point somewhere the world does not.
+#
+#   Rowan believes   bicycle at the platform three, Amara at the left-luggage office
+#
+# Here the belief replaces the reading outright.
+
+id: station_false_false
+description: >
+  Rowan is seen walking toward platform three. They believe bicycle is at
+  the platform three and Amara is at the left-luggage office.
+
+scenario_set: station
+
+variant:
+  type: false_false
+
+entities:
+  agents:
+    - id: rowan
+      name: Rowan
+    - id: amara
+      name: Amara
+
+  locations:
+    - id: platform_three
+      name: platform three
+    - id: left_luggage
+      name: left-luggage office
+
+  objects:
+    - id: bicycle
+      name: bicycle
+
+observations:
+  - type: walks_to
+    agent: rowan
+    destination: platform_three
+
+world_state:
+  - predicate: located
+    subject: bicycle
+    location: left_luggage
+    value: true
+
+  - predicate: located
+    subject: bicycle
+    location: platform_three
+    value: false
+
+  - predicate: located
+    subject: amara
+    location: platform_three
+    value: true
+
+  - predicate: located
+    subject: amara
+    location: left_luggage
+    value: false
+
+mental_state:
+  - type: belief
+    agent: rowan
+    proposition:
+      predicate: located
+      subject: bicycle
+      location: platform_three
+      value: true
+
+  - type: belief
+    agent: rowan
+    proposition:
+      predicate: located
+      subject: amara
+      location: left_luggage
+      value: true
+
+question:
+  type: goal
+  agent: rowan
+  options:
+    - retrieve_bicycle
+    - find_amara
+
+ground_truth:
+  answer: retrieve_bicycle
+  explanation: >
+    Rowan wrongly believes bicycle is at the platform three and Amara is
+    not, so the walk is going to retrieve bicycle — though Amara really is
+    there and bicycle is not.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - belief_redirects
+    - belief_reality_mismatch
+    - rerepresentation_target

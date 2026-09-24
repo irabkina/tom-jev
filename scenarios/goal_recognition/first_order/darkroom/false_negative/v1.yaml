@@ -1,0 +1,102 @@
+# darkroom — goal recognition, false negative
+#
+# A photographer is seen heading for the darkroom with an exposed roll.
+#
+# The observation is constant across all four conditions:
+#   Ruth walks to the darkroom carrying the exposed roll.
+#
+# reality        developer available
+# belief         developer unavailable
+#
+# With developer ruled out the remaining goals are underdetermined,
+# so several answers count as correct.
+
+id: darkroom_false_negative
+description: >
+  A photographer is seen heading for the darkroom with an exposed roll.
+  The developer is available, and they believe it is unavailable.
+
+scenario_set: darkroom
+
+variant:
+  type: false_negative
+
+entities:
+  agents:
+    - id: ruth
+      name: Ruth
+
+  locations:
+    - id: darkroom
+      name: darkroom
+
+  objects:
+    - id: roll
+      name: exposed roll
+    - id: drying_line
+      name: drying line
+    - id: wash_sink
+      name: wash sink
+
+observations:
+  - type: walks_to
+    agent: ruth
+    destination: darkroom
+
+  - type: carries
+    agent: ruth
+    object: roll
+
+world_state:
+  - predicate: available
+    subject: developer
+    location: darkroom
+    value: true
+
+  - predicate: located
+    subject: drying_line
+    location: darkroom
+    value: true
+
+  - predicate: located
+    subject: wash_sink
+    location: darkroom
+    value: true
+
+mental_state:
+  - type: belief
+    agent: ruth
+    proposition:
+      predicate: available
+      subject: developer
+      location: darkroom
+      value: false
+
+question:
+  type: goal
+  agent: ruth
+  options:
+    - develop_film
+    - collect_prints
+    - clean_trays
+
+ground_truth:
+  answer: collect_prints
+  acceptable:
+    - collect_prints
+    - clean_trays
+  explanation: >
+    Ruth believes there is no developer, so the goal is not develop_film.
+    What remains is underdetermined and the observation does not
+    distinguish it, so every remaining goal counts.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - ambiguous_by_design
+    - rerepresentation_target

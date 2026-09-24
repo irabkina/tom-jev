@@ -1,0 +1,126 @@
+# mailroom — discriminative goal recognition, FALSE package / TRUE Alex
+#
+# Sam is seen walking toward the front desk. Why?
+#
+# The world and the observation are constant across all four cells:
+#
+#   world          package at the mailroom, Alex at the front desk
+#   observation    Sam walks toward the front desk
+#
+# Only what Sam believes varies, over two axes: whether Sam's belief about
+# the package matches the world, and whether Sam's belief about Alex does.
+#
+#   Sam believes   package at the front desk, Alex at the front desk
+#
+# Sam is wrong about the package and right about Alex, so Sam believes
+# both are at the front desk. Either goal explains the walk equally well
+# and nothing in the scenario chooses between them, so both answers count.
+#
+# This cell runs the opposite way to false_false. There, belief resolves an
+# ambiguity the world left open. Here it creates one: from the world alone
+# only Alex is at the front desk and the walk reads as meeting Alex, and
+# adding the belief makes the package an equally good explanation. Entropy
+# should rise, and a confident answer either way is the thing to notice.
+#
+# Because both options are acceptable, `outcome` cannot fail here and
+# carries no information. Entropy is the measure that does.
+
+id: mailroom_false_true
+description: >
+  Sam walks toward the front desk. The package is actually in the mailroom,
+  but Sam believes it is at the front desk, and Sam correctly believes Alex
+  is at the front desk too.
+
+scenario_set: mailroom
+
+variant:
+  type: false_true
+
+entities:
+  agents:
+    - id: sam
+      name: Sam
+    - id: alex
+      name: Alex
+  locations:
+    - id: front_desk
+      name: front desk
+    - id: mailroom
+      name: mailroom
+  objects:
+    - id: package
+      name: package
+
+observations:
+  - type: walks_to
+    agent: sam
+    destination: front_desk
+
+world_state:
+  - predicate: located
+    subject: package
+    location: mailroom
+    value: true
+
+  - predicate: located
+    subject: package
+    location: front_desk
+    value: false
+
+  - predicate: located
+    subject: alex
+    location: front_desk
+    value: true
+
+  - predicate: located
+    subject: alex
+    location: mailroom
+    value: false
+
+mental_state:
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: package
+      location: front_desk
+      value: true
+
+  - type: belief
+    agent: sam
+    proposition:
+      predicate: located
+      subject: alex
+      location: front_desk
+      value: true
+
+question:
+  type: goal
+  agent: sam
+  options:
+    - pick_up_package
+    - meet_alex
+
+ground_truth:
+  answer: meet_alex
+  acceptable:
+    - meet_alex
+    - pick_up_package
+  explanation: >
+    Sam believes both the package and Alex are at the front desk, so either
+    goal explains the walk and nothing distinguishes them. The ambiguity is
+    the point: both answers count, and what is worth measuring is whether
+    the rich representation becomes less certain than the sparse one, which
+    had only Alex there.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - ambiguous_by_design
+    - belief_adds_ambiguity

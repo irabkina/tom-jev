@@ -1,0 +1,119 @@
+# newsroom — attribution, false attribution true belief
+#
+# The editor wants to reach the stringer before the edition locks.
+#
+# reality                    copy desk
+# Juno believes             copy desk
+# Ade believes Juno believes  wire room
+#
+# Truth follows the attribution. Juno's actual belief and the world are
+# both stated in the rich representation and unavailable to Ade;
+# reading either as theirs is a perspective error.
+
+id: newsroom_false_attribution_true_belief
+description: >
+  The editor wants to reach the stringer before the edition locks. Ade
+  believes Juno expects it in the wire room, while Juno actually expects
+  the copy desk.
+
+scenario_set: newsroom
+
+variant:
+  type: false_attribution_true_belief
+
+entities:
+  agents:
+    - id: ade
+      name: Ade
+    - id: juno
+      name: Juno
+
+  locations:
+    - id: copy_desk
+      name: copy desk
+    - id: wire_room
+      name: wire room
+    - id: roof_deck
+      name: roof deck
+    - id: archive
+      name: archive
+
+  objects:
+    - id: handover
+      name: handover
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: handover
+    location: copy_desk
+    value: true
+
+  - predicate: located
+    subject: handover
+    location: wire_room
+    value: false
+
+  - predicate: located
+    subject: handover
+    location: roof_deck
+    value: false
+
+  - predicate: located
+    subject: handover
+    location: archive
+    value: false
+
+goals:
+  - agent: ade
+    type: meet
+    target_agent: juno
+
+mental_state:
+  - type: belief
+    agent: ade
+    proposition:
+      predicate: believes
+      subject: juno
+      proposition:
+        predicate: located
+        subject: handover
+        location: wire_room
+        value: true
+
+  - type: belief
+    agent: juno
+    proposition:
+      predicate: located
+      subject: handover
+      location: copy_desk
+      value: true
+
+question:
+  type: action_prediction
+  agent: ade
+  options:
+    - go_to_copy_desk
+    - go_to_wire_room
+    - go_to_roof_deck
+    - go_to_archive
+
+ground_truth:
+  answer: go_to_wire_room
+  explanation: >
+    Ade goes where Ade believes Juno expects it, the wire room. Juno
+    actually expects the copy desk, and it is really in the copy desk;
+    neither is available to Ade.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - nested_belief
+    - attribution_error
+    - social_prediction
+    - perspective_taking
+    - rerepresentation_target

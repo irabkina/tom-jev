@@ -1,0 +1,106 @@
+# gallery — second-order belief, false negative
+#
+# The curator wants to catch the artist before the doors open.
+#
+# reality                    atrium
+# Ilse believes Tavo believes  print room
+#
+# Tavo's own belief is not represented, so the attribution cannot be
+# wrong about Tavo — only about the world.
+
+id: gallery_false_negative
+description: >
+  The curator wants to catch the artist before the doors open. Ilse
+  believes Tavo expects it in the print room.
+
+scenario_set: gallery
+
+variant:
+  type: false_negative
+
+entities:
+  agents:
+    - id: ilse
+      name: Ilse
+    - id: tavo
+      name: Tavo
+
+  locations:
+    - id: atrium
+      name: atrium
+    - id: print_room
+      name: print room
+    - id: loading_bay
+      name: loading bay
+    - id: mezzanine
+      name: mezzanine
+
+  objects:
+    - id: hanging
+      name: hanging session
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: hanging
+    location: atrium
+    value: true
+
+  - predicate: located
+    subject: hanging
+    location: print_room
+    value: false
+
+  - predicate: located
+    subject: hanging
+    location: loading_bay
+    value: false
+
+  - predicate: located
+    subject: hanging
+    location: mezzanine
+    value: false
+
+goals:
+  - agent: ilse
+    type: meet
+    target_agent: tavo
+
+mental_state:
+  - type: belief
+    agent: ilse
+    proposition:
+      predicate: believes
+      subject: tavo
+      proposition:
+        predicate: located
+        subject: hanging
+        location: print_room
+        value: true
+
+question:
+  type: action_prediction
+  agent: ilse
+  options:
+    - go_to_atrium
+    - go_to_print_room
+    - go_to_loading_bay
+    - go_to_mezzanine
+
+ground_truth:
+  answer: go_to_print_room
+  explanation: >
+    Ilse expects Tavo where Ilse believes Tavo thinks it is, the print
+    room, though it is actually in the atrium.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - nested_belief
+    - social_prediction
+    - belief_reality_mismatch
+    - rerepresentation_target

@@ -1,0 +1,112 @@
+# clinic — discriminative goal recognition, false false
+#
+# Devi is seen walking toward the dispensary.
+#
+# The world and the observation are constant across all four cells:
+#   world         patient chart at the records room, Hale at the dispensary
+#   observation   Devi walks toward the dispensary
+#
+# Only what the agent believes varies, over whether each belief matches
+# the world. Whichever thing they believe is at the destination is the
+# goal the walk serves, so belief can point somewhere the world does not.
+#
+#   Devi believes   patient chart at the dispensary, Hale at the records room
+#
+# Here the belief replaces the reading outright.
+
+id: clinic_false_false
+description: >
+  Devi is seen walking toward the dispensary. They believe patient chart
+  is at the dispensary and Hale is at the records room.
+
+scenario_set: clinic
+
+variant:
+  type: false_false
+
+entities:
+  agents:
+    - id: devi
+      name: Devi
+    - id: hale
+      name: Hale
+
+  locations:
+    - id: dispensary
+      name: dispensary
+    - id: records_room
+      name: records room
+
+  objects:
+    - id: chart
+      name: patient chart
+
+observations:
+  - type: walks_to
+    agent: devi
+    destination: dispensary
+
+world_state:
+  - predicate: located
+    subject: chart
+    location: records_room
+    value: true
+
+  - predicate: located
+    subject: chart
+    location: dispensary
+    value: false
+
+  - predicate: located
+    subject: hale
+    location: dispensary
+    value: true
+
+  - predicate: located
+    subject: hale
+    location: records_room
+    value: false
+
+mental_state:
+  - type: belief
+    agent: devi
+    proposition:
+      predicate: located
+      subject: chart
+      location: dispensary
+      value: true
+
+  - type: belief
+    agent: devi
+    proposition:
+      predicate: located
+      subject: hale
+      location: records_room
+      value: true
+
+question:
+  type: goal
+  agent: devi
+  options:
+    - collect_chart
+    - consult_hale
+
+ground_truth:
+  answer: collect_chart
+  explanation: >
+    Devi wrongly believes patient chart is at the dispensary and Hale is
+    not, so the walk is going to collect chart — though Hale really is
+    there and patient chart is not.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - first_order
+    - goal_recognition
+    - discriminative
+    - belief_redirects
+    - belief_reality_mismatch
+    - rerepresentation_target

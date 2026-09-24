@@ -102,25 +102,29 @@ def world_conflict(scenario: Scenario) -> bool:
     fact share a proposition — same predicate, subject, object and
     location — but disagree on its value.
 
+    Second-order beliefs are skipped. A belief *about another agent's
+    belief* makes no claim about the world — the nested belief could
+    itself be wrong without anyone being mistaken about how things are —
+    so there is no known conflict to detect.
+
     This is the in-memory reference implementation. `world.has_conflict`
     computes the same thing by querying the Neo4j graph, which is the
     source of truth; this one needs no database, so it serves as the
     cross-check that keeps the two honest (see tests/test_world.py).
     """
-    facts = {(p.predicate, p.subject, p.object, p.location): p.value for p in scenario.world_state}
-    return any(
-        facts.get(
-            (
-                m.proposition.predicate,
-                m.proposition.subject,
-                m.proposition.object,
-                m.proposition.location,
-            ),
-            m.proposition.value,
-        )
-        != m.proposition.value
-        for m in scenario.mental_state
-    )
+    facts = {
+        (p.predicate, p.subject, p.object, p.location): p.value
+        for p in scenario.world_state
+        if p.proposition is None
+    }
+    for mental in scenario.mental_state:
+        held = mental.proposition
+        if held.proposition is not None:
+            continue
+        key = (held.predicate, held.subject, held.object, held.location)
+        if key in facts and facts[key] != held.value:
+            return True
+    return False
 
 
 def _argmax(prediction: Prediction, question_type: str) -> str | None:
