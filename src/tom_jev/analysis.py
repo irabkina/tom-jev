@@ -94,9 +94,10 @@ def world_conflict(scenario: Scenario) -> bool:
     fact share a proposition — same predicate, subject, object and
     location — but disagree on its value.
 
-    Computed here in memory. `compare` accepts a `conflict` override so
-    the same question can instead be answered by a store that holds the
-    world state, with this kept as the reference implementation.
+    This is the in-memory reference implementation. `world.has_conflict`
+    computes the same thing by querying the Neo4j graph, which is the
+    source of truth; this one needs no database, so it serves as the
+    cross-check that keeps the two honest (see tests/test_world.py).
     """
     facts = {(p.predicate, p.subject, p.object, p.location): p.value for p in scenario.world_state}
     return any(
@@ -249,9 +250,9 @@ def compare(
 ) -> Comparison:
     """Measure one scenario's sparse pass against its rich pass.
 
-    `conflict` is the world/belief conflict for this scenario, for callers
-    that compute it from a store holding the world state. When omitted it
-    falls back to the in-memory `world_conflict` above.
+    `conflict` is the world/belief conflict for this scenario, normally
+    supplied by `world.has_conflict` from the graph. When omitted it falls
+    back to the in-memory `world_conflict` above.
     """
     question_type = scenario.question.type
     acceptable = scenario.ground_truth.answers()

@@ -6,9 +6,9 @@ Two passes over each scenario:
     rich     what action does Jev predict once the agent's belief is
              explicitly represented?
 
-The comparison is reported as four separate quantities — theoretical
-relevance, representational influence, utility, answer correction — rather
-than collapsed into one accuracy figure. See tom_jev/analysis.py.
+World/belief conflict is computed by querying the Neo4j graph the world
+state is loaded into, not from the scenario annotations. The comparison is
+reported as influence, utility and correction — see tom_jev/analysis.py.
 
     python experiments/01_sparse_vs_rich.py
 """
@@ -20,7 +20,8 @@ import pathlib
 
 from dotenv import load_dotenv
 
-from tom_jev import analysis, jev, scenarios
+from tom_jev import analysis, jev, scenarios, world
+from tom_jev.models import Scenario
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
@@ -29,11 +30,29 @@ SCENARIOS = ROOT / "scenarios"
 CONDITIONS = ["sparse", "rich"]
 
 
+def conflicts_from_graph(items: list[Scenario]) -> dict[str, bool]:
+    """Load the world state into Neo4j and ask it which scenarios conflict.
+
+    Falls back to the in-memory reference if the database is unreachable,
+    saying so rather than quietly substituting a different computation.
+    """
+    try:
+        with world.connect() as driver:
+            for scenario in items:
+                world.load(driver, scenario)
+            return {s.id: world.has_conflict(driver, s.id) for s in items}
+    except Exception as error:  # noqa: BLE001 - any driver failure falls back
+        print(f"! neo4j unavailable ({type(error).__name__}), using in-memory conflicts: {error}")
+        return {s.id: analysis.world_conflict(s) for s in items}
+
+
 def main() -> None:
     load_dotenv()
     items = scenarios.load(SCENARIOS)
     if not items:
         raise SystemExit(f"no scenarios found in {SCENARIOS}")
+
+    conflict = conflicts_from_graph(items)
 
     predictions: dict[str, dict[str, object]] = {}
     with jev.client() as c:
@@ -47,6 +66,7 @@ def main() -> None:
             predictions[s.id]["sparse"],
             predictions[s.id]["rich"],
             s,
+            conflict=conflict[s.id],
         )
         for s in items
     ]
