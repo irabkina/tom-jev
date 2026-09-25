@@ -22,8 +22,8 @@ re-representation; succeeding needs the richer representation to contain
 enough to construct the alternative. See *Consequence for the two-systems
 framing*.
 
-**Belief moves action prediction substantially** — 0.43–0.48 mean influence
-across every action-prediction template, 24 corrections and no regressions
+**Belief moves action prediction substantially** — 0.45–0.69 mean influence
+across every action-prediction template, 28 corrections and no regressions
 in 68 scenarios. See *Belief moves action prediction, not goal recognition*,
 whose title states the goal-recognition half too strongly; the first finding
 above is the corrected form.
@@ -68,10 +68,12 @@ The original A vs. not-A results should be retained as a methodological pilot ra
 
 ## Not tuning stimuli to results
 
-`coffee_false_negative` is the one failing cell in the corpus: annotated as
-requiring belief, it measures influence ~0.05 where its group averages 0.80,
+`coffee_false_negative` was the first failing cell found: annotated as
+requiring belief, it measures influence 0.03 where its group averages 0.66,
 and the rich pass still answers `get_coffee` despite Sam believing there is
-none. It is left as it is, deliberately.
+none. It is left as it is, deliberately. It has since turned out to be one
+of a family — see the goal-recognition result below — rather than a broken
+item.
 
 Revising a scenario until it produces the expected measurement is fitting the
 stimulus to the hypothesis. The measurement stops being evidence at that
@@ -112,20 +114,18 @@ agent's belief depends almost entirely on what Jev is asked:
 
 | task family | template | n | mean TV influence | corrections |
 |---|---|---|---|---|
-| action prediction | attribution | 12 | 0.48 | 6 |
-| action prediction | first order | 12 | 0.48 | 6 |
+| action prediction | attribution | 12 | 0.69 | 9 |
+| action prediction | first order | 12 | 0.47 | 6 |
 | action prediction | second order | 16 | 0.45 | 8 |
 | goal recognition | discriminative | 16 | 0.43 | 4 |
-| **goal recognition** | first order | 12 | **0.00** | **0** |
+| **goal recognition** | first order | 12 | **0.07** | **1** |
 
-Two of those figures moved after the numbers below were first recorded, and
-both moves were data fixes rather than model behaviour. Attribution fell
-from 0.69 because its worlds never said where the agent being met actually
-was, so sparse failed those cells for an unrelated reason and rich looked
-like it was correcting more than it was. Goal-recognition first-order fell
-from 0.07 to nothing at all once the scenarios stated what the carried
-object was for, which gave sparse more to work with. Both are recorded in
-the commit log; the qualitative claims are unchanged.
+These figures survived a round trip worth noting. Attribution was briefly
+0.48 after the scenarios were given a `located(<other agent>, …)` fact so
+the conflict rule could apply to them; removing that fact restored 0.69
+exactly. The fact was derived from the agent's own belief using the very
+principle under test, and it reached the model through the sparse
+representation. See *Where the line falls* in graph_ontology.md.
 
 All five failing cells in the corpus are goal recognition. This is not one
 bad item: it replicates across `coffee`, `darkroom` and `greenhouse`, three
@@ -141,7 +141,7 @@ where anything moves at all, which is why it looked like an outlier before
 the other two existed.
 
 Read alongside the action-prediction results, where the same manipulation
-moves 0.43–0.48 and produces 24 corrections with no regressions, the
+moves 0.45–0.69 and produces 28 corrections with no regressions, the
 contrast is the finding rather than a defect:
 
 **An observed action appears to determine goal inference strongly enough
@@ -182,7 +182,7 @@ belief. It separates two things the earlier sets confounded.
 |---|---|---|
 | licenses a *different* answer | `mailroom` false_false, false_true | 0.47, 0.60 |
 | only removes the sparse answer | `mailroom` true_false | 0.18 |
-| only subtracts the primary goal | `coffee`, `darkroom`, `greenhouse` | 0.00 |
+| only subtracts the primary goal | `coffee`, `darkroom`, `greenhouse` | 0.07 |
 
 In `false_false` the belief says the package is at the front desk — a
 positive claim that supports a competing reading of the walk, and the model
@@ -191,9 +191,8 @@ neither the package nor Alex is at the front desk. That *undermines* the
 sparse reading without supplying anything in its place, and the model did
 not merely fail to switch: entropy fell from 0.94 to 0.68 and it answered
 `meet_alex` more confidently — the very reading the belief rules out. The
-subtractive goal-recognition domains behave the same way, and have since
-fallen to 0.00 flat — once those scenarios stated what the carried object
-was for, sparse had more to work with and belief moved it not at all.
+subtractive goal-recognition domains behave the same way, at 0.07 — near
+enough nothing across twelve scenarios and three unrelated domains.
 
 **Re-representation is most effective when the richer representation
 supports a competing inference, rather than merely revealing a problem with
@@ -310,18 +309,19 @@ representations in the absence of an internally detectable error.
 
 Three candidate triggers, each computable from the sparse representation
 without any belief, against whether the rich pass actually produced a
-correction. 68 scenarios, 25 corrections.
+correction. 68 scenarios, 28 corrections.
 
-**Sparse uncertainty.** Mean sparse entropy is 0.28 where a correction
-follows and 0.30 where none does — no separation, and slightly the wrong
-way round. Thresholding does not help: 6 of 18 scenarios above 0.5 bits are
-corrections, against 19 of 50 below it. More pointedly, 13 of the 25
-corrections have sparse entropy below 0.2 — near-certainty on two or three
-options — and those carry a mean influence of 0.92. The sparse pass is at
+**Sparse uncertainty.** Mean sparse entropy is 0.40 where a correction
+follows and 0.34 where none does — a difference far too small to threshold
+on, and in any case the two ranges overlap almost entirely. Thresholding
+does not help: 12 of 25 scenarios above 0.5 bits are corrections, against
+16 of 43 below it. More pointedly, 11 of the 28 corrections have sparse
+entropy below 0.2 — near-certainty on two or three options — and those
+carry a mean influence of 0.94. The sparse pass is at
 its most confident precisely where belief is about to overturn it.
 
-**Objective-world conflict.** 11 of the 14 second-order and attribution
-corrections have no world conflict at all, at mean influence 0.87. Three of
+**Objective-world conflict.** 11 of the 17 second-order and attribution
+corrections have no world conflict at all, at mean influence 0.85. Three of
 those do have an *attribution* conflict — the believer is wrong about a
 person rather than about the world — and the rest are uncheckable because
 the other agent's belief is not represented. So the mental state doing the
@@ -336,6 +336,6 @@ where it would matter: an action-prediction answer is derived from the
 world, so it does not contradict it.
 
 The one quantity that does separate cleanly is acceptable mass on the sparse
-pass — 0.05 where a correction follows against 0.84 where none does. That is
+pass — 0.06 where a correction follows against 0.83 where none does. That is
 not a trigger but a restatement of the target: it is computed from ground
 truth, and predicting it is the whole problem.
