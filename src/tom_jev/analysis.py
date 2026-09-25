@@ -246,6 +246,7 @@ class Comparison(BaseModel):
     scenario_id: str
     scenario_set: str | None = None
     variant: str | None = None
+    task_family: str | None = None
 
     # A priori experimental annotation, carried for reference. Not a
     # measure, and never a substitute for one — see the module docstring.
@@ -354,6 +355,7 @@ def compare(
         scenario_id=scenario.id,
         scenario_set=scenario.scenario_set,
         variant=scenario.variant.type if scenario.variant else None,
+        task_family=scenario.taxonomy.task_family,
         belief_changes_expected_action=scenario.annotations.belief_changes_expected_action,
         world_conflict=world_conflict(scenario) if conflict is None else conflict,
         attribution_conflict=(
@@ -432,7 +434,9 @@ def summarise(comparisons: list[Comparison]) -> str:
         # informative. See notes/experimental_design.md.
         policies = {
             "answer contradicted": [c for c in comparisons if c.trigger == "conflict"],
-            "predicting an action": [c for c in comparisons if c.trigger != "not_applicable"],
+            "predicting an action": [
+                c for c in comparisons if c.task_family == "action_prediction"
+            ],
             "always": list(comparisons),
         }
         if helped and any(p for p in policies.values()):
