@@ -53,13 +53,6 @@ observations:
     object: can
 
 world_state:
-  # What the carried object is for. Without this the walk cannot be judged
-  # against the world at all — see world.observation_anomaly.
-  - predicate: requires
-    subject: water
-    object: can
-    value: true
-
   - predicate: available
     subject: water
     location: greenhouse

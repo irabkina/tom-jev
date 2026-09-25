@@ -28,6 +28,14 @@ in 68 scenarios. See *Belief moves action prediction, not goal recognition*,
 whose title states the goal-recognition half too strongly; the first finding
 above is the corrected form.
 
+**Nothing computable from the sparse pass predicts whether re-representation
+will help.** Neither its confidence, nor a conflict between what it knows and
+the world, nor its own answer being ruled out by what is known. Where belief
+matters most the sparse pass is at its most confident, because the
+information that would change its mind is exactly what was withheld. A
+negative result for self-monitoring accounts of escalation. See *Sparse-state
+signals do not reliably identify the need for re-representation*.
+
 **Prefer symmetric competing alternatives (A vs. B) to an action and its
 negation.** See *Symmetric action alternatives*.
 
@@ -271,3 +279,63 @@ against is roughly 0.15 here, not zero.
 
 Three domains per cell, one run each. The direction is consistent across
 every domain; the magnitudes are not stable enough to quote to two figures.
+
+## Sparse-state signals do not reliably identify the need for re-representation
+
+Across the current corpus, cases in which re-representation substantially
+improves inference are not reliably identifiable from the sparse inference
+alone. In particular, sparse confidence and entropy do not provide a
+sufficient escalation signal: the sparse system is often highly confident in
+an inference that is reasonable given the information represented, even when
+adding mental-state information subsequently produces a large correction.
+Objective-world conflict is also insufficient, because useful
+re-representation occurs in second-order and attribution cases where the
+relevant mental-state proposition does not contradict the objective world.
+
+These failures reflect representational incompleteness rather than
+necessarily defective inference over the sparse representation. In many
+cases, the information that makes the rich inference preferable is precisely
+the information omitted from the sparse representation. Consequently, the
+sparse inference need not contain an internal indication that its conclusion
+would change under re-representation.
+
+This provides a negative result for simple self-monitoring accounts of
+escalation: uncertainty and detected world conflict are not sufficient
+triggers for re-representation on this corpus. A successful escalation
+mechanism therefore requires either additional information outside the
+sparse inference itself or a policy that sometimes constructs richer
+representations in the absence of an internally detectable error.
+
+### What was measured
+
+Three candidate triggers, each computable from the sparse representation
+without any belief, against whether the rich pass actually produced a
+correction. 68 scenarios, 25 corrections.
+
+**Sparse uncertainty.** Mean sparse entropy is 0.28 where a correction
+follows and 0.30 where none does — no separation, and slightly the wrong
+way round. Thresholding does not help: 6 of 18 scenarios above 0.5 bits are
+corrections, against 19 of 50 below it. More pointedly, 13 of the 25
+corrections have sparse entropy below 0.2 — near-certainty on two or three
+options — and those carry a mean influence of 0.92. The sparse pass is at
+its most confident precisely where belief is about to overturn it.
+
+**Objective-world conflict.** 11 of the 14 second-order and attribution
+corrections have no world conflict at all, at mean influence 0.87. Three of
+those do have an *attribution* conflict — the believer is wrong about a
+person rather than about the world — and the rest are uncheckable because
+the other agent's belief is not represented. So the mental state doing the
+work contradicts nobody's facts.
+
+**The model's own answer contradicting what is known.** Take the sparse
+answer and ask whether background knowledge and the episodic world rule it
+out. It fires four times, with precision 0.00 and recall 0.00. Where it
+fires — darkroom and greenhouse, false_positive and true_negative — the rich
+pass gives the same answer, so escalating buys nothing. And it cannot fire
+where it would matter: an action-prediction answer is derived from the
+world, so it does not contradict it.
+
+The one quantity that does separate cleanly is acceptable mass on the sparse
+pass — 0.05 where a correction follows against 0.84 where none does. That is
+not a trigger but a restatement of the target: it is computed from ground
+truth, and predicting it is the whole problem.
