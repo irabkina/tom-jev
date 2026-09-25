@@ -107,9 +107,10 @@ def world_conflict(scenario: Scenario) -> bool:
     itself be wrong without anyone being mistaken about how things are —
     so there is no known conflict to detect.
 
-    Computed here in memory. `compare` accepts a `conflict` override so
-    the same question can instead be answered by a store that holds the
-    world state, with this kept as the reference implementation.
+    This is the in-memory reference implementation. `world.has_conflict`
+    computes the same thing by querying the Neo4j graph, which is the
+    source of truth; this one needs no database, so it serves as the
+    cross-check that keeps the two honest (see tests/test_world.py).
     """
     facts = {
         (p.predicate, p.subject, p.object, p.location): p.value
@@ -141,8 +142,7 @@ def attribution_conflict(scenario: Scenario) -> bool | None:
     scenario represents. The `meeting` set has attributions but no second
     agent's beliefs, so nothing there can be checked.
 
-    Computed here in memory. `compare` accepts an `attribution` override
-    so a store holding both agents' beliefs can answer it instead.
+    `world.attributions` answers the same question from the graph.
     """
     own: dict[tuple[str, str, str], set[str | None]] = {}
     for mental in scenario.mental_state:
@@ -326,10 +326,9 @@ def compare(
 ) -> Comparison:
     """Measure one scenario's sparse pass against its rich pass.
 
-    `conflict` and `attribution` are the two conflict dimensions. Either
-    may be supplied by a store that holds the world state and the agents'
-    beliefs; when omitted each falls back to its in-memory equivalent
-    above.
+    `conflict` and `attribution` are the two conflict dimensions, normally
+    supplied by `world.has_conflict` and `world.attributions` from the
+    graph. When omitted each falls back to its in-memory equivalent above.
     """
     question_type = scenario.question.type
     acceptable = scenario.ground_truth.answers()

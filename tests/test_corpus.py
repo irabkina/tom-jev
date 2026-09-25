@@ -6,7 +6,8 @@ a miscoded cell loads fine and quietly poisons every analysis grouped by
 variant.
 
 These derive the design from the content and check it against the label.
-They need nothing but the corpus itself.
+No database needed; `tests/test_world.py` checks the same derivations
+against the graph.
 """
 
 from __future__ import annotations

@@ -9,8 +9,8 @@ later wording is the one to use.
 **For goal recognition, explicit mental-state re-representation strongly
 changes inference when it supplies a competing explanation, but has much
 weaker effects when it merely undermines the sparse explanation without
-supporting an alternative.** Across four domains, influence is 0.68–0.81
-where the belief licenses a different answer and 0.07–0.29 where it only
+supporting an alternative.** Across four domains, influence is 0.65–0.71
+where the belief licenses a different answer and 0.17–0.19 where it only
 removes the sparse one. See *Re-representation needs an alternative, not just a problem* and its
 *Replication across four domains*.
 
@@ -22,11 +22,19 @@ re-representation; succeeding needs the richer representation to contain
 enough to construct the alternative. See *Consequence for the two-systems
 framing*.
 
-**Belief moves action prediction substantially** — 0.46–0.69 mean influence
-across first-order, second-order and attribution templates, 23 corrections
-and no regressions. See *Belief moves action prediction, not goal
-recognition*, whose title states the goal-recognition half too strongly; the
-first finding above is the corrected form.
+**Belief moves action prediction substantially** — 0.45–0.69 mean influence
+across every action-prediction template, 28 corrections and no regressions
+in 68 scenarios. See *Belief moves action prediction, not goal recognition*,
+whose title states the goal-recognition half too strongly; the first finding
+above is the corrected form.
+
+**Nothing computable from the sparse pass predicts whether re-representation
+will help.** Neither its confidence, nor a conflict between what it knows and
+the world, nor its own answer being ruled out by what is known. Where belief
+matters most the sparse pass is at its most confident, because the
+information that would change its mind is exactly what was withheld. A
+negative result for self-monitoring accounts of escalation. See *Sparse-state
+signals do not reliably identify the need for re-representation*.
 
 **Prefer symmetric competing alternatives (A vs. B) to an action and its
 negation.** See *Symmetric action alternatives*.
@@ -60,10 +68,12 @@ The original A vs. not-A results should be retained as a methodological pilot ra
 
 ## Not tuning stimuli to results
 
-`coffee_false_negative` is the one failing cell in the corpus: annotated as
-requiring belief, it measures influence ~0.05 where its group averages 0.80,
+`coffee_false_negative` was the first failing cell found: annotated as
+requiring belief, it measures influence 0.03 where its group averages 0.66,
 and the rich pass still answers `get_coffee` despite Sam believing there is
-none. It is left as it is, deliberately.
+none. It is left as it is, deliberately. It has since turned out to be one
+of a family — see the goal-recognition result below — rather than a broken
+item.
 
 Revising a scenario until it produces the expected measurement is fitting the
 stimulus to the hypothesis. The measurement stops being evidence at that
@@ -105,9 +115,17 @@ agent's belief depends almost entirely on what Jev is asked:
 | task family | template | n | mean TV influence | corrections |
 |---|---|---|---|---|
 | action prediction | attribution | 12 | 0.69 | 9 |
-| action prediction | first order | 12 | 0.48 | 6 |
-| action prediction | second order | 16 | 0.46 | 8 |
+| action prediction | first order | 12 | 0.47 | 6 |
+| action prediction | second order | 16 | 0.45 | 8 |
+| goal recognition | discriminative | 16 | 0.43 | 4 |
 | **goal recognition** | first order | 12 | **0.07** | **1** |
+
+These figures survived a round trip worth noting. Attribution was briefly
+0.48 after the scenarios were given a `located(<other agent>, …)` fact so
+the conflict rule could apply to them; removing that fact restored 0.69
+exactly. The fact was derived from the agent's own belief using the very
+principle under test, and it reached the model through the sparse
+representation. See *Where the line falls* in graph_ontology.md.
 
 All five failing cells in the corpus are goal recognition. This is not one
 bad item: it replicates across `coffee`, `darkroom` and `greenhouse`, three
@@ -123,7 +141,7 @@ where anything moves at all, which is why it looked like an outlier before
 the other two existed.
 
 Read alongside the action-prediction results, where the same manipulation
-moves 0.46–0.69 and produces 23 corrections with no regressions, the
+moves 0.45–0.69 and produces 28 corrections with no regressions, the
 contrast is the finding rather than a defect:
 
 **An observed action appears to determine goal inference strongly enough
@@ -173,7 +191,8 @@ neither the package nor Alex is at the front desk. That *undermines* the
 sparse reading without supplying anything in its place, and the model did
 not merely fail to switch: entropy fell from 0.94 to 0.68 and it answered
 `meet_alex` more confidently — the very reading the belief rules out. The
-subtractive goal-recognition domains behave the same way, at 0.07.
+subtractive goal-recognition domains behave the same way, at 0.07 — near
+enough nothing across twelve scenarios and three unrelated domains.
 
 **Re-representation is most effective when the richer representation
 supports a competing inference, rather than merely revealing a problem with
@@ -230,8 +249,8 @@ each written once and run once, with no revision. They reproduce the
 | false_false | replaces it outright | **0.72** | +0.02 |
 
 The split is the same in every domain: where the belief puts something at
-the observed destination, influence is 0.68–0.81; where it does not, 0.07–
-0.29. Nothing about a particular story is carrying the effect.
+the observed destination, influence is 0.65–0.76; where it does not, 0.12–
+0.34. Nothing about a particular story is carrying the effect.
 
 The new domains sharpen the claim in a way `mailroom` alone did not.
 `true_false` — belief undermines the sparse reading and supplies nothing —
@@ -259,3 +278,64 @@ against is roughly 0.15 here, not zero.
 
 Three domains per cell, one run each. The direction is consistent across
 every domain; the magnitudes are not stable enough to quote to two figures.
+
+## Sparse-state signals do not reliably identify the need for re-representation
+
+Across the current corpus, cases in which re-representation substantially
+improves inference are not reliably identifiable from the sparse inference
+alone. In particular, sparse confidence and entropy do not provide a
+sufficient escalation signal: the sparse system is often highly confident in
+an inference that is reasonable given the information represented, even when
+adding mental-state information subsequently produces a large correction.
+Objective-world conflict is also insufficient, because useful
+re-representation occurs in second-order and attribution cases where the
+relevant mental-state proposition does not contradict the objective world.
+
+These failures reflect representational incompleteness rather than
+necessarily defective inference over the sparse representation. In many
+cases, the information that makes the rich inference preferable is precisely
+the information omitted from the sparse representation. Consequently, the
+sparse inference need not contain an internal indication that its conclusion
+would change under re-representation.
+
+This provides a negative result for simple self-monitoring accounts of
+escalation: uncertainty and detected world conflict are not sufficient
+triggers for re-representation on this corpus. A successful escalation
+mechanism therefore requires either additional information outside the
+sparse inference itself or a policy that sometimes constructs richer
+representations in the absence of an internally detectable error.
+
+### What was measured
+
+Three candidate triggers, each computable from the sparse representation
+without any belief, against whether the rich pass actually produced a
+correction. 68 scenarios, 28 corrections.
+
+**Sparse uncertainty.** Mean sparse entropy is 0.40 where a correction
+follows and 0.34 where none does — a difference far too small to threshold
+on, and in any case the two ranges overlap almost entirely. Thresholding
+does not help: 12 of 25 scenarios above 0.5 bits are corrections, against
+16 of 43 below it. More pointedly, 11 of the 28 corrections have sparse
+entropy below 0.2 — near-certainty on two or three options — and those
+carry a mean influence of 0.94. The sparse pass is at
+its most confident precisely where belief is about to overturn it.
+
+**Objective-world conflict.** 11 of the 17 second-order and attribution
+corrections have no world conflict at all, at mean influence 0.85. Three of
+those do have an *attribution* conflict — the believer is wrong about a
+person rather than about the world — and the rest are uncheckable because
+the other agent's belief is not represented. So the mental state doing the
+work contradicts nobody's facts.
+
+**The model's own answer contradicting what is known.** Take the sparse
+answer and ask whether background knowledge and the episodic world rule it
+out. It fires four times, with precision 0.00 and recall 0.00. Where it
+fires — darkroom and greenhouse, false_positive and true_negative — the rich
+pass gives the same answer, so escalating buys nothing. And it cannot fire
+where it would matter: an action-prediction answer is derived from the
+world, so it does not contradict it.
+
+The one quantity that does separate cleanly is acceptable mass on the sparse
+pass — 0.06 where a correction follows against 0.83 where none does. That is
+not a trigger but a restatement of the target: it is computed from ground
+truth, and predicting it is the whole problem.
