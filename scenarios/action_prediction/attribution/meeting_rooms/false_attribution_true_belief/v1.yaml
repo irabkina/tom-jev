@@ -68,6 +68,7 @@ world_state:
     subject: meeting
     location: garden
     value: false
+
 goals:
   - agent: sam
     type: meet
