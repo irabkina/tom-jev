@@ -42,7 +42,7 @@ CONDITIONS = ["sparse", "rich"]
 
 def from_graph(
     items: list[Scenario], sparse: dict[str, str]
-) -> tuple[dict[str, bool], dict[str, bool | None], dict[str, str]]:
+) -> tuple[dict[str, bool], dict[str, bool | None], dict[str, str], dict[str, int]]:
     """Ask the graph the three things only it can answer.
 
     Conflict and attribution have in-memory equivalents and fall back to
@@ -62,12 +62,14 @@ def from_graph(
                 {s.id: world.has_conflict(driver, s.id) for s in items},
                 {s.id: _attribution(driver, s.id) for s in items},
                 {s.id: str(world.answer_anomaly(driver, s, sparse[s.id])) for s in items},
+                {s.id: world.mind_dependence(driver, s) for s in items},
             )
     except Exception as error:  # noqa: BLE001 - any driver failure falls back
         print(f"! neo4j unavailable ({type(error).__name__}), falling back in memory: {error}")
         return (
             {s.id: analysis.world_conflict(s) for s in items},
             {s.id: analysis.attribution_conflict(s) for s in items},
+            {},
             {},
         )
 
@@ -99,7 +101,7 @@ def main() -> None:
     # The trigger is asked of the sparse answer, so the graph is queried
     # after the model rather than before it.
     sparse = {s.id: top_answer(predictions[s.id]["sparse"], s) for s in items}
-    conflict, attribution, trigger = from_graph(items, sparse)
+    conflict, attribution, trigger, minds = from_graph(items, sparse)
 
     comparisons = [
         analysis.compare(
@@ -109,6 +111,7 @@ def main() -> None:
             conflict=conflict[s.id],
             attribution=attribution[s.id],
             trigger=trigger.get(s.id),
+            mind_dependence=minds.get(s.id),
         )
         for s in items
     ]

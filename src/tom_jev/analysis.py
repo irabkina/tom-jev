@@ -265,6 +265,12 @@ class Comparison(BaseModel):
     # verdict, precision and recall need the whole set.
     trigger: str | None = None
 
+    # How many minds beyond the actor's own the prediction turns on, from
+    # `world.mind_dependence`. Structural rather than output-based: it reads
+    # the goal's requirements and the cast, both available to the sparse
+    # pass, and never the belief. None without a store to ask.
+    mind_dependence: int | None = None
+
     influence: float | None = None
     utility: float | None = None
 
@@ -331,6 +337,7 @@ def compare(
     conflict: bool | None = None,
     attribution: bool | None = None,
     trigger: str | None = None,
+    mind_dependence: int | None = None,
 ) -> Comparison:
     """Measure one scenario's sparse pass against its rich pass.
 
@@ -353,6 +360,7 @@ def compare(
             attribution_conflict(scenario) if attribution is None else attribution
         ),
         trigger=trigger,
+        mind_dependence=mind_dependence,
         influence=influence(sparse, rich, question_type),
         utility=utility(sparse, rich, question_type, acceptable),
         acceptable_mass_sparse=acceptable_mass(sparse, question_type, acceptable),
@@ -416,17 +424,28 @@ def summarise(comparisons: list[Comparison]) -> str:
                 " sparse -> "
                 f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} rich"
             )
-        fired = [c for c in comparisons if c.trigger == "conflict"]
         helped = [c for c in comparisons if c.outcome is Outcome.CORRECTION]
-        if fired or any(c.trigger for c in comparisons):
-            hit = sum(c.outcome is Outcome.CORRECTION for c in fired)
-            precision = f"{hit / len(fired):.2f}" if fired else "n/a"
-            recall = f"{hit / len(helped):.2f}" if helped else "n/a"
+        policies = {
+            "answer contradicted": [c for c in comparisons if c.trigger == "conflict"],
+            "mind-dependent": [
+                c for c in comparisons if c.mind_dependence and c.mind_dependence >= 1
+            ],
+            "always": list(comparisons),
+        }
+        if helped and any(p for p in policies.values()):
+            lines.append("")
             lines.append(
-                f"escalation trigger: fired {len(fired)}, "
-                f"precision {precision}, recall {recall} "
-                f"(against {len(helped)} corrections)"
+                f"escalation policies, against {len(helped)} corrections "
+                f"(escalating everywhere costs {len(comparisons)}):"
             )
+            for name, fired in policies.items():
+                if not fired:
+                    continue
+                hit = sum(c.outcome is Outcome.CORRECTION for c in fired)
+                lines.append(
+                    f"  {name:22} escalates {len(fired):3}  "
+                    f"precision {hit / len(fired):.2f}  recall {hit / len(helped):.2f}"
+                )
         counts = {o: sum(c.outcome is o for c in comparisons) for o in Outcome}
         lines.append("  ".join(f"{name} {count}" for name, count in counts.items()))
         lines.append("")

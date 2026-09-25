@@ -339,3 +339,81 @@ The one quantity that does separate cleanly is acceptable mass on the sparse
 pass — 0.06 where a correction follows against 0.83 where none does. That is
 not a trigger but a restatement of the target: it is computed from ground
 truth, and predicting it is the whole problem.
+
+## Dependency structure is a usable escalation signal; output properties are not
+
+The negative result above tested three signals, and all three are
+properties of the sparse *output* — how confident it is, whether it
+conflicts with the world, whether its answer is ruled out. None works,
+because the sparse pass is not behaving badly: it is reasoning correctly
+over what it was given.
+
+A different question does work. Rather than asking whether the conclusion
+looks wrong, ask what it *rests on*, and whether any of those supports is
+the sort of thing only a mind settles.
+
+    1. sparse inference          "Sam will go to the office."
+    2. dependency analysis       this rests on where Alex will be
+    3. epistemic relevance       but Alex's position is settled by Alex's
+                                 representation, not by the world
+    4. construct                 query what Sam thinks Alex thinks
+    5. rerun
+
+Steps 2 and 3 are computable without any belief. `world.dependencies`
+reads the goal's requirements from background knowledge and resolves them
+against the scenario's cast; a requirement pointing at an *agent* resolves
+through that agent's representation. `world.mind_dependence` counts the
+distinct minds involved beyond the actor's own.
+
+| policy | escalates | precision | recall |
+|---|---|---|---|
+| answer contradicted by the world | 4 | 0.00 | 0.00 |
+| **mind-dependent (>= 1 other mind)** | **44** | **0.48** | **0.75** |
+| always | 68 | 0.41 | 1.00 |
+
+Two kinds of mind-dependence fall out, and they behave differently. The
+*actor's own* representation mediates every prediction about an agent —
+whatever the world says, they act on what they believe — so on its own it
+says escalate always. A requirement resolving through *another* agent is
+selective: `meet(alex)` needs co-location with Alex, and where Alex is
+depends on what Alex believes.
+
+### The ceiling is low, and not because of missing information
+
+The obvious next move is step 3 proper: escalate only where the
+mind-dependent support is load-bearing, meaning the answer would change if
+the belief differed. On this corpus that adds nothing, because the answer
+is *always* sensitive — every scenario offers two or more destinations and
+a different belief picks a different one. Sensitivity is positive by
+construction.
+
+More tellingly, an oracle does barely better. A trigger able to see whether
+the belief actually diverges from the world or from the attributed person —
+which requires the rich representation, and so cannot be a trigger —
+reaches precision 0.61 at recall 0.71. It has *worse* recall than the blind
+structural signal. Among mind-dependent scenarios, 8 of 21 divergences
+produce no correction and 8 corrections occur where nothing diverges.
+
+So the limit is not that the sparse pass lacks the information. Belief
+diverging simply does not reliably imply that re-representation corrects.
+No trigger, informed or otherwise, can do much better than the base rate.
+
+### What the signal is actually worth
+
+Precision 0.48 is close to the base rate among the scenarios it fires on —
+21 of 44 — so it is not identifying *which* cases need re-representation.
+What it does is concentrate the effort: escalating on 44 of 68 catches 21
+of 28 corrections, which is 65% of the cost for 75% of the benefit.
+
+That is the right shape for the motivating account, where the question was
+never "is my answer wrong" but "is this worth the effort". A resource-bound
+policy does not need to know it will be corrected. It needs to spend where
+correction is likelier, and mind-dependence tells it that much without ever
+seeing a belief.
+
+One caveat on the number. Precision tracks how often belief diverges among
+mind-dependent cases, which here is 21 of 44 — near a half, because the
+corpus is balanced 2x2s and half of every set has belief diverging by
+construction. In a setting where false belief is rare, the same policy
+would show much lower precision without being any worse a policy. The
+figure describes the corpus as much as the method.

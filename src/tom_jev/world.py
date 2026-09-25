@@ -537,6 +537,79 @@ def action_consistency(driver: Driver, scenario: Scenario, action: str) -> Consi
     return accounted_for(driver, scenario, action[len(GO_TO) :])
 
 
+def dependencies(driver: Driver, scenario: Scenario) -> list[dict]:
+    """What a prediction rests on, and which supports resolve through a mind.
+
+    The escalation question asked structurally rather than from the output.
+    Three output-based signals fail on this corpus — confidence, conflict
+    with the world, and the answer being ruled out — because they ask
+    whether the sparse pass looks wrong, and it does not: it is reasoning
+    correctly over what it was given. This asks instead what the conclusion
+    *depends on*, and whether any of those supports is the kind of thing
+    only a mind settles.
+
+    Two kinds, and they behave very differently.
+
+    `actor` — the acting agent's own representation of a requirement.
+    Universal: whatever the world says about where the report is, the agent
+    goes where they *believe* it is. Present in every prediction about an
+    agent, so on its own it says escalate always.
+
+    `<agent id>` — a requirement that resolves through *another* agent's
+    representation. `meet(alex)` needs co-location with Alex, and where
+    Alex is depends on what Alex believes. Selective: only goals whose
+    requirements point at an agent.
+
+    Returned one row per support, so a caller can count distinct minds,
+    weight them, or ignore the universal one.
+    """
+    rows: list[dict] = []
+    agents = {e.id for e in scenario.entities.agents}
+    actor = scenario.question.agent
+
+    for goal, roles in goals_in_play(scenario):
+        records, _, _ = driver.execute_query(
+            """
+            MATCH (:Goal {scenario: $scope, name: $goal})-[r:REQUIRES]->(c:Concept)
+            RETURN r.kind AS kind, c.name AS what
+            """,
+            scope=BACKGROUND,
+            goal=goal,
+        )
+        for record in records:
+            kind, what = record["kind"], record["what"]
+            filler = roles.get(what, what) if kind == CO_LOCATED else what
+            rows.append(
+                {
+                    "goal": goal,
+                    "kind": kind,
+                    "requires": filler,
+                    # Whose representation settles this. Another agent when
+                    # the requirement points at one; otherwise the actor's
+                    # own, since they act on what they take to be true.
+                    "through": filler if filler in agents and filler != actor else "actor",
+                }
+            )
+    return rows
+
+
+def mind_dependence(driver: Driver, scenario: Scenario) -> int:
+    """How many distinct minds the prediction turns on, beyond the actor's.
+
+    0 — the answer depends only on the actor's own representation of
+        objective facts. Every prediction about an agent is at least this,
+        so 0 is the floor rather than "no mind involved".
+    1 — some requirement resolves through another agent's representation,
+        as `meet(alex)` does through Alex's.
+    2+ — several such agents.
+
+    Computable without any belief: it reads the goal's requirements from
+    background knowledge and the cast from the scenario, neither of which
+    is withheld from the sparse representation.
+    """
+    return len({row["through"] for row in dependencies(driver, scenario)} - {"actor"})
+
+
 def answer_anomaly(driver: Driver, scenario: Scenario, answer: str) -> Consistency:
     """Is the model's own answer contradicted by what is known?
 
