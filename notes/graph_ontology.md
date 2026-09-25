@@ -85,3 +85,56 @@ The first is the likely one, and it is the guard above that will announce
 it: the moment a scenario uses `knowledge`, or an attitude other than
 `believes` in a chain, loading it into the graph raises. That is the signal
 to reify, and it will arrive as a failure rather than as wrong numbers.
+
+## Episodic fact and background knowledge are separated
+
+The graph holds two kinds of thing, and they are kept apart because they
+change for different reasons.
+
+**Episodic**, from a scenario's `world_state`: what is where, right now, in
+this episode. Reified as propositions, scoped by scenario id.
+
+**Background**, from `knowledge/goals.yaml`: what goals require, as standing
+facts about the domain.
+
+```
+(:Goal {name})-[:REQUIRES {kind}]->(:Concept {name})
+
+    present     the named entity must be at the place in question
+    carried     the agent must be carrying it
+    co_located  the goal's own argument must be at the place
+```
+
+Move the coffee and every scenario changes; the fact that making coffee
+needs a mug does not. Scoped under a reserved name no scenario can use, so
+it is shared across the corpus rather than repeated in it.
+
+The split was not cosmetic. While `requires(coffee, mug)` sat in
+`world_state`, the conflict rule was written against that predicate by name,
+and so appeared to be about the word `requires` rather than about goals
+having requirements at all. Separating them forced the general form: a goal
+is satisfiable at a place when its requirements hold there, and a place is
+accounted for when some goal in play is satisfiable. Neither step names a
+predicate.
+
+Generalising it immediately falsified a result. The narrow version had
+reported six observation anomalies; asked properly, there are none, because
+every observed walk in the corpus is accounted for by *some* goal — Sam's
+walk to the coffee-less kitchen by washing the mug. The six had been an
+artifact of following a single route from the carried object.
+
+### Where the line falls
+
+`world_state` should hold only what could differ between two episodes of the
+same domain. Anything true of the domain itself belongs in the background,
+and anything derivable from something already stated belongs in neither —
+it should be derived.
+
+One thing currently sits on the wrong side of that last rule. The
+attribution scenarios state where the second agent is, and it is *derived*:
+that agent acts on their own belief, which the scenario also states. It is
+written out because `representation.sparse()` builds the model's input from
+the `Scenario` object alone, with no database, and moving the fact into the
+graph would make Neo4j a dependency of running the experiment rather than
+of analysing it. A derivation step that materialises such facts back onto
+the scenario would remove the duplication without that cost.

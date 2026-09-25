@@ -40,18 +40,22 @@ outside it.
 another agent's belief makes no claim about the world, so there is no known
 conflict. Correct as far as it goes, and documented in schema.yaml.
 
-**Belief-vs-belief disagreement is not checked at all.** Nothing compares
-mental states to each other, so `attribution_FT` reports
-`world_conflict: false` despite Sam and Alex plainly disagreeing about
-where Alex thinks the meeting is. Detecting it needs a second relation —
-compare an attribution's inner proposition against the attributed agent's
-own belief — not a widening of the existing one. The two should stay
-separate measures: one is about the world, the other about a person.
+**Belief-vs-belief disagreement — closed.** `analysis.attribution_conflict`
+and `world.attributions` now compare an attribution's inner proposition
+against the attributed agent's own belief. Kept as a separate measure
+rather than folded in, since one asks whether a belief matches the world
+and the other whether it matches a person. Across the attribution set the
+two are exactly orthogonal, which is the 2x2 that set was built on. `None`
+where the other agent has no represented belief, which is 56 of 68
+scenarios: an attribution can only be wrong about someone the scenario
+represents.
 
-This gap now has a concrete cost: across the corpus, `world_conflict` does
-not predict influence (the two largest influences in the `meeting` set have
-no first-order conflict), while the `belief_changes_expected_action`
-annotation does. A belief-vs-belief measure might close that.
+It did not close the gap it was expected to. `world_conflict` still fails
+to predict influence — 11 of the 14 second-order and attribution
+corrections have no world conflict at all — and adding the second dimension
+does not rescue it, because most of those cases are uncheckable rather than
+non-conflicting. See *Sparse-state signals do not reliably identify the
+need for re-representation* in experimental_design.md.
 
 **Beliefs about unstated facts are invisible.** Conflict is found by exact
 signature match against `world_state`, so a belief about something the
@@ -113,3 +117,21 @@ observation that on its own implies one goal more than the others — the
 candidate targets are locations Sam might walk to, which is a property of
 that story rather than a designed feature. An item where the observed
 action genuinely carries no preference would isolate belief further.
+
+## Still open: an observation the world cannot account for
+
+No scenario in the corpus contains one. Asked properly — is *any* goal in
+play satisfiable at the observed destination, given background requirements
+and the episodic world — every observed walk is accounted for. Sam's walk
+to the coffee-less kitchen is explained by washing the mug; the darkroom
+walk by collecting prints.
+
+That is why the anomaly detector never fires, and it is a gap in the corpus
+rather than in the rule. An item where the observation is genuinely
+unaccountable — every candidate goal blocked at that place — would be the
+first real test of whether an observer can notice, from the sparse
+representation alone, that something needs explaining.
+
+Worth building precisely because the negative result above says nothing
+inside the sparse inference predicts the need to re-represent. If any
+sparse-side signal works, this is the shape it would have.
