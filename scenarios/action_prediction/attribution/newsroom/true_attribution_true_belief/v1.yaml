@@ -65,29 +65,6 @@ world_state:
     location: archive
     value: false
 
-  # Where Juno actually is. Juno acts on Juno's own belief,
-  # so this follows from it — and without it the world says nothing about
-  # the goal's target, which is what Ade is trying to reach.
-  - predicate: located
-    subject: juno
-    location: copy_desk
-    value: true
-
-  - predicate: located
-    subject: juno
-    location: wire_room
-    value: false
-
-  - predicate: located
-    subject: juno
-    location: roof_deck
-    value: false
-
-  - predicate: located
-    subject: juno
-    location: archive
-    value: false
-
 goals:
   - agent: ade
     type: meet

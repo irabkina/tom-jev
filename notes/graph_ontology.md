@@ -130,11 +130,40 @@ same domain. Anything true of the domain itself belongs in the background,
 and anything derivable from something already stated belongs in neither —
 it should be derived.
 
-One thing currently sits on the wrong side of that last rule. The
-attribution scenarios state where the second agent is, and it is *derived*:
-that agent acts on their own belief, which the scenario also states. It is
-written out because `representation.sparse()` builds the model's input from
-the `Scenario` object alone, with no database, and moving the fact into the
-graph would make Neo4j a dependency of running the experiment rather than
-of analysing it. A derivation step that materialises such facts back onto
-the scenario would remove the duplication without that cost.
+This line was crossed once and the crossing is worth recording, because the
+mistake was easy to make and looked like a fix.
+
+The attribution scenarios were given a `located(<other agent>, …)` fact so
+that the goal's target had a position and the conflict rule could apply to
+them. It was wrong on three counts, in increasing seriousness.
+
+It was **derived, not stated** — the agent's position follows from their own
+belief, which the scenario already gives, so the same fact existed twice and
+could drift.
+
+It **reached the model**. `world_state` feeds `representation.sparse()`, so
+this changed the stimulus rather than only what the analysis could compute.
+
+And the derivation **is the thing under test**. Getting from *Alex believes
+the meeting is in the garden* to *Alex is in the garden* uses "agents act on
+their beliefs" — the very principle the experiment measures. Doing that
+inference in the data and presenting the result as objective fact hands the
+model the answer to the question being asked.
+
+The motive was the worst part: the stimulus was changed so that a
+measurement tool would apply to it. Attribution influence moved 0.69 to
+0.48, and reverting restored it exactly, which shows the figure was a
+consequence of the injected fact rather than a better-controlled reading.
+
+So `accounted_for` reports NOT_APPLICABLE for the attribution and
+second-order sets. Their worlds genuinely say nothing about where the person
+being met is, and that should surface as "cannot tell" rather than be
+papered over.
+
+If the inference should be available at all, it belongs in background
+knowledge as a rule — *an agent is where they believe their goal object
+is* — so the graph derives it visibly at query time and it never touches
+`world_state`. That keeps it out of the model's input, which was the actual
+error. An agent's position is legitimate episodic fact when nothing derives
+it: the discriminative set locates Alex, who holds no belief there, and that
+is primitive rather than inferred.
