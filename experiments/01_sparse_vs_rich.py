@@ -30,29 +30,57 @@ import pathlib
 from dotenv import load_dotenv
 
 from tom_jev import analysis, jev, scenarios, world
-from tom_jev.models import Scenario
+from tom_jev.models import Prediction, Scenario
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
+KNOWLEDGE = ROOT / "knowledge" / "goals.yaml"
 
 CONDITIONS = ["sparse", "rich"]
 
 
-def conflicts_from_graph(items: list[Scenario]) -> dict[str, bool]:
-    """Load the world state into Neo4j and ask it which scenarios conflict.
+def from_graph(
+    items: list[Scenario], sparse: dict[str, str]
+) -> tuple[dict[str, bool], dict[str, bool | None], dict[str, str]]:
+    """Ask the graph the three things only it can answer.
 
-    Falls back to the in-memory reference if the database is unreachable,
-    saying so rather than quietly substituting a different computation.
+    Conflict and attribution have in-memory equivalents and fall back to
+    them; the escalation trigger does not, since it needs the background
+    knowledge the graph holds, and comes back empty instead.
+
+    `sparse` maps scenario id to the sparse pass's top answer — the trigger
+    is asked of what the model actually concluded, which is the whole point
+    of it: a self-monitoring policy has that and nothing else.
     """
     try:
         with world.connect() as driver:
+            world.load_knowledge(driver, KNOWLEDGE)
             for scenario in items:
                 world.load(driver, scenario)
-            return {s.id: world.has_conflict(driver, s.id) for s in items}
+            return (
+                {s.id: world.has_conflict(driver, s.id) for s in items},
+                {s.id: _attribution(driver, s.id) for s in items},
+                {s.id: str(world.answer_anomaly(driver, s, sparse[s.id])) for s in items},
+            )
     except Exception as error:  # noqa: BLE001 - any driver failure falls back
-        print(f"! neo4j unavailable ({type(error).__name__}), using in-memory conflicts: {error}")
-        return {s.id: analysis.world_conflict(s) for s in items}
+        print(f"! neo4j unavailable ({type(error).__name__}), falling back in memory: {error}")
+        return (
+            {s.id: analysis.world_conflict(s) for s in items},
+            {s.id: analysis.attribution_conflict(s) for s in items},
+            {},
+        )
+
+
+def _attribution(driver, scenario_id: str) -> bool | None:
+    """Does any checkable attribution disagree with what its subject holds?"""
+    rows = [r for r in world.attributions(driver, scenario_id) if r["actual"] is not None]
+    return None if not rows else any(r["actual"] != r["attributed"] for r in rows)
+
+
+def top_answer(prediction: Prediction, scenario: Scenario) -> str:
+    """The answer the pass actually gave."""
+    return prediction.answers.get(scenario.question.type, {}).get("choice", "")
 
 
 def main() -> None:
@@ -61,8 +89,6 @@ def main() -> None:
     if not items:
         raise SystemExit(f"no scenarios found in {SCENARIOS}")
 
-    conflict = conflicts_from_graph(items)
-
     predictions: dict[str, dict[str, object]] = {}
     with jev.client() as c:
         for scenario in items:
@@ -70,12 +96,19 @@ def main() -> None:
                 condition: jev.ask(c, scenario, condition) for condition in CONDITIONS
             }
 
+    # The trigger is asked of the sparse answer, so the graph is queried
+    # after the model rather than before it.
+    sparse = {s.id: top_answer(predictions[s.id]["sparse"], s) for s in items}
+    conflict, attribution, trigger = from_graph(items, sparse)
+
     comparisons = [
         analysis.compare(
             predictions[s.id]["sparse"],
             predictions[s.id]["rich"],
             s,
             conflict=conflict[s.id],
+            attribution=attribution[s.id],
+            trigger=trigger.get(s.id),
         )
         for s in items
     ]

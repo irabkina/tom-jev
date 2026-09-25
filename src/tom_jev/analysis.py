@@ -258,6 +258,13 @@ class Comparison(BaseModel):
     world_conflict: bool | None = None
     attribution_conflict: bool | None = None
 
+    # Would a self-monitoring policy have escalated here? The sparse answer
+    # checked against background knowledge and the episodic world, by
+    # `world.answer_anomaly`. None without a store to ask. Scored against
+    # `outcome` at corpus level in `summarise` — per scenario it is only a
+    # verdict, precision and recall need the whole set.
+    trigger: str | None = None
+
     influence: float | None = None
     utility: float | None = None
 
@@ -323,12 +330,16 @@ def compare(
     *,
     conflict: bool | None = None,
     attribution: bool | None = None,
+    trigger: str | None = None,
 ) -> Comparison:
     """Measure one scenario's sparse pass against its rich pass.
 
     `conflict` and `attribution` are the two conflict dimensions, normally
     supplied by `world.has_conflict` and `world.attributions` from the
     graph. When omitted each falls back to its in-memory equivalent above.
+
+    `trigger` has no in-memory equivalent — it needs the background
+    knowledge the graph holds — so it stays None unless supplied.
     """
     question_type = scenario.question.type
     acceptable = scenario.ground_truth.answers()
@@ -341,6 +352,7 @@ def compare(
         attribution_conflict=(
             attribution_conflict(scenario) if attribution is None else attribution
         ),
+        trigger=trigger,
         influence=influence(sparse, rich, question_type),
         utility=utility(sparse, rich, question_type, acceptable),
         acceptable_mass_sparse=acceptable_mass(sparse, question_type, acceptable),
@@ -403,6 +415,17 @@ def summarise(comparisons: list[Comparison]) -> str:
                 f"{sum(c.acceptable_mass_sparse for c in with_mass) / len(with_mass):.2f}"
                 " sparse -> "
                 f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} rich"
+            )
+        fired = [c for c in comparisons if c.trigger == "conflict"]
+        helped = [c for c in comparisons if c.outcome is Outcome.CORRECTION]
+        if fired or any(c.trigger for c in comparisons):
+            hit = sum(c.outcome is Outcome.CORRECTION for c in fired)
+            precision = f"{hit / len(fired):.2f}" if fired else "n/a"
+            recall = f"{hit / len(helped):.2f}" if helped else "n/a"
+            lines.append(
+                f"escalation trigger: fired {len(fired)}, "
+                f"precision {precision}, recall {recall} "
+                f"(against {len(helped)} corrections)"
             )
         counts = {o: sum(c.outcome is o for c in comparisons) for o in Outcome}
         lines.append("  ".join(f"{name} {count}" for name, count in counts.items()))
