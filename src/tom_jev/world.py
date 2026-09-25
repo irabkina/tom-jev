@@ -584,30 +584,40 @@ def dependencies(driver: Driver, scenario: Scenario) -> list[dict]:
                     "goal": goal,
                     "kind": kind,
                     "requires": filler,
-                    # Whose representation settles this. Another agent when
-                    # the requirement points at one; otherwise the actor's
-                    # own, since they act on what they take to be true.
-                    "through": filler if filler in agents and filler != actor else "actor",
+                    # Whose representation settles this. The actor's
+                    # always, since they act on what they take to be true;
+                    # additionally another agent's when the requirement
+                    # points at one, as `meet(alex)` does through Alex.
+                    "through": sorted(
+                        {actor} | ({filler} if filler in agents and filler != actor else set())
+                    ),
                 }
             )
     return rows
 
 
 def mind_dependence(driver: Driver, scenario: Scenario) -> int:
-    """How many distinct minds the prediction turns on, beyond the actor's.
+    """How many distinct minds the prediction turns on. Always at least one.
 
-    0 — the answer depends only on the actor's own representation of
-        objective facts. Every prediction about an agent is at least this,
-        so 0 is the floor rather than "no mind involved".
-    1 — some requirement resolves through another agent's representation,
-        as `meet(alex)` does through Alex's.
-    2+ — several such agents.
+    Depending on some agent's representation is constitutive of predicting
+    an agent, so this never returns 0 for a scenario about one, and cannot
+    by itself say whether re-representation is worth doing. It measures
+    depth of nesting, not need:
+
+    1 — the actor's own representation of objective facts
+    2 — the actor's, plus another agent whose own mind settles a
+        requirement, as `meet(alex)` does through Alex's
+
+    An earlier version excluded the actor to obtain a signal that fired on
+    some scenarios and not others. That was selectivity manufactured by
+    deforming the concept, and it missed the largest effects in the corpus,
+    all of them first-order. See notes/experimental_design.md, *Dependency
+    structure does not give a usable escalation signal either*.
 
     Computable without any belief: it reads the goal's requirements from
-    background knowledge and the cast from the scenario, neither of which
-    is withheld from the sparse representation.
+    background knowledge and the cast from the scenario.
     """
-    return len({row["through"] for row in dependencies(driver, scenario)} - {"actor"})
+    return len({m for row in dependencies(driver, scenario) for m in row["through"]})
 
 
 def answer_anomaly(driver: Driver, scenario: Scenario, answer: str) -> Consistency:

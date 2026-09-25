@@ -28,13 +28,17 @@ in 68 scenarios. See *Belief moves action prediction, not goal recognition*,
 whose title states the goal-recognition half too strongly; the first finding
 above is the corrected form.
 
-**Nothing computable from the sparse pass predicts whether re-representation
-will help.** Neither its confidence, nor a conflict between what it knows and
-the world, nor its own answer being ruled out by what is known. Where belief
-matters most the sparse pass is at its most confident, because the
-information that would change its mind is exactly what was withheld. A
-negative result for self-monitoring accounts of escalation. See *Sparse-state
-signals do not reliably identify the need for re-representation*.
+**Nothing available to the sparse pass predicts whether re-representation
+will help.** Not its confidence, not a conflict with the world, not its own
+answer being ruled out, and not the dependency structure of its derivation.
+Output properties fail because the sparse pass is reasoning correctly over
+what it was given; structural properties fail because a dependence on some
+agent's representation is constitutive of predicting an agent at all. Close
+to a consequence of the design rather than a discovery, since the
+manipulation is precisely the withholding of the deciding information. See
+*Sparse-state signals do not reliably identify the need for
+re-representation* and *Dependency structure does not give a usable
+escalation signal either*.
 
 **Prefer symmetric competing alternatives (A vs. B) to an action and its
 negation.** See *Symmetric action alternatives*.
@@ -340,17 +344,14 @@ pass — 0.06 where a correction follows against 0.83 where none does. That is
 not a trigger but a restatement of the target: it is computed from ground
 truth, and predicting it is the whole problem.
 
-## Dependency structure is a usable escalation signal; output properties are not
+## Dependency structure does not give a usable escalation signal either
 
-The negative result above tested three signals, and all three are
-properties of the sparse *output* — how confident it is, whether it
-conflicts with the world, whether its answer is ruled out. None works,
-because the sparse pass is not behaving badly: it is reasoning correctly
-over what it was given.
+An earlier version of this section claimed it did. That was wrong, and the
+way it was wrong is worth keeping.
 
-A different question does work. Rather than asking whether the conclusion
-looks wrong, ask what it *rests on*, and whether any of those supports is
-the sort of thing only a mind settles.
+The idea was sound: rather than asking whether the sparse output looks
+wrong, ask what it *rests on*, and whether any of those supports is the
+kind of thing only a mind settles.
 
     1. sparse inference          "Sam will go to the office."
     2. dependency analysis       this rests on where Alex will be
@@ -359,61 +360,74 @@ the sort of thing only a mind settles.
     4. construct                 query what Sam thinks Alex thinks
     5. rerun
 
-Steps 2 and 3 are computable without any belief. `world.dependencies`
-reads the goal's requirements from background knowledge and resolves them
-against the scenario's cast; a requirement pointing at an *agent* resolves
-through that agent's representation. `world.mind_dependence` counts the
-distinct minds involved beyond the actor's own.
+Steps 2 and 3 are computable without any belief — `world.dependencies`
+reads a goal's requirements from background knowledge and resolves them
+against the cast. The problem is what they compute.
 
-| policy | escalates | precision | recall |
+### Mind-dependence is constitutive, not discriminative
+
+The first implementation counted only *other* agents' minds, excluding the
+acting agent's own. That produced a signal firing on 44 of 68 with precision
+0.48 and recall 0.75, which looked usable.
+
+It was an artifact of the exclusion. Sam going where Sam *believes* the
+report is depends on Sam's mind exactly as much as Sam going where Sam
+believes *Alex believes* the meeting is. The actor's own representation was
+dropped because counting it fires everywhere — selectivity manufactured by
+deforming the concept. It also cost the seven largest effects in the corpus,
+all first-order cells at influence 0.81–0.97.
+
+Counted honestly, every prediction about an agent has a mind in its
+dependency chain. The structural signal says *escalate always*: precision
+0.41, recall 1.00. That is not a defect in the detector. Depending on an
+agent's representation is constitutive of predicting an agent at all, so
+nothing structural can distinguish the cases.
+
+### The graded version measures the corpus, not the phenomenon
+
+Depth of nesting does vary — the actor alone, or the actor plus another
+agent whose own mind settles a requirement — and it appeared to rank
+benefit: base rate 0.48 at depth 2 against 0.29 at depth 1, mean influence
+0.51 against 0.28.
+
+It does not. Sparse performs identically at both depths, and rich is
+*better* on the deeper one:
+
+| depth | sparse acc. mass | rich acc. mass | rich correct |
 |---|---|---|---|
-| answer contradicted by the world | 4 | 0.00 | 0.00 |
-| **mind-dependent (>= 1 other mind)** | **44** | **0.48** | **0.75** |
-| always | 68 | 0.41 | 1.00 |
+| 1 (actor alone) | 0.50 | 0.77 | 19/24 |
+| 2 (actor + another mind) | 0.52 | **0.93** | **44/44** |
 
-Two kinds of mind-dependence fall out, and they behave differently. The
-*actor's own* representation mediates every prediction about an agent —
-whatever the world says, they act on what they believe — so on its own it
-says escalate always. A requirement resolving through *another* agent is
-selective: `meet(alex)` needs co-location with Alex, and where Alex is
-depends on what Alex believes.
+Jev solves every second-order case once given the belief, and fails five
+first-order ones. So second-order is not harder here in any sense, and the
+depth gradient was composition: the depth-2 sets are balanced 2x2s where
+half the cells have belief diverging, while depth-1 includes the twelve
+subtractive goal-recognition scenarios where belief does nothing, dragging
+its base rate down.
 
-### The ceiling is low, and not because of missing information
+Two implementation bugs surfaced on the way and are fixed: `through`
+recorded only one mediating mind per requirement, losing the actor on
+`meet` goals, and `mind_dependence` excluded the actor by design.
 
-The obvious next move is step 3 proper: escalate only where the
-mind-dependent support is load-bearing, meaning the answer would change if
-the belief differed. On this corpus that adds nothing, because the answer
-is *always* sensitive — every scenario offers two or more destinations and
-a different belief picks a different one. Sensitivity is positive by
-construction.
+### What is left of the escalation question
 
-More tellingly, an oracle does barely better. A trigger able to see whether
-the belief actually diverges from the world or from the attributed person —
-which requires the rich representation, and so cannot be a trigger —
-reaches precision 0.61 at recall 0.71. It has *worse* recall than the blind
-structural signal. Among mind-dependent scenarios, 8 of 21 divergences
-produce no correction and 8 corrections occur where nothing diverges.
+One line, and it subsumes the section above:
 
-So the limit is not that the sparse pass lacks the information. Belief
-diverging simply does not reliably imply that re-representation corrects.
-No trigger, informed or otherwise, can do much better than the base rate.
+**Nothing available to the sparse pass predicts whether re-representation
+will help.** Output properties fail because the sparse pass is reasoning
+correctly over what it was given. Structural properties fail because the
+dependence on a mind is always present. This is close to a consequence of
+the design — the manipulation *is* withholding the information that would
+change the answer — so it should be read as confirming that framing rather
+than as a discovery.
 
-### What the signal is actually worth
+What that leaves for a policy is cost, not detection. Escalating everywhere
+catches everything; the only measured saving is that goal recognition from
+an observation is nearly barren on this corpus (base rate 0.08), and that
+is an empirical fact about Jev rather than something derivable from the
+dependency graph.
 
-Precision 0.48 is close to the base rate among the scenarios it fires on —
-21 of 44 — so it is not identifying *which* cases need re-representation.
-What it does is concentrate the effort: escalating on 44 of 68 catches 21
-of 28 corrections, which is 65% of the cost for 75% of the benefit.
-
-That is the right shape for the motivating account, where the question was
-never "is my answer wrong" but "is this worth the effort". A resource-bound
-policy does not need to know it will be corrected. It needs to spend where
-correction is likelier, and mind-dependence tells it that much without ever
-seeing a belief.
-
-One caveat on the number. Precision tracks how often belief diverges among
-mind-dependent cases, which here is 21 of 44 — near a half, because the
-corpus is balanced 2x2s and half of every set has belief diverging by
-construction. In a setting where false belief is rare, the same policy
-would show much lower precision without being any worse a policy. The
-figure describes the corpus as much as the method.
+The finding that does not reduce to this, or to "deeper theory of mind is
+harder", is *Re-representation needs an alternative, not just a problem* —
+a claim about what the richer representation must contain rather than about
+how deep the nesting goes.

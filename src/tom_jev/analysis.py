@@ -425,11 +425,14 @@ def summarise(comparisons: list[Comparison]) -> str:
                 f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} rich"
             )
         helped = [c for c in comparisons if c.outcome is Outcome.CORRECTION]
+        # No mind-dependence policy here: every prediction about an agent
+        # depends on some agent's representation, so the structural signal is
+        # identical to "always" and listing it twice reads as a bug. The
+        # score is still recorded per scenario, where its depth is what is
+        # informative. See notes/experimental_design.md.
         policies = {
             "answer contradicted": [c for c in comparisons if c.trigger == "conflict"],
-            "mind-dependent": [
-                c for c in comparisons if c.mind_dependence and c.mind_dependence >= 1
-            ],
+            "predicting an action": [c for c in comparisons if c.trigger != "not_applicable"],
             "always": list(comparisons),
         }
         if helped and any(p for p in policies.values()):
