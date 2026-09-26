@@ -135,3 +135,92 @@ representation alone, that something needs explaining.
 Worth building precisely because the negative result above says nothing
 inside the sparse inference predicts the need to re-represent. If any
 sparse-side signal works, this is the shape it would have.
+
+## Still open: histories are derived from the beliefs they entail
+
+`scripts/add_histories.py` does not author a backstory. It reads the
+beliefs of the agent the question is about and emits the events that make
+them true: the agent witnesses a claim being settled as they are stated
+to believe it, and where something disagrees — the world, for a claim
+about the world; the other agent, for a claim about that agent's belief —
+a further event settles it otherwise with nobody watching.
+
+That guarantees entailment by construction, which is what the middle
+condition needs — `history` and `rich` must carry the same belief, or they
+are not two representations of one scenario. `analysis.entailed_beliefs`
+then recovers the belief from the events independently, and a corpus test
+holds the two to agreement.
+
+The cost is that the history is a mechanical transform of the belief
+rather than a plausible course of events. Consequences worth testing:
+
+- **No irrelevant events.** A real history contains changes that bear on
+  nothing at all. The padding below adds superseded sightings, but they
+  are about the very claim in question, so the model still never has to
+  work out *which* access matters — only which sighting is current.
+- **Minimal length.** Two events per belief, four in the discriminative
+  set. Belief attribution from access presumably gets harder with more
+  events between the sighting and the present, and nothing here tests
+  that.
+- **One shape.** Always "saw it, then missed the change". Never
+  "was told", "inferred", "saw a trace", "was absent the whole time".
+- ~~**The false-belief cells are longer than the true-belief cells.**~~
+  Fixed. Every belief now contributes exactly two events: a false one is
+  settled in view and settled again out of view, a true one settled
+  twice in view. Before the fix, event count alone classified the
+  condition and a model could have scored well on `history` by counting
+  and never representing a belief. A corpus test holds the invariant,
+  and a second test checks the padding is inert — dropping it does not
+  change what the history entails.
+
+  Where a thing *is* gets superseded by moving it; availability gets
+  flipped, since it is not exclusive across places and stocking the
+  coffee elsewhere would not supersede a belief about the kitchen. The
+  alternative location comes from `world_state` in file order, so a
+  padded true cell uses the same place its matching false cell moves to.
+
+  Two residues. **Position is still not matched**: in a true cell the
+  believed claim is settled second, in a false cell first and then
+  superseded out of view. Equalising that needs three events per cell.
+  And the padding **adds a mention of the alternative location**, which
+  may pull probability toward the distractor — symmetrically across
+  cells, so the contrast should hold, but absolute numbers from before
+  the padding are not comparable to numbers after it.
+
+Hand-authoring a few histories per domain and comparing them against the
+derived ones would say how much of the middle condition's behaviour is an
+artefact of the derivation.
+
+## Resolved: an attribution is a claim like any other
+
+An earlier version of the derivation skipped second-order beliefs, on the
+grounds that entailing "Sam believes Alex believes X" needs Sam to have
+access to *Alex's* access, which `HistoryEvent` could not express. It then
+gave the attribution set a history for Alex's own belief instead.
+
+That was the wrong level. What Sam believes about Alex's belief sits
+beside what Sam believes about the coffee machine: a claim Sam witnessed
+being settled, and may since have missed being settled otherwise. Sam does
+not need access to Alex's access — Sam needs access to the event of Alex
+coming to think something, which is an ordinary observable event.
+
+So `HistoryEvent` now carries a `Proposition` rather than flattened
+fields, and the same derivation covers every depth:
+
+    attribution, Sam wrong about Alex, Alex wrong about the world
+      1. Alex comes to think that the meeting is in the office (seen by Sam)
+      2. Alex comes to think that the meeting is in the garden (seen by nobody)
+
+    second order, nothing stated about what Alex actually thinks
+      1. Wen comes to think that the crew briefing is in the galley (seen by Noor)
+
+The history represents the access of one agent: the one the question is
+about. Alex's own access is not represented, because nothing is predicted
+about Alex; Alex's actual belief reaches the history only as the event Sam
+missed. Locative exclusivity passes through the nesting, so witnessing
+Alex come to think the meeting is in the office is witnessing Alex come to
+think it is not in the garden.
+
+All 68 scenarios now carry a history. What still has no vocabulary is an
+event whose *witnessing* is itself witnessed — third order, "Sam saw Kim
+see Alex find out" — which no current scenario needs.

@@ -71,6 +71,26 @@ goals:
     type: obtain
     object: basket
 
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: basket
+        location: cold_room
+        value: true
+    witnessed_by:
+      - osei
+
+  - proposition:
+        predicate: located
+        subject: basket
+        location: flour_store
+        value: true
+    witnessed_by: []
+
 mental_state:
   - type: belief
     agent: osei

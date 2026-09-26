@@ -431,3 +431,69 @@ The finding that does not reduce to this, or to "deeper theory of mind is
 harder", is *Re-representation needs an alternative, not just a problem* —
 a claim about what the richer representation must contain rather than about
 how deep the nesting goes.
+
+## Unresolved: the history's surface form moves the result
+
+The `history` condition was rendered two ways, over identical events
+entailing identical beliefs. The only difference is wording:
+
+    narrated   1. report is put in the office (seen by Sam)
+               2. report is taken from the office (seen by nobody)
+
+    symbolic   1. located(report, at office) = True  [witnessed by Sam]
+               2. located(report, at office) = False [witnessed by nobody]
+
+Acceptable mass on the 24 first-order scenarios, same model, same run:
+
+| scenario | symbolic | narrated |
+|---|---|---|
+| bakery_false_negative | 0.00 | 0.47 |
+| bakery_false_positive | 0.01 | 0.51 |
+| lighthouse_false_positive | 0.12 | 0.44 |
+| report_false_positive | 0.04 | 0.25 |
+| *all 24, mean* | *0.52* | *0.60* |
+
+The whole effect sits in the false-belief cells. The true-belief cells are
+identical to two decimal places, which is what makes this more than noise:
+the wording matters exactly where the agent's belief has to come apart
+from the world.
+
+A plausible reading is that `= True` followed by `= False` about the same
+claim reads as two contradictory facts, while "is put in / is taken from,
+seen by nobody" reads as an event someone missed. If so, the narration is
+not decoration — it is what marks the events as *events*, and the symbolic
+form quietly deletes the temporal structure the condition depends on.
+
+### Why this is a problem and not a preference
+
+The three-condition design claims to vary one thing. It does not:
+
+- `sparse`, `world_state` and the `mental_state` that `rich` adds are all
+  symbolic. A narrated `history` is the only prose in the corpus, so
+  `history` differs from `rich` in style as well as in explicitness.
+- A symbolic `history` holds style constant but demonstrably handicaps the
+  middle condition, so it understates what evidence affords.
+
+Either choice biases the `history` -> `rich` comparison, in opposite
+directions, and neither is the neutral option. The measured gap between
+the two renderings (0.52 to 0.60 mean, up to +0.50 in a cell) is large
+relative to the effects being reported, so this is not a detail that can
+be noted and set aside.
+
+### Options, none of them yet taken
+
+1. **Render every condition in prose**, including `mental_state`, so style
+   is constant and symbolic-vs-prose stops being confounded with
+   sparse-vs-rich. Costs a rewrite of all the renderers and makes the
+   state less machine-checkable.
+2. **Run both renderings as conditions** and report the range rather than
+   a point estimate. Doubles the middle condition's cost and leaves the
+   `rich` style still unmatched.
+3. **Render `mental_state` symbolically and `history` both ways**, then
+   check whether prose helps `rich` too. If it does, the effect is about
+   surface form generally and not about histories; if it does not, the
+   narration is doing something specific to event structure.
+
+Option 3 answers the question most cheaply and should probably come
+first. Until one of these is done, any number from the `history`
+condition carries an unmeasured surface-form term.

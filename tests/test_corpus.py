@@ -98,3 +98,116 @@ def test_scenario_ids_are_unique(corpus):
     """Two scenarios sharing an id would collapse together in analysis."""
     ids = [s.id for s in corpus]
     assert len(ids) == len(set(ids))
+
+
+def test_history_entails_the_stated_mental_state(corpus):
+    """A history must imply exactly the beliefs the scenario states.
+
+    The history is the whole manipulation: it must carry the same belief
+    the `rich` condition states outright, or the middle condition tests a
+    different scenario from the other two and the three passes are no
+    longer comparable. A history that entailed *less* would understate
+    what evidence affords; one that entailed *more* would smuggle in a
+    belief `rich` never claimed.
+    """
+    for scenario in corpus:
+        if not scenario.history:
+            continue
+        mismatches = analysis.history_matches_mental_state(scenario)
+        assert not mismatches, f"{scenario.id}: " + "; ".join(mismatches)
+
+
+def test_history_witnesses_are_agents(corpus):
+    """Only an agent can witness an event.
+
+    A location or object in `witnessed_by` passes the declared-entity
+    check but entails a belief held by something that cannot hold one.
+    """
+    for scenario in corpus:
+        agents = {e.id for e in scenario.entities.agents}
+        for event in scenario.history:
+            assert set(event.witnessed_by) <= agents, (
+                f"{scenario.id}: {sorted(set(event.witnessed_by) - agents)} witness an event "
+                "but are not agents"
+            )
+
+
+def test_every_scenario_carries_a_history(corpus):
+    """The middle condition must cover the whole corpus.
+
+    A scenario without a history drops out of the three-condition
+    comparison, and which scenarios drop out would not be a principled
+    subset — it would be whatever the derivation happened to manage.
+    """
+    missing = [s.id for s in corpus if not s.history]
+    assert not missing, f"no history for {missing}"
+
+
+def test_only_the_question_agent_witnesses_anything(corpus):
+    """A history represents one agent's access: the one being predicted.
+
+    Giving another agent access would put evidence in `history` that
+    `rich` never states as that agent's belief, so the two conditions
+    would stop being the same scenario. In an attribution the second
+    agent appears only as the *subject* of a claim Sam witnessed — Alex
+    coming to think something — never as a witness.
+    """
+    for scenario in corpus:
+        witnesses = {w for event in scenario.history for w in event.witnessed_by}
+        assert witnesses <= {scenario.question.agent}, (
+            f"{scenario.id}: {sorted(witnesses - {scenario.question.agent})} witness events "
+            f"but the question is about {scenario.question.agent}"
+        )
+
+
+def test_attribution_is_witnessed_as_an_event(corpus):
+    """A second-order belief gets a history like any other belief.
+
+    What Sam believes about Alex's belief sits at the same level as what
+    Sam believes about the coffee: a claim Sam saw settled. So the
+    attribution and second-order sets carry nested history events, rather
+    than being excluded for holding a belief about a belief.
+    """
+    items = [s for s in corpus if s.taxonomy.template in ("attribution", "second_order")]
+    assert items, "expected attribution and second-order sets in the corpus"
+    for scenario in items:
+        nested = [e for e in scenario.history if e.proposition.proposition is not None]
+        assert nested, f"{scenario.id}: no history event settles a belief about a belief"
+
+
+def test_event_count_does_not_give_away_the_condition(corpus):
+    """Every belief contributes exactly two events, true or false.
+
+    A false belief is settled in view and then settled again out of view.
+    A true one is settled twice in view, the first sighting superseded
+    before it matters. Without that padding the true-belief cells ran one
+    event and the false-belief cells two, so counting events classified
+    the condition and a model could have scored well on `history` without
+    representing a belief at all.
+    """
+    for scenario in corpus:
+        held = [m for m in scenario.mental_state if m.agent == scenario.question.agent]
+        assert len(scenario.history) == 2 * len(held), (
+            f"{scenario.id}: {len(held)} belief(s) but {len(scenario.history)} events"
+        )
+
+
+def test_padding_leaves_the_entailed_belief_alone(corpus):
+    """A superseded sighting must not change what the history entails.
+
+    The padding is only legitimate if the agent's last witnessed event is
+    still the belief the scenario states. `history_matches_mental_state`
+    checks that for the corpus as it stands; this checks the stronger
+    claim that dropping the padding would not change the answer, which is
+    what makes the added events inert rather than load-bearing.
+    """
+    for scenario in corpus:
+        full = analysis.entailed_beliefs(scenario)
+        witnessed_only = scenario.model_copy(
+            update={"history": [e for e in scenario.history if e.witnessed_by][-1:]}
+        )
+        trimmed = analysis.entailed_beliefs(witnessed_only)
+        for key, value in trimmed.items():
+            assert full.get(key) == value, (
+                f"{scenario.id}: padding changed the entailed value of {key}"
+            )

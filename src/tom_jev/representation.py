@@ -18,7 +18,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from .models import Goal, MentalState, Observation, Proposition, Scenario
+from .models import (
+    Entities,
+    Goal,
+    HistoryEvent,
+    MentalState,
+    Observation,
+    Proposition,
+    Scenario,
+)
 
 State = dict[str, str]
 
@@ -109,8 +117,162 @@ def rich(scenario: Scenario) -> State:
     return state
 
 
+#: Prefixed to every history, so a superseded early event does not read as
+#: a contradiction of the current world_state. Fixed text, identical for
+#: every scenario, so it cannot favour one of them.
+HISTORY_PREAMBLE = (
+    "Earlier events, in the order they happened. A later event supersedes an "
+    "earlier one about the same claim; world_state is the situation now."
+)
+
+#: How to narrate an event settling a flat claim, by predicate, the value
+#: it settles, and whether the subject is an agent. Agents arrive and
+#: leave; objects are put somewhere and taken away. `None` means the
+#: location supplies the preposition, since that depends on the place
+#: rather than the verb.
+VERBS: dict[tuple[str, bool, bool], tuple[str, str | None]] = {
+    ("located", True, True): ("arrives", "at"),
+    ("located", True, False): ("is put", None),
+    ("located", False, True): ("leaves", ""),
+    ("located", False, False): ("is taken", "from"),
+    ("available", True, False): ("is stocked", "in"),
+    ("available", False, False): ("runs out", "in"),
+}
+
+#: How to narrate an agent coming to hold a belief. The attitude is an
+#: event like any other — something that happens, that someone may or may
+#: not be there for.
+ATTITUDE_VERBS = {"believes": "comes to think"}
+
+
+def _place(entities: Entities, location: str, preposition: str | None) -> str:
+    """`at the front desk`, `on platform three` — the place decides."""
+    entity = entities.by_id(location)
+    return entity.phrase(preposition) if entity else f"in {location}"
+
+
+def _subject(entities: Entities, entity_id: str) -> str:
+    """A subject as it appears in a sentence: `Alex`, but `the meeting`.
+
+    An agent is a name and takes no article; anything else does, unless
+    its own `article` says otherwise.
+    """
+    entity = entities.by_id(entity_id)
+    if entity is None:
+        return entity_id
+    if entity in entities.agents or not entity.article:
+        return entity.name
+    return f"the {entity.name}"
+
+
+def _state_clause(proposition: Proposition, entities: Entities) -> str:
+    """A claim as a statement of fact: `the meeting is in the office`.
+
+    Used inside a belief, where the content is a state of affairs rather
+    than something happening.
+    """
+    subject = _subject(entities, proposition.subject)
+    negation = "" if proposition.value else " not"
+    if proposition.location is None:
+        return f"{subject} is{negation} available"
+    where = _place(entities, proposition.location, None)
+    if proposition.predicate == "available":
+        return f"{subject} is{negation} available {where}"
+    return f"{subject} is{negation} {where}"
+
+
+def _narrate_event(event: HistoryEvent, index: int, entities: Entities, agents: set[str]) -> str:
+    """Render one history event as `n. what happened (who saw it)`."""
+    names = entities.names()
+    claim = event.proposition
+    subject = _subject(entities, claim.subject)
+
+    if claim.proposition is not None:
+        # A nested claim: an agent coming to hold a belief. Narrated as an
+        # event, because that is what it is — Sam can witness it, or miss
+        # it, exactly as with the coffee running out.
+        verb = ATTITUDE_VERBS.get(claim.predicate, f"comes to {claim.predicate}")
+        what = f"{subject} {verb} that {_state_clause(claim.innermost(), entities)}"
+    else:
+        verb, preposition = VERBS.get(
+            (claim.predicate, bool(claim.value), claim.subject in agents), ("changes", "in")
+        )
+        where = f" {_place(entities, claim.location, preposition)}" if claim.location else ""
+        what = f"{subject} {verb}{where}"
+
+    seen = (
+        ", ".join(names.get(w, w) for w in event.witnessed_by) if event.witnessed_by else "nobody"
+    )
+    return f"{index}. {what} (seen by {seen})"
+
+
+def _describe_event(event: HistoryEvent, index: int, names: dict[str, str]) -> str:
+    """Render one history event in the symbolic form world_state uses.
+
+    The alternative to narrating it, and measurably a weaker one: a claim
+    asserted True and then False reads as two contradictory facts, where
+    the narration reads as an event someone was or was not there for. On
+    the first-order set this costs most of the effect, and all of the cost
+    falls in the false-belief cells (bakery_false_positive 0.51 -> 0.01
+    acceptable mass); the true-belief cells do not move.
+
+    Kept because it is the only rendering that matches the rest of the
+    state, including the `mental_state` that `rich` adds — so it bounds
+    how much of the `history` -> `rich` gap is style rather than
+    explicitness. See notes/experimental_design.md.
+    """
+    claim = _describe_proposition(event.proposition, names)
+    seen = (
+        ", ".join(names.get(w, w) for w in event.witnessed_by) if event.witnessed_by else "nobody"
+    )
+    return f"{index}. {claim} [witnessed by {seen}]"
+
+
+def history(scenario: Scenario) -> State:
+    """Everything sparse has, plus how the agents came to know what they know.
+
+    Events are listed in the order they happened, so a later one
+    supersedes an earlier one about the same claim — for whoever was there
+    to see it.
+
+    The middle condition. It carries the evidence from which a belief
+    follows — who was present when the world changed — without stating the
+    belief. Comparing it against `rich` separates needing the information
+    from needing it made explicit; comparing it against `sparse` says
+    whether the evidence alone suffices.
+    """
+    agents = {e.id for e in scenario.entities.agents}
+    state = _observable(scenario)
+    events = [
+        _narrate_event(e, i, scenario.entities, agents)
+        for i, e in enumerate(scenario.history, start=1)
+    ]
+    if events:
+        state["history"] = "\n".join(events)
+    return state
+
+
+def history_symbolic(scenario: Scenario) -> State:
+    """`history`, written in the symbolic form the rest of the state uses.
+
+    A robustness check, not the primary condition. It removes the style
+    difference between `history` and `rich` at the cost of weakening what
+    the history affords — see `_describe_event`. Because it is the weaker
+    of the two, the gap it leaves to `rich` is an upper bound on what
+    stating a belief buys over merely entailing it.
+    """
+    names = scenario.entities.names()
+    state = _observable(scenario)
+    events = [_describe_event(e, i, names) for i, e in enumerate(scenario.history, start=1)]
+    if events:
+        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
+    return state
+
+
 RENDERERS: dict[str, Callable[[Scenario], State]] = {
     "sparse": sparse,
+    "history": history,
+    "history_symbolic": history_symbolic,
     "rich": rich,
 }
 

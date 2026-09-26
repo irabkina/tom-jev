@@ -71,7 +71,7 @@ from math import log2
 
 from pydantic import BaseModel, Field, computed_field
 
-from .models import Prediction, Scenario
+from .models import Prediction, Proposition, Scenario
 
 
 class Outcome(StrEnum):
@@ -125,6 +125,92 @@ def world_conflict(scenario: Scenario) -> bool:
         if key in facts and facts[key] != held.value:
             return True
     return False
+
+
+Claim = tuple[str, tuple]
+"""(agent, proposition signature) — a belief, identified by who holds it
+and what it is about. The value is excluded: that is what the belief says,
+not which belief it is."""
+
+
+def entailed_beliefs(scenario: Scenario) -> dict[Claim, bool | float | str | None]:
+    """What each agent's epistemic access entails they believe.
+
+    An agent's belief about a claim is whatever the last event they
+    witnessed settled. Events they missed leave their belief where it was,
+    which is how a history produces a false belief without stating one:
+    the world moved on out of sight.
+
+    A locative claim is exclusive — seeing something somewhere is seeing
+    it not elsewhere — so one sighting fixes a belief across every
+    location. Exclusivity passes through nesting: witnessing Alex come to
+    believe the meeting is in the office is witnessing Alex come to
+    believe it is not in the garden.
+
+    Nested claims need no special case. What Sam believes about Alex's
+    belief is a claim Sam has access to like any other.
+    """
+    held: dict[Claim, bool | float | str | None] = {}
+    for event in scenario.history:
+        value = event.value
+        innermost = event.proposition.innermost()
+        for witness in event.witnessed_by:
+            held[(witness, event.claim())] = value
+            if innermost.location is not None and value is True:
+                for other in scenario.entities.locations:
+                    if other.id != innermost.location:
+                        elsewhere = event.proposition.relocated(other.id).signature()
+                        held[(witness, elsewhere)] = False
+    return held
+
+
+def _claim_text(proposition: Proposition) -> str:
+    """A short identifier for a proposition, for error messages."""
+    head = f"{proposition.predicate}({proposition.subject})"
+    if proposition.proposition is not None:
+        return f"{head}[{_claim_text(proposition.proposition)}]"
+    return head
+
+
+def history_matches_mental_state(scenario: Scenario) -> list[str]:
+    """Where the access history and the stated mental states disagree.
+
+    Two things must hold for `history` and `rich` to be two
+    representations of one scenario rather than two scenarios:
+
+    - every belief held by the agent the question is about must follow
+      from the history, since that is the belief the prediction turns on;
+    - nothing the history entails may contradict a stated belief.
+
+    Beliefs held by *other* agents need not be entailed. In an attribution
+    scenario the question is about Sam, so the history carries Sam's
+    access — including Sam's access to Alex coming to believe something.
+    Alex's own access goes unrepresented, because nothing is predicted
+    about Alex, and Alex's actual belief reaches the history only as the
+    unwitnessed event that Sam missed.
+
+    Returns a description per mismatch; empty means they agree.
+    """
+    if not scenario.history:
+        return []
+    entailed = entailed_beliefs(scenario)
+    problems = []
+    for mental in scenario.mental_state:
+        key: Claim = (mental.agent, mental.proposition.signature())
+        stated = mental.proposition.held_value()
+        if key not in entailed:
+            if mental.agent == scenario.question.agent:
+                problems.append(
+                    f"{mental.agent} is the agent in question and is stated to believe "
+                    f"{_claim_text(mental.proposition)}, but witnessed nothing bearing on it"
+                )
+            continue
+        if entailed[key] != stated:
+            problems.append(
+                f"{mental.agent} is stated to believe {_claim_text(mental.proposition)} "
+                f"= {stated}, but the history entails {entailed[key]}"
+            )
+    return problems
 
 
 def attribution_conflict(scenario: Scenario) -> bool | None:
@@ -376,15 +462,23 @@ def compare(
     )
 
 
-def summarise(comparisons: list[Comparison]) -> str:
-    """Render the three measures per scenario, with totals."""
+def summarise(comparisons: list[Comparison], labels: tuple[str, str] = ("sparse", "rich")) -> str:
+    """Render the three measures per scenario, with totals.
+
+    `labels` names the pair being compared. `compare` is symmetric in its
+    two passes — they are a baseline and an enriched representation, not
+    necessarily sparse and rich — so the headings say which is which.
+    """
     if not comparisons:
         return "(no comparisons)"
+
+    base, rich_label = (label[:4] for label in labels)
 
     # `variant` is omitted: the scenario id already ends in it.
     header = (
         f"{'scenario':24} {'relevant':>8} | {'world':>6} {'attr':>5} {'influence':>9} "
-        f"{'utility':>8} {'acc sp':>7} {'acc ri':>7} {'H sp':>6} {'H ri':>6}  outcome"
+        f"{'utility':>8} {'acc ' + base:>7} {'acc ' + rich_label:>7} "
+        f"{'H ' + base:>6} {'H ' + rich_label:>6}  outcome"
     )
     lines = [
         f"{'':24} {'annotated':>8} | {'measured':<64}",
@@ -423,8 +517,8 @@ def summarise(comparisons: list[Comparison]) -> str:
             lines.append(
                 "mean acceptable mass "
                 f"{sum(c.acceptable_mass_sparse for c in with_mass) / len(with_mass):.2f}"
-                " sparse -> "
-                f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} rich"
+                f" {labels[0]} -> "
+                f"{sum(c.acceptable_mass_rich for c in with_mass) / len(with_mass):.2f} {labels[1]}"
             )
         helped = [c for c in comparisons if c.outcome is Outcome.CORRECTION]
         # No mind-dependence policy here: every prediction about an agent

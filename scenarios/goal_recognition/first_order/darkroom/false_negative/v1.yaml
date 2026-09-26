@@ -65,6 +65,26 @@ world_state:
     location: darkroom
     value: true
 
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: developer
+        location: darkroom
+        value: false
+    witnessed_by:
+      - ruth
+
+  - proposition:
+        predicate: available
+        subject: developer
+        location: darkroom
+        value: true
+    witnessed_by: []
+
 mental_state:
   - type: belief
     agent: ruth

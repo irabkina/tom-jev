@@ -60,6 +60,33 @@ goals:
     type: meet
     target_agent: wen
 
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: believes
+        subject: wen
+        proposition:
+          predicate: located
+          subject: briefing
+          location: galley
+          value: true
+    witnessed_by:
+      - noor
+
+  - proposition:
+        predicate: believes
+        subject: wen
+        proposition:
+          predicate: located
+          subject: briefing
+          location: wheelhouse
+          value: true
+    witnessed_by:
+      - noor
+
 mental_state:
   - type: belief
     agent: noor
