@@ -6,6 +6,24 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**Writing the history in prose rather than symbols is worth almost
+nothing once the whole state is written the same way, and prose actively
+harms nested beliefs.** Measured over a 2x3 of style by richness: +0.03
+acceptable mass at the history level, 0.00 at sparse, and **-0.08** at
+rich, with the whole loss in the four nested-belief cells at -0.25 to
+-0.29 and entropy roughly tripling. So the earlier prose advantage does
+not survive making the registers consistent. See *Surface form: prose
+does not help, and hurts nested attitudes*, which supersedes
+*Unresolved: the history's surface form moves the result*.
+
+**An epistemic-access history closes part of the sparse-rich gap, and
+explicit statement does the rest — but how much depends on how the
+history is rendered.** 0.51 -> 0.63 of a 0.51 -> 0.87 span over 68
+scenarios, which is about two fifths; on a matched 12 it is two fifths
+under the mixed rendering and a ninth to a fifth under a consistent one.
+The direction is robust and the fraction is not. See *Evidence for a
+belief is worth less than the belief*.
+
 **For goal recognition, explicit mental-state re-representation strongly
 changes inference when it supplies a competing explanation, but has much
 weaker effects when it merely undermines the sparse explanation without
@@ -434,6 +452,14 @@ how deep the nesting goes.
 
 ## Unresolved: the history's surface form moves the result
 
+> Superseded. The confound this section identifies is real and the
+> reasoning about why it matters still stands. The *measurement* in it
+> does not: both renderings here sat in a state that was symbolic
+> everywhere else, and once each arm is made internally consistent the
+> prose advantage almost vanishes. The speculation below about narration
+> marking events as events is not supported. See *Surface form: prose
+> does not help, and hurts nested attitudes*.
+
 The `history` condition was rendered two ways, over identical events
 entailing identical beliefs. The only difference is wording:
 
@@ -497,3 +523,159 @@ be noted and set aside.
 Option 3 answers the question most cheaply and should probably come
 first. Until one of these is done, any number from the `history`
 condition carries an unmeasured surface-form term.
+
+
+## Evidence for a belief is worth less than the belief
+
+Three conditions over all 68 scenarios: `sparse`, then `history` — the
+epistemic-access events a belief follows from, without the belief — then
+`rich`, which states it.
+
+| pairing | n | influence | utility | acceptable mass | corrections | regressions |
+|---|---|---|---|---|---|---|
+| sparse -> rich | 68 | 0.43 | +0.36 | 0.51 -> 0.87 | 28 | 0 |
+| sparse -> history | 68 | 0.20 | +0.11 | 0.51 -> 0.63 | 9 | **2** |
+| history -> rich | 68 | 0.28 | +0.25 | 0.63 -> 0.87 | 21 | 0 |
+
+Evidence from which a belief follows is worth something, and stating the
+belief is worth roughly twice as much again. On the motivating framing:
+the belief has to be *represented*, not merely *derivable*.
+
+| template | sparse | history | rich | n |
+|---|---|---|---|---|
+| attribution | 0.25 | 0.54 | 0.95 | 12 |
+| second_order | 0.49 | 0.58 | 0.93 | 16 |
+| first_order | 0.50 | 0.58 | 0.76 | 24 |
+| discriminative | 0.75 | 0.81 | 0.91 | 16 |
+
+Attribution is the striking row. The history more than doubles it —
+watching one agent come to think something genuinely moves what a second
+agent is predicted to do — and stating it nearly doubles it again. That
+row only measures anything because the history represents the access of
+the agent the question is *about*: an earlier version gave the attribution
+set a history for the other agent's belief instead, which is the wrong
+level. See *Resolved: an attribution is a claim like any other* in
+future_scenarios.md.
+
+### The first regressions in the corpus
+
+Two, both under `history`, both in cells whose padding added a superseded
+sighting where there had been one event:
+
+| scenario | sparse | history | truth | mass |
+|---|---|---|---|---|
+| `workshop_true_true` | `consult_nils` | `fetch_respirator` | `consult_nils` | 0.83 -> 0.29 |
+| `coffee_true_negative` | `get_food` | `get_coffee` | `wash_mug` | 0.79 -> 0.09 |
+
+`coffee_true_negative` moving to `get_coffee` is what the padding's
+distractor risk looks like: the added event mentions the coffee being
+stocked before it ran out, and the answer moved toward the mention. Read
+as suspicious rather than as a finding until rerun without the padding.
+
+### The fraction is rendering-dependent
+
+The 0.51 -> 0.63 figure is not a property of epistemic access. It is a
+property of epistemic access *as rendered here*, and the rendering turned
+out to matter more than the section below assumed. On a matched 12:
+
+| history rendering | ladder | share of the gap the history closes |
+|---|---|---|
+| prose events inside an otherwise symbolic state | 0.41 -> 0.63 -> 0.94 | 42% |
+| consistently symbolic | 0.42 -> 0.48 -> 0.95 | 11% |
+| consistently prose | 0.42 -> 0.51 -> 0.87 | 20% |
+
+So *evidence is worth less than the belief* holds under every rendering
+and is the finding. *How much* less should not be quoted from the 68-item
+run without saying which rendering produced it.
+
+## Surface form: prose does not help, and hurts nested attitudes
+
+Supersedes *Unresolved: the history's surface form moves the result*,
+which measured two renderings of the history inside a state that was
+symbolic everywhere else — so neither arm was internally consistent and
+the comparison confounded register with contrast against the surroundings.
+
+This crosses the three richness levels with two arms that are each
+consistent throughout, `world_state`, `history` and `mental_state` alike.
+12 scenarios over four sets — `report`, `mailroom`, `meeting`,
+`attribution` — three cells each: the two where the belief diverges from
+the world, plus one agreement control.
+
+| richness | symbolic | narrative | difference | influence |
+|---|---|---|---|---|
+| sparse | 0.42 | 0.42 | 0.00 | 0.06 |
+| history | 0.48 | 0.51 | +0.03 | 0.15 |
+| rich | 0.95 | 0.87 | **-0.08** | 0.11 |
+
+**Prose does nothing for `sparse`.** A representation with no mental
+content is indifferent to how it is written, which is the control this
+question needed and never had.
+
+**Prose is worth +0.03 at the history level.** Real against the noise
+floor below, and trivial. Nothing like the 0.52 -> 0.60 the superseded
+section reports, so the story offered there — that narration is what
+marks events as *events*, and the symbolic form deletes the temporal
+structure — is not supported. Whatever the earlier effect was, it was not
+prose.
+
+**Prose costs 0.08 at the rich level, entirely in nested beliefs.**
+
+| cell | symbolic | narrative | entropy |
+|---|---|---|---|
+| `meeting_false_positive` | 0.93 | 0.68 | 0.37 -> 0.90 |
+| `meeting_false_negative` | 0.96 | 0.67 | 0.24 -> 0.91 |
+| `attribution_false_attribution_true_belief` | 0.96 | 0.71 | 0.24 -> 0.87 |
+| `attribution_false_attribution_false_belief` | 0.94 | 0.65 | 0.33 -> 1.04 |
+| the four first-order divergent cells | 0.84-1.00 | 0.83-1.00 | no loss |
+
+    symbolic   believes(Sam)[believes(Alex)[located(meeting, at office) = True]]
+    narrative  Sam believes that Alex believes that the meeting is in the office.
+
+Bracket nesting says unambiguously who holds what; a doubled *believes
+that* is a garden path, and entropy roughly tripling says the model is
+losing track rather than disagreeing. The loss appears only where the
+belief diverges from the world — the nested control cells sit at 0.99 and
+1.00 in both arms, with nothing to lose.
+
+**Design implication, the reverse of what the superseded section
+suggests: render nested attitudes symbolically.** Prose buys nothing
+anywhere and costs a quarter of the acceptable mass on exactly the cells
+the second-order and attribution templates exist to test.
+
+### The noise floor
+
+Two runs over identical stimuli, 24 condition-scenario pairs (`sparse` and
+`rich`, symbolic, on the 12): mean absolute difference 0.010, maximum
+0.08. So a *mean over twelve* is stable to about 0.01 and the table above
+is interpretable; a *single cell* is not interpretable below about 0.08.
+That is the first direct measurement of run-to-run variation in the
+project, and it supports the ~0.05 per-cell figure quoted in
+future_scenarios.md while showing that aggregates are far tighter than
+that implies.
+
+### What is still confounded
+
+The mixed rendering — prose events inside a symbolic state — scores 0.63
+at the history level, above *both* consistent arms. That looks like a
+salience effect, the history standing out by being the only prose in its
+state. It cannot be claimed, because it differs from `history_prose` in
+three ways at once:
+
+| condition | surroundings | events | preamble |
+|---|---|---|---|
+| `history` | symbolic | numbered, present tense, `(seen by Sam)` | no |
+| `history_symbolic` | symbolic | symbolic | yes |
+| `history_prose` | prose | unnumbered, past tense, `and Sam saw it` | yes |
+
+The `history_symbolic` / `history_prose` contrast is clean — both carry
+the preamble, and they differ in register — and that is the +0.03. The
+mixed condition's advantage is attributable to nothing yet. Filling the
+two empty cells of surroundings x event-rendering would settle it, and is
+24 calls.
+
+One asymmetry remains in all of this. `HISTORY_PREAMBLE` ends with
+"world_state is the situation now", which glosses a section every
+condition carries, and only the history conditions are told it. It was
+held constant across both arms here so it cannot explain the style
+contrast, but it is an advantage `sparse` and `rich` could have been given
+and were not.
