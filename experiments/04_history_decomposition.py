@@ -26,7 +26,13 @@ If the history's advantage is salience rather than anything about
 epistemic access, that link carries it.
 
 What each outcome would mean is in notes/experimental_design.md, under
-*What is still confounded*.
+*Where the mixed rendering's advantage comes from*.
+
+The chain names the `_preamble` variants because the preamble was dropped
+from the conditions in use once this run showed it never helps. Those
+variants exist so this experiment stays reproducible, and for nothing
+else — `history_prose_preamble` is what `history_prose` was when these
+numbers were taken.
 
     python experiments/04_history_decomposition.py
 """
@@ -47,13 +53,18 @@ RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
 
 #: The chain, in order. Consecutive entries differ in exactly one factor.
-CHAIN = ["history", "history_listed", "history_narrated", "history_prose"]
+CHAIN = [
+    "history",
+    "history_listed_preamble",
+    "history_narrated_preamble",
+    "history_prose_preamble",
+]
 
 #: What the step onto each condition changes from the one before it.
 FACTOR = {
-    "history_listed": "the preamble",
-    "history_narrated": "the event wording",
-    "history_prose": "the surroundings",
+    "history_listed_preamble": "the preamble",
+    "history_narrated_preamble": "the event wording",
+    "history_prose_preamble": "the surroundings",
 }
 
 #: The same twelve as experiment 03, so the endpoints can be read against

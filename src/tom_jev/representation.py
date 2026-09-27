@@ -318,50 +318,6 @@ def _observable_prose(scenario: Scenario) -> State:
     )
 
 
-def history(scenario: Scenario) -> State:
-    """Everything sparse has, plus how the agents came to know what they know.
-
-    Events are listed in the order they happened, so a later one
-    supersedes an earlier one about the same claim — for whoever was there
-    to see it.
-
-    The middle condition. It carries the evidence from which a belief
-    follows — who was present when the world changed — without stating the
-    belief. Comparing it against `rich` separates needing the information
-    from needing it made explicit; comparing it against `sparse` says
-    whether the evidence alone suffices.
-
-    Mixed register: the events are narrated while everything around them
-    is symbolic. That was not a design choice, and it scores above both
-    consistent arms for reasons not yet attributable — register contrast,
-    the event wording, or the absent preamble. Prefer `history_symbolic`
-    or `history_prose` when the rendering has to be controlled.
-    """
-    state = _observable(scenario)
-    events = _listed_events(scenario)
-    if events:
-        state["history"] = "\n".join(events)
-    return state
-
-
-def history_symbolic(scenario: Scenario) -> State:
-    """`history`, written in the symbolic form the rest of the state uses.
-
-    With `sparse` and `rich`, this is the internally consistent symbolic
-    arm: every section of the state in one notation, so the richness level
-    is the only thing that varies. That makes it the better of the two
-    history conditions for measuring what evidence affords, and `history`
-    — whose events are prose inside a symbolic state — the one carrying an
-    unattributed advantage. See `experiments/03_surface_form.py`.
-    """
-    names = scenario.entities.names()
-    state = _observable(scenario)
-    events = [_describe_event(e, i, names) for i, e in enumerate(scenario.history, start=1)]
-    if events:
-        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
-    return state
-
-
 #: `VERBS`, in the past tense. A history is a sequence of things that
 #: already happened, and in prose the tense is what says so — it is the
 #: closest thing the narration has to the supersession rule that
@@ -424,27 +380,6 @@ def sparse_prose(scenario: Scenario) -> State:
     return _observable_prose(scenario)
 
 
-def history_prose(scenario: Scenario) -> State:
-    """`history`, with every section of the state in prose.
-
-    Not the same condition as `history`, which narrates the events but
-    leaves observations, world_state and goals symbolic. That mixture was
-    never a design choice — it is what came of adding a narrated section
-    to a symbolic state — and it left the history as the only prose in its
-    own condition.
-
-    Here nothing stands out: the events are sentences in the same register
-    as everything around them, and they carry HISTORY_PREAMBLE exactly as
-    the symbolic form does, so the two arms differ in notation and in
-    nothing else.
-    """
-    state = _observable_prose(scenario)
-    events = _narrated_events(scenario)
-    if events:
-        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
-    return state
-
-
 def rich_prose(scenario: Scenario) -> State:
     """`rich`, written in prose — including the belief itself.
 
@@ -459,8 +394,20 @@ def rich_prose(scenario: Scenario) -> State:
     return state
 
 
+#: The three ways a history's events can be written. Each takes a scenario
+#: and returns the event lines, so the rendering is a parameter rather than
+#: a copy of the renderer.
+EVENT_FORMS: dict[str, Callable[[Scenario], list[str]]] = {}
+
+
+def _symbolic_events(scenario: Scenario) -> list[str]:
+    """`1. available(coffee, at kitchen) = True [witnessed by Sam]`."""
+    names = scenario.entities.names()
+    return [_describe_event(e, i, names) for i, e in enumerate(scenario.history, start=1)]
+
+
 def _listed_events(scenario: Scenario) -> list[str]:
-    """The events as a numbered list, present tense, witness in brackets."""
+    """`1. the coffee is stocked in the kitchen (seen by Sam)`."""
     agents = {e.id for e in scenario.entities.agents}
     return [
         _narrate_event(e, i, scenario.entities, agents)
@@ -469,78 +416,126 @@ def _listed_events(scenario: Scenario) -> list[str]:
 
 
 def _narrated_events(scenario: Scenario) -> list[str]:
-    """The events as sentences, past tense, witness inside the sentence."""
+    """`The coffee was stocked in the kitchen, and Sam saw it.`"""
     return [
         _narrate_event_prose(e, i == 0, scenario.entities) for i, e in enumerate(scenario.history)
     ]
 
 
-def history_listed(scenario: Scenario) -> State:
-    """`history`, plus the preamble it does not carry.
+EVENT_FORMS.update(
+    symbolic=_symbolic_events,
+    listed=_listed_events,
+    narrated=_narrated_events,
+)
 
-    One link in the chain that decomposes why `history` outscores both
-    internally consistent arms. It differs from `history` in the preamble
-    and nothing else, so the difference between them is the preamble's
-    effect on its own. See `experiments/04_history_decomposition.py`.
+
+def _history_state(scenario: Scenario, *, events: str, prose: bool, preamble: bool) -> State:
+    """A history condition, as the three factors that distinguish one.
+
+    `events` names an entry in EVENT_FORMS, `prose` says whether the
+    surrounding sections are narrated, and `preamble` whether
+    HISTORY_PREAMBLE is prefixed. Every history condition is a point in
+    that space, so two of them can be compared knowing exactly what
+    differs — which the earlier hand-written renderers made easy to get
+    wrong. See notes/experimental_design.md, *Where the mixed rendering's
+    advantage comes from*.
     """
-    state = _observable(scenario)
-    events = _listed_events(scenario)
-    if events:
-        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
+    state = _observable_prose(scenario) if prose else _observable(scenario)
+    lines = EVENT_FORMS[events](scenario)
+    if lines:
+        state["history"] = "\n".join([HISTORY_PREAMBLE, *lines] if preamble else lines)
     return state
+
+
+def history(scenario: Scenario) -> State:
+    """Everything sparse has, plus how the agents came to know what they know.
+
+    Events are listed in the order they happened, so a later one
+    supersedes an earlier one about the same claim — for whoever was there
+    to see it.
+
+    The middle condition as originally built, and mixed in register: the
+    events are narrated while everything around them is symbolic. That was
+    not a design choice, and it is worth about 0.06 of acceptable mass in
+    contrast against its surroundings alone. Kept because the 68-scenario
+    results were produced with it; prefer `history_symbolic` for anything
+    new.
+    """
+    return _history_state(scenario, events="listed", prose=False, preamble=False)
+
+
+def history_symbolic(scenario: Scenario) -> State:
+    """The middle condition, in the notation the rest of the state uses.
+
+    With `sparse` and `rich` this is the internally consistent symbolic
+    arm: one notation throughout, no preamble, and nothing about the
+    history's formatting that sets it apart from its surroundings. That
+    makes it the defensible middle condition, and the one that gives the
+    smaller and more honest estimate of what evidence for a belief affords.
+    """
+    return _history_state(scenario, events="symbolic", prose=False, preamble=False)
 
 
 def history_narrated(scenario: Scenario) -> State:
     """Narrated sentences inside a state that is symbolic everywhere else.
 
-    The middle link. Against `history_listed` it isolates the event
-    wording, the two differing only in whether the events are a numbered
-    present-tense list or past-tense sentences. Against `history_prose` it
-    isolates the surroundings, the two carrying identical events and
-    differing only in whether anything around them is prose — which is the
-    test of whether the history's advantage is contrast against its
-    context rather than anything about the history itself.
+    Differs from `history` in the event wording alone, and from
+    `history_prose` in the surroundings alone, so it is the pivot for both
+    of those factors.
     """
-    state = _observable(scenario)
-    events = _narrated_events(scenario)
-    if events:
-        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
-    return state
+    return _history_state(scenario, events="narrated", prose=False, preamble=False)
 
 
-def history_symbolic_bare(scenario: Scenario) -> State:
-    """`history_symbolic` without the preamble.
+def history_prose(scenario: Scenario) -> State:
+    """The middle condition with every section of the state in prose.
 
-    The preamble turned out to be the largest single factor in why the
-    mixed rendering outscored both consistent arms, and it costs 0.08
-    acceptable mass — the opposite of what it was added for. That was
-    measured with narrated events, where it is one prose sentence among
-    several. Here it would have been the only prose in the state, so its
-    absence is worth measuring separately rather than assumed.
-
-    With `sparse` and `rich` this is the first internally consistent arm
-    that is also free of the preamble, which makes it the candidate for a
-    defensible middle condition. See `experiments/05_preamble.py`.
+    The internally consistent narrative arm, with `sparse_prose` and
+    `rich_prose`. Measured against the symbolic arm, prose is worth +0.03
+    here and *costs* 0.08 at the rich level, all of it in nested beliefs —
+    so this arm is the weaker of the two and kept for the comparison
+    rather than for use.
     """
-    names = scenario.entities.names()
-    state = _observable(scenario)
-    events = [_describe_event(e, i, names) for i, e in enumerate(scenario.history, start=1)]
-    if events:
-        state["history"] = "\n".join(events)
-    return state
+    return _history_state(scenario, events="narrated", prose=True, preamble=False)
+
+
+#: The preamble-bearing variants. HISTORY_PREAMBLE was measured harmful —
+#: -0.08 acceptable mass where the events are narrated, and nothing at all
+#: where they are symbolic — so no condition above carries it. These exist
+#: only so the experiments that established that stay reproducible, and
+#: should not be used for anything new.
+def history_listed_preamble(scenario: Scenario) -> State:
+    """`history` plus the preamble: isolates the preamble, nothing else."""
+    return _history_state(scenario, events="listed", prose=False, preamble=True)
+
+
+def history_narrated_preamble(scenario: Scenario) -> State:
+    """`history_narrated` plus the preamble."""
+    return _history_state(scenario, events="narrated", prose=False, preamble=True)
+
+
+def history_prose_preamble(scenario: Scenario) -> State:
+    """`history_prose` plus the preamble."""
+    return _history_state(scenario, events="narrated", prose=True, preamble=True)
+
+
+def history_symbolic_preamble(scenario: Scenario) -> State:
+    """`history_symbolic` plus the preamble."""
+    return _history_state(scenario, events="symbolic", prose=False, preamble=True)
 
 
 RENDERERS: dict[str, Callable[[Scenario], State]] = {
     "sparse": sparse,
-    "history": history,
-    "history_symbolic": history_symbolic,
     "rich": rich,
     "sparse_prose": sparse_prose,
-    "history_prose": history_prose,
     "rich_prose": rich_prose,
-    "history_listed": history_listed,
+    "history": history,
+    "history_symbolic": history_symbolic,
     "history_narrated": history_narrated,
-    "history_symbolic_bare": history_symbolic_bare,
+    "history_prose": history_prose,
+    "history_listed_preamble": history_listed_preamble,
+    "history_narrated_preamble": history_narrated_preamble,
+    "history_prose_preamble": history_prose_preamble,
+    "history_symbolic_preamble": history_symbolic_preamble,
 }
 
 

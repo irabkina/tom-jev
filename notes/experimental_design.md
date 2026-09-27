@@ -24,13 +24,16 @@ not survive making the registers consistent. See *Surface form: prose
 does not help, and hurts nested attitudes*, which supersedes
 *Unresolved: the history's surface form moves the result*.
 
-**An epistemic-access history closes part of the sparse-rich gap, and
-explicit statement does the rest — but how much depends on how the
-history is rendered.** 0.51 -> 0.63 of a 0.51 -> 0.87 span over 68
-scenarios, which is about two fifths; on a matched 12 it is two fifths
-under the mixed rendering and a ninth to a fifth under a consistent one.
-The direction is robust and the fraction is not. See *Evidence for a
-belief is worth less than the belief*.
+**An epistemic-access history closes about a sixth of the sparse-rich
+gap, and explicit statement closes the rest.** 0.51 -> 0.58 of a
+0.51 -> 0.87 span over 68 scenarios, under a middle condition written in
+one notation throughout. It closes a quarter of the gap on the attribution
+and discriminative templates and under a tenth on first- and second-order
+action prediction: evidence about access helps where the question is
+social. An earlier figure of 0.63 came from a rendering carrying two
+formatting advantages. The direction is robust across renderings; the
+fraction is not, and should be quoted only with the rendering named. See
+*Evidence for a belief is worth less than the belief*.
 
 **For goal recognition, explicit mental-state re-representation strongly
 changes inference when it supplies a competing explanation, but has much
@@ -535,66 +538,98 @@ condition carries an unmeasured surface-form term.
 
 ## Evidence for a belief is worth less than the belief
 
-Three conditions over all 68 scenarios: `sparse`, then `history` — the
-epistemic-access events a belief follows from, without the belief — then
-`rich`, which states it.
+Three conditions over all 68 scenarios: `sparse`, then the
+epistemic-access events a belief follows from without the belief, then
+`rich`, which states it. The middle condition is `history_symbolic` —
+every section in one notation, no preamble — because the mixed rendering
+this was first run with turned out to carry two formatting advantages
+worth most of its effect. See *Where the mixed rendering's advantage comes
+from*.
 
 | pairing | n | influence | utility | acceptable mass | corrections | regressions |
 |---|---|---|---|---|---|---|
 | sparse -> rich | 68 | 0.43 | +0.36 | 0.51 -> 0.87 | 28 | 0 |
-| sparse -> history | 68 | 0.20 | +0.11 | 0.51 -> 0.63 | 9 | **2** |
-| history -> rich | 68 | 0.28 | +0.25 | 0.63 -> 0.87 | 21 | 0 |
+| sparse -> history | 68 | 0.15 | +0.06 | 0.51 -> 0.58 | 6 | 1 |
+| history -> rich | 68 | 0.33 | +0.30 | 0.58 -> 0.87 | 23 | 0 |
 
-Evidence from which a belief follows is worth something, and stating the
-belief is worth roughly twice as much again. On the motivating framing:
-the belief has to be *represented*, not merely *derivable*.
+**Evidence from which a belief follows closes about a sixth of the gap;
+stating the belief closes the rest.** On the motivating framing: the
+belief has to be *represented*, not merely *derivable*, and the margin is
+wider than it first looked — four to one rather than two to one.
 
-| template | sparse | history | rich | n |
-|---|---|---|---|---|
-| attribution | 0.25 | 0.54 | 0.95 | 12 |
-| second_order | 0.49 | 0.58 | 0.93 | 16 |
-| first_order | 0.50 | 0.58 | 0.76 | 24 |
-| discriminative | 0.75 | 0.81 | 0.91 | 16 |
+`sparse -> rich` is unchanged from the run made with the mixed middle
+condition, to every figure in the row, because neither of its passes
+moved. That is a 68-scenario replication of two conditions across two
+runs, and it is the strongest evidence yet that the aggregates are stable
+and that what moved in the middle row is the rendering rather than noise.
 
-Attribution is the striking row. The history more than doubles it —
-watching one agent come to think something genuinely moves what a second
-agent is predicted to do — and stating it nearly doubles it again. That
-row only measures anything because the history represents the access of
-the agent the question is *about*: an earlier version gave the attribution
-set a history for the other agent's belief instead, which is the wrong
-level. See *Resolved: an attribution is a claim like any other* in
+| template | sparse | history | rich | n | share of the gap |
+|---|---|---|---|---|---|
+| attribution | 0.26 | 0.44 | 0.94 | 12 | 26% |
+| discriminative | 0.75 | 0.79 | 0.90 | 16 | 27% |
+| second_order | 0.49 | 0.54 | 0.95 | 16 | 10% |
+| first_order | 0.50 | 0.52 | 0.77 | 24 | 9% |
+| **all** | **0.51** | **0.58** | **0.87** | **68** | **17%** |
+
+Attribution is still the striking row: the history lifts it 0.26 -> 0.44,
+and stating the belief takes it to 0.94. Watching one agent come to think
+something does move what a second agent is predicted to do. That row only
+measures anything because the history represents the access of the agent
+the question is *about* — an earlier version gave the attribution set a
+history for the other agent's belief instead, which is the wrong level.
+See *Resolved: an attribution is a claim like any other* in
 future_scenarios.md.
 
-### The first regressions in the corpus
+The split across templates is worth more than the aggregate. Where the
+history closes a quarter of the gap it does so in the two templates whose
+scenarios turn on *who was where* — an attribution, or a discriminative
+pair of beliefs. In first- and second-order action prediction it closes
+under a tenth. Evidence about access helps where the question is social;
+where the question is about a single agent and a single fact, stating the
+belief is very nearly the only thing that works.
 
-Two, both under `history`, both in cells whose padding added a superseded
-sighting where there had been one event:
+### The history can make things worse
 
-| scenario | sparse | history | truth | mass |
-|---|---|---|---|---|
-| `workshop_true_true` | `consult_nils` | `fetch_respirator` | `consult_nils` | 0.83 -> 0.29 |
-| `coffee_true_negative` | `get_food` | `get_coffee` | `wash_mug` | 0.79 -> 0.09 |
+Three cells lose mass under the history, one of them badly enough to flip
+the answer:
 
-`coffee_true_negative` moving to `get_coffee` is what the padding's
-distractor risk looks like: the added event mentions the coffee being
-stocked before it ran out, and the answer moved toward the mention. Read
-as suspicious rather than as a finding until rerun without the padding.
-
-### The fraction is rendering-dependent
-
-The 0.51 -> 0.63 figure is not a property of epistemic access. It is a
-property of epistemic access *as rendered here*, and the rendering turned
-out to matter more than the section below assumed. On a matched 12:
-
-| history rendering | ladder | share of the gap the history closes |
+| scenario | mass | note |
 |---|---|---|
-| prose events inside an otherwise symbolic state | 0.41 -> 0.63 -> 0.94 | 42% |
-| consistently symbolic | 0.42 -> 0.48 -> 0.95 | 11% |
-| consistently prose | 0.42 -> 0.51 -> 0.87 | 20% |
+| `coffee_true_negative` | 0.76 -> 0.23 | `get_food` -> `get_coffee`, truth `wash_mug` — the one outcome regression |
+| `clinic_true_true` | 0.83 -> 0.56 | answer stays correct, confidence in it does not |
+| `workshop_true_true` | 0.82 -> 0.58 | same |
 
-So *evidence is worth less than the belief* holds under every rendering
-and is the finding. *How much* less should not be quoted from the 68-item
-run without saying which rendering produced it.
+All three are cells whose padding added a superseded sighting where there
+had been one event, and `coffee_true_negative` moving to `get_coffee` is
+what the padding's distractor risk looks like: the added event mentions
+the coffee being stocked before it ran out, and the answer moved toward
+the mention. The same three cells misbehaved under the mixed rendering, so
+this is not a property of the notation. Read as suspicious rather than as
+a finding until rerun without the padding.
+
+### Escalation, with the rendering corrected
+
+`history -> rich` gives 23 corrections against 68 scenarios. Escalating on
+"the answer is contradicted by what is known" fires four times at
+precision 0.00; escalating whenever the task is action prediction fires 40
+times at precision 0.50 and recall 0.87; escalating always fires 68 at
+precision 0.34. The ordering is the same as before and so is the reading —
+see *Nothing available to the sparse pass predicts whether
+re-representation will help*.
+
+### What the earlier figure was
+
+Recorded because the difference is the whole point of the three
+experiments that follow. The same script with the mixed middle condition
+gave `sparse -> history` as 0.51 -> 0.63, influence 0.20, 9 corrections,
+and put the history's share of the gap at a third. Roughly half of that
+extra 0.05 was the history looking different from its surroundings and the
+rest a preamble that only helps by being absent. On a matched 12 the
+rendering moves the share from 42% to 11%.
+
+*Evidence is worth less than the belief* holds under every rendering and
+is the finding. *How much* less is not quotable without naming the
+rendering, and the number to quote now is the consistent one.
 
 ## Surface form: prose does not help, and hurts nested attitudes
 
@@ -749,8 +784,8 @@ standing out is measuring salience. Either hold the contrast constant
 across every condition, which would mean giving `sparse` and `rich` a
 differently formatted section too and is absurd, or take a consistent arm
 and report the smaller number. The second is the honest option, and it puts
-the history's contribution at roughly a ninth of the sparse-rich gap rather
-than the two fifths the mixed rendering suggested.
+the history's contribution at a sixth of the sparse-rich gap corpus-wide
+rather than the third the mixed rendering suggested.
 
 One asymmetry survives all of this and is now moot. `HISTORY_PREAMBLE`
 ended with "world_state is the situation now", glossing a section every

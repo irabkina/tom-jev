@@ -29,6 +29,13 @@ are answered by different cuts of the same 72 predictions:
 Read down a column for the style contrast at fixed richness; read across a
 row for the richness ladder at fixed style.
 
+The numbers this produced are recorded in notes/experimental_design.md,
+and they were taken while `history_symbolic` and `history_prose` still
+carried HISTORY_PREAMBLE. Experiment 04 then showed the preamble never
+helps, so it was dropped from both. Re-running this now measures the same
+contrast without it; the `_preamble` variants are what these conditions
+were at the time.
+
     python experiments/03_surface_form.py
 """
 

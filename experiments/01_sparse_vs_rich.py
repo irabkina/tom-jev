@@ -2,20 +2,35 @@
 
 Three passes over each scenario:
 
-    sparse   what does Jev answer from the limited representation?
-    history  what does Jev answer given the epistemic-access history the
-             belief follows from, but not the belief itself?
-    rich     what does Jev answer once the agent's belief is explicitly
-             represented?
+    sparse           what does Jev answer from the limited representation?
+    history_symbolic what does Jev answer given the epistemic-access
+                     history the belief follows from, but not the belief
+                     itself?
+    rich             what does Jev answer once the agent's belief is
+                     explicitly represented?
 
 The middle pass splits what the sparse pass lacks into two things: the
 information, and the information made explicit. sparse -> history asks
 whether the evidence alone suffices; history -> rich asks whether stating
 the belief adds anything once the evidence is already there.
 
+The middle pass is `history_symbolic` rather than `history`, and the
+choice matters more than it looks. `history` narrates its events inside a
+state that is symbolic everywhere else, and experiments 03 to 05 measured
+what that mixture buys: 0.06 of acceptable mass from the history simply
+looking different from its surroundings, and 0.08 from lacking a preamble
+that only hurts narrated events. Neither has anything to do with
+epistemic access, and together they are most of the middle condition's
+apparent advantage. `history_symbolic` writes every section in one
+notation and carries no preamble, so what it measures is the evidence.
+
+Numbers from this script before that change are not comparable to numbers
+after it. The earlier ones are recorded in notes/experimental_design.md as
+the mixed-rendering run.
+
 Only scenarios that carry a history take the middle pass. Where there is
-none, `history` renders exactly as `sparse`, so querying it would buy a
-guaranteed zero.
+none, the middle condition renders exactly as `sparse`, so querying it
+would buy a guaranteed zero.
 
 Each scenario's own `question` fixes the task — goal recognition for the
 coffee set, action prediction for the report set — so representation
@@ -48,7 +63,11 @@ RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
 KNOWLEDGE = ROOT / "knowledge" / "goals.yaml"
 
-CONDITIONS = ["sparse", "history", "rich"]
+CONDITIONS = ["sparse", "history_symbolic", "rich"]
+
+#: The middle condition, named once so the pairings and the skip rule
+#: cannot disagree about which one it is.
+MIDDLE = "history_symbolic"
 
 
 def from_graph(
@@ -106,7 +125,7 @@ def main() -> None:
     with jev.client() as c:
         for scenario in items:
             wanted = [
-                condition for condition in CONDITIONS if condition != "history" or scenario.history
+                condition for condition in CONDITIONS if condition != MIDDLE or scenario.history
             ]
             predictions[scenario.id] = {
                 condition: jev.ask(c, scenario, condition) for condition in wanted
@@ -134,8 +153,8 @@ def main() -> None:
     with_history = [s for s in items if s.history]
     pairings = {
         "sparse_vs_rich": (("sparse", "rich"), pair("sparse", "rich", items)),
-        "sparse_vs_history": (("sparse", "history"), pair("sparse", "history", with_history)),
-        "history_vs_rich": (("history", "rich"), pair("history", "rich", with_history)),
+        "sparse_vs_history": (("sparse", "history"), pair("sparse", MIDDLE, with_history)),
+        "history_vs_rich": (("history", "rich"), pair(MIDDLE, "rich", with_history)),
     }
 
     RESULTS.mkdir(exist_ok=True)
