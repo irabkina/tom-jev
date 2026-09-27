@@ -3,7 +3,7 @@
 Experiment 03 found that writing the history in prose is worth +0.03 once
 the whole state is written the same way. But the *mixed* rendering — prose
 events inside a state that is symbolic everywhere else, which is what the
-`history` condition has always been — scored 0.63 against 0.48 and 0.51
+`history_mixed` condition has always been — scored 0.63 against 0.48 and 0.51
 for the two consistent arms. It differs from `history_prose` in three ways
 at once, so that 0.12 was attributable to nothing.
 
@@ -54,15 +54,15 @@ SCENARIOS = ROOT / "scenarios"
 
 #: The chain, in order. Consecutive entries differ in exactly one factor.
 CHAIN = [
-    "history",
-    "history_listed_preamble",
+    "history_mixed",
+    "history_mixed_preamble",
     "history_narrated_preamble",
     "history_prose_preamble",
 ]
 
 #: What the step onto each condition changes from the one before it.
 FACTOR = {
-    "history_listed_preamble": "the preamble",
+    "history_mixed_preamble": "the preamble",
     "history_narrated_preamble": "the event wording",
     "history_prose_preamble": "the surroundings",
 }

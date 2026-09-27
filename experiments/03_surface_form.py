@@ -1,9 +1,9 @@
 """Experiment 03 — surface form.
 
-Every number the `history` condition has produced carries an unmeasured
-term, because the conditions are not written in one register. `history` is
+Every number the `history_mixed` condition has produced carries an unmeasured
+term, because the conditions are not written in one register. `history_mixed` is
 narrated prose; `sparse`, `world_state` and the `mental_state` that `rich`
-adds are symbolic. So `history` differs from `rich` in wording as well as
+adds are symbolic. So `history_mixed` differs from `rich` in wording as well as
 in explicitness, and the measured gap between two renderings of identical
 events was large relative to the effects being reported. See *Unresolved:
 the history's surface form moves the result* in notes/experimental_design.md.
@@ -19,7 +19,7 @@ Within an arm every section is written the same way, so the arm is a style
 and the richness level is the manipulation. Two questions follow, and they
 are answered by different cuts of the same 72 predictions:
 
-    does wording lift `rich` as much as it lifts `history`?
+    does wording lift `rich` as much as it lifts `history_mixed`?
         if it does, the effect is about surface form generally and the
         narration is not doing anything specific to event structure
     does wording lift `sparse`, which has neither a history nor a belief?
@@ -30,7 +30,7 @@ Read down a column for the style contrast at fixed richness; read across a
 row for the richness ladder at fixed style.
 
 The numbers this produced are recorded in notes/experimental_design.md,
-and they were taken while `history_symbolic` and `history_prose` still
+and they were taken while `history` and `history_prose` still
 carried HISTORY_PREAMBLE. Experiment 04 then showed the preamble never
 helps, so it was dropped from both. Re-running this now measures the same
 contrast without it; the `_preamble` variants are what these conditions
@@ -55,12 +55,12 @@ SCENARIOS = ROOT / "scenarios"
 
 #: The two arms, each internally consistent, in richness order.
 ARMS: dict[str, list[str]] = {
-    "symbolic": ["sparse", "history_symbolic", "rich"],
+    "symbolic": ["sparse", "history", "rich"],
     "narrative": ["sparse_prose", "history_prose", "rich_prose"],
 }
 
 #: Richness levels, as the pair of conditions realising each one.
-LEVELS = ["sparse", "history", "rich"]
+LEVELS = ["sparse", "history_mixed", "rich"]
 
 #: Twelve scenarios over four sets, three cells each: the two where the
 #: belief diverges from the world, plus one control where it agrees.

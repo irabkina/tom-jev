@@ -384,7 +384,7 @@ def rich_prose(scenario: Scenario) -> State:
     """`rich`, written in prose — including the belief itself.
 
     The condition the surface-form question turns on. If prose lifts this
-    as much as it lifts `history`, the effect is about wording generally;
+    as much as it lifts `history_mixed`, the effect is about wording generally;
     if it does not, the narration is doing something specific to events.
     """
     state = _observable_prose(scenario)
@@ -447,7 +447,7 @@ def _history_state(scenario: Scenario, *, events: str, prose: bool, preamble: bo
     return state
 
 
-def history(scenario: Scenario) -> State:
+def history_mixed(scenario: Scenario) -> State:
     """Everything sparse has, plus how the agents came to know what they know.
 
     Events are listed in the order they happened, so a later one
@@ -458,13 +458,13 @@ def history(scenario: Scenario) -> State:
     events are narrated while everything around them is symbolic. That was
     not a design choice, and it is worth about 0.06 of acceptable mass in
     contrast against its surroundings alone. Kept because the 68-scenario
-    results were produced with it; prefer `history_symbolic` for anything
+    results were produced with it; prefer `history` for anything
     new.
     """
     return _history_state(scenario, events="listed", prose=False, preamble=False)
 
 
-def history_symbolic(scenario: Scenario) -> State:
+def history(scenario: Scenario) -> State:
     """The middle condition, in the notation the rest of the state uses.
 
     With `sparse` and `rich` this is the internally consistent symbolic
@@ -479,7 +479,7 @@ def history_symbolic(scenario: Scenario) -> State:
 def history_narrated(scenario: Scenario) -> State:
     """Narrated sentences inside a state that is symbolic everywhere else.
 
-    Differs from `history` in the event wording alone, and from
+    Differs from `history_mixed` in the event wording alone, and from
     `history_prose` in the surroundings alone, so it is the pivot for both
     of those factors.
     """
@@ -503,8 +503,8 @@ def history_prose(scenario: Scenario) -> State:
 #: where they are symbolic — so no condition above carries it. These exist
 #: only so the experiments that established that stay reproducible, and
 #: should not be used for anything new.
-def history_listed_preamble(scenario: Scenario) -> State:
-    """`history` plus the preamble: isolates the preamble, nothing else."""
+def history_mixed_preamble(scenario: Scenario) -> State:
+    """`history_mixed` plus the preamble: isolates the preamble, nothing else."""
     return _history_state(scenario, events="listed", prose=False, preamble=True)
 
 
@@ -518,24 +518,31 @@ def history_prose_preamble(scenario: Scenario) -> State:
     return _history_state(scenario, events="narrated", prose=True, preamble=True)
 
 
-def history_symbolic_preamble(scenario: Scenario) -> State:
-    """`history_symbolic` plus the preamble."""
+def history_preamble(scenario: Scenario) -> State:
+    """`history` plus the preamble."""
     return _history_state(scenario, events="symbolic", prose=False, preamble=True)
 
 
 RENDERERS: dict[str, Callable[[Scenario], State]] = {
+    # The three conditions. One notation throughout, no preamble; they
+    # differ in what they say about the agent's mind and in nothing else.
     "sparse": sparse,
-    "rich": rich,
-    "sparse_prose": sparse_prose,
-    "rich_prose": rich_prose,
     "history": history,
-    "history_symbolic": history_symbolic,
-    "history_narrated": history_narrated,
+    "rich": rich,
+    # The narrative arm, for the surface-form comparison. Weaker at the
+    # rich level, where prose costs 0.08 on nested beliefs.
+    "sparse_prose": sparse_prose,
     "history_prose": history_prose,
-    "history_listed_preamble": history_listed_preamble,
+    "rich_prose": rich_prose,
+    # Renderings kept so the experiments that established the above stay
+    # reproducible. `history_mixed` is what `history` was until the
+    # formatting was measured; the rest vary one factor each.
+    "history_mixed": history_mixed,
+    "history_narrated": history_narrated,
+    "history_preamble": history_preamble,
+    "history_mixed_preamble": history_mixed_preamble,
     "history_narrated_preamble": history_narrated_preamble,
     "history_prose_preamble": history_prose_preamble,
-    "history_symbolic_preamble": history_symbolic_preamble,
 }
 
 

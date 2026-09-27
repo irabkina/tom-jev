@@ -6,6 +6,15 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**The one signal that beats the base rate is the cheap pass raising its
+own entropy.** Nine candidate triggers, all declared before measurement:
+a rise in entropy from `sparse` to `history` fires on 43 of 68 at
+precision 0.42 against a base rate of 0.34, and it is not the task-family
+prior in disguise — inside action prediction it lifts 0.50 to 0.62, inside
+goal recognition it does nothing. Disagreement between the two passes is
+*anti*-predictive, and for a good reason. See *A cheap pass that raises its
+own entropy is the first usable trigger*.
+
 **The mixed history's apparent advantage is entirely formatting.** Its
 0.12 over the consistent arms decomposes into 0.08 from avoiding a
 preamble that only hurts narrated events, 0.06 from the history standing
@@ -506,9 +515,9 @@ form quietly deletes the temporal structure the condition depends on.
 The three-condition design claims to vary one thing. It does not:
 
 - `sparse`, `world_state` and the `mental_state` that `rich` adds are all
-  symbolic. A narrated `history` is the only prose in the corpus, so
-  `history` differs from `rich` in style as well as in explicitness.
-- A symbolic `history` holds style constant but demonstrably handicaps the
+  symbolic. A narrated history is the only prose in the corpus, so
+  `history_mixed` differs from `rich` in style as well as in explicitness.
+- A symbolic history holds style constant but demonstrably handicaps the
   middle condition, so it understates what evidence affords.
 
 Either choice biases the `history` -> `rich` comparison, in opposite
@@ -540,7 +549,7 @@ condition carries an unmeasured surface-form term.
 
 Three conditions over all 68 scenarios: `sparse`, then the
 epistemic-access events a belief follows from without the belief, then
-`rich`, which states it. The middle condition is `history_symbolic` —
+`rich`, which states it. The middle condition is `history` —
 every section in one notation, no preamble — because the mixed rendering
 this was first run with turned out to carry two formatting advantages
 worth most of its effect. See *Where the mixed rendering's advantage comes
@@ -699,7 +708,7 @@ that implies.
 ## Where the mixed rendering's advantage comes from
 
 The mixed rendering — prose events inside a symbolic state, which is what
-the `history` condition had always been — scores 0.62 at the history
+the middle condition had always been — scores 0.62 at the history
 level, above *both* internally consistent arms (0.48 symbolic, 0.50
 prose). It differs from `history_prose` in three ways at once, so a chain
 was run that varies one at a time. Twelve scenarios, four conditions, one
@@ -707,13 +716,13 @@ batch.
 
 | condition | surroundings | events | preamble | mass | delta | factor |
 |---|---|---|---|---|---|---|
-| `history` | symbolic | listed | no | 0.62 | | |
-| `history_listed` | symbolic | listed | yes | 0.54 | **-0.08** | the preamble |
-| `history_narrated` | symbolic | sentences | yes | 0.56 | +0.02 | event wording |
-| `history_prose` | prose | sentences | yes | 0.50 | **-0.06** | the surroundings |
+| `history_mixed` | symbolic | listed | no | 0.62 | | |
+| `history_mixed_preamble` | symbolic | listed | yes | 0.54 | **-0.08** | the preamble |
+| `history_narrated_preamble` | symbolic | sentences | yes | 0.56 | +0.02 | event wording |
+| `history_prose_preamble` | prose | sentences | yes | 0.50 | **-0.06** | the surroundings |
 
-The endpoints replicate across runs to 0.01 — `history` 0.62 against 0.63
-in the 68-item run, `history_prose` 0.50 against 0.51 in the run above —
+The endpoints replicate across runs to 0.01 — `history_mixed` 0.62 against
+0.63 in the 68-item run, the prose end 0.50 against 0.51 in the run above —
 so the deltas are readable against the noise floor.
 
 **None of the 0.12 is about epistemic access.** It is a preamble that
@@ -734,8 +743,8 @@ most, being the only prose in the state:
 
 | condition | mass |
 |---|---|
-| `history_symbolic` (with preamble) | 0.48 |
-| `history_symbolic_bare` (without) | 0.49 |
+| `history_preamble` (with preamble) | 0.48 |
+| `history` (without) | 0.49 |
 
 So it is an interaction with the event rendering rather than a main effect:
 redundant where the narration already carries sequence, inert where the
@@ -774,7 +783,7 @@ dead, which is the only outcome here that would have required rework.
 ### What a defensible middle condition looks like
 
 Nothing measured is both internally consistent and preamble-free except
-`history_symbolic_bare`, at 0.49. The untested cell is narrated sentences
+`history` itself, at 0.49. The untested cell is narrated sentences
 in a symbolic state with no preamble, which the deltas put at around 0.64 —
 near the mixed condition, and for the same reasons, since that is very
 nearly what the mixed condition is.
@@ -791,3 +800,125 @@ One asymmetry survives all of this and is now moot. `HISTORY_PREAMBLE`
 ended with "world_state is the situation now", glossing a section every
 condition carries while only the history conditions were told it. Since the
 preamble should go, the asymmetry goes with it.
+
+
+## A cheap pass that raises its own entropy is the first usable trigger
+
+*Sparse-state signals do not reliably identify the need for
+re-representation* tested three triggers and found nothing. All three read
+the **sparse output**. The three-condition design allows a fourth kind: a
+trigger can be an *intervention* rather than a classifier — run the middle
+pass and watch what happens to the model's own distribution. That is much
+closer to what conflict-triggered re-representation actually claims, and it
+is what the escalation question should have been asking.
+
+Nine candidates, all defined before any was measured, every one computable
+at run time from passes already paid for and none using ground truth.
+Target: does `history -> rich` produce a correction? 23 of 68, base rate
+0.34.
+
+| trigger | fires | precision | recall | F1 |
+|---|---|---|---|---|
+| sparse and history disagree | 11 | **0.09** | 0.04 | 0.06 |
+| the cheap pass moved the answer (TV > 0.2) | 19 | 0.32 | 0.26 | 0.29 |
+| the cheap pass moved the answer (TV > 0.1) | 29 | 0.38 | 0.48 | 0.42 |
+| **the cheap pass raised entropy** | 43 | **0.42** | 0.78 | 0.55 |
+| raised entropy by more than 0.2 bits | 29 | 0.45 | 0.57 | 0.50 |
+| the history pass is still uncertain (> 0.5 bits) | 34 | 0.41 | 0.61 | 0.49 |
+| the sparse pass is uncertain (> 0.5 bits) | 26 | 0.31 | 0.35 | 0.33 |
+| the task is action prediction | 40 | 0.50 | 0.87 | 0.63 |
+| always | 68 | 0.34 | 1.00 | 0.51 |
+
+Sparse uncertainty comes in *below* the base rate, which replicates the
+earlier negative result on fresh numbers and a different middle condition.
+
+### Entropy rise separates, and is not the task-family prior
+
+Mean acceptable-mass gain from escalating, split by whether the trigger
+fired: **+0.38 where entropy rose against +0.16 where it did not**. And it
+survives conditioning on the task family, which is the check that killed
+the dependency-structure signal:
+
+| family | n | base rate | entropy-rise fires | precision |
+|---|---|---|---|---|
+| action prediction | 40 | 0.50 | 26 | **0.62** |
+| goal recognition | 28 | 0.11 | 17 | 0.12 |
+
+It adds where escalation is worth something and adds nothing where it is
+not. That is the shape a real signal should have, rather than a single
+number that happens to beat a base rate.
+
+This joins up with *Consequence for the two-systems framing*, where entropy
+rise was the marker of "triggered but unresolved" — the belief undermines
+the sparse reading and supplies nothing. The same quantity, measured under
+the cheap enrichment rather than the rich one, is diagnostic of *needing*
+the belief. Conflict detection as a trigger for effortful re-representation
+is the motivating claim, and this is the first measurement in the project
+that supports it rather than failing to find it.
+
+### Disagreement means "already solved", not "needs help"
+
+The candidate expected to work is the worst of the nine, at precision 0.09
+against a base rate of 0.34 — actively worse than escalating at random. The
+mechanism is clean: **10 of the 11 disagreements already had more than 0.5
+acceptable mass after the cheap pass.** Where the history moves the answer,
+it moves it to where the belief would have put it, so there is nothing left
+for `rich` to correct. Disagreement between two passes is a success signal,
+not a distress signal.
+
+Worth keeping because the intuition is strong and wrong. "The two passes
+disagree, so something is unresolved" is the obvious reading, and the
+opposite is true.
+
+### What escalation costs here, and why it is not a saving
+
+The policy comparison, with the number of `rich` calls each choice buys:
+
+| policy | rich calls | corrections kept | mass gained | gain per call |
+|---|---|---|---|---|
+| always | 68 | 23/23 | +20.3 | 0.30 |
+| entropy rose | 43 | 18/23 | +16.3 | 0.38 |
+| action prediction | 40 | 20/23 | +17.8 | 0.45 |
+| action prediction **and** entropy rose | 26 | 16/23 | +14.5 | **0.56** |
+
+Gain per call nearly doubles. But the saving is notional, because the
+trigger has to be paid for:
+
+| condition | mean input tokens |
+|---|---|
+| `sparse` | 381 |
+| `history` | 442 |
+| `rich` | 412 |
+
+The middle pass is the *most expensive* of the three. A two-stage policy
+costs 68 sparse + 68 history + 26 rich = 162 calls where escalating always
+costs 136. Escalation cannot save anything in this pilot; it strictly costs
+more.
+
+That is a fact about the pilot rather than about the architecture. Jev is
+the System One model, so the effortful step is not a larger inference — it
+is *constructing* the richer representation. Here that is free, because
+`mental_state` is read from a file. In a system that had to derive it, from
+a knowledge base or from a chain of inference, the construction is the
+expense and a trigger that avoids two thirds of them is worth having. The
+token counts say the pilot cannot price the thing the architecture is
+trying to economise, not that there is nothing to economise.
+
+### Why this is not yet a result
+
+Sixty-eight items, 23 positives, nine candidates. Declaring the candidates
+in advance limits the damage but does not remove it, and the corpus is now
+the set this signal was selected on. Precision 0.42 against a base rate of
+0.34 is a difference of six scenarios.
+
+The same caution applies that *Dependency structure does not give a usable
+escalation signal either* records: a trigger once looked usable at
+precision 0.48 and recall 0.75, and dissolved once the concept behind it
+was counted honestly. The conditioning check above is the equivalent test
+here and entropy rise passes it, which is the reason to take it seriously
+at all.
+
+What would make it a result is scenarios it was not selected on. Two are
+already specified in future_scenarios.md — an observation compatible with
+several goals, and an observation the world cannot account for — and the
+second is exactly the shape a sparse-side trigger would have.

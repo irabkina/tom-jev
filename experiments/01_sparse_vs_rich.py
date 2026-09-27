@@ -14,14 +14,14 @@ information, and the information made explicit. sparse -> history asks
 whether the evidence alone suffices; history -> rich asks whether stating
 the belief adds anything once the evidence is already there.
 
-The middle pass is `history_symbolic` rather than `history`, and the
-choice matters more than it looks. `history` narrates its events inside a
+The middle pass is `history` rather than `history_mixed`, and the
+choice matters more than it looks. `history_mixed` narrates its events inside a
 state that is symbolic everywhere else, and experiments 03 to 05 measured
 what that mixture buys: 0.06 of acceptable mass from the history simply
 looking different from its surroundings, and 0.08 from lacking a preamble
 that only hurts narrated events. Neither has anything to do with
 epistemic access, and together they are most of the middle condition's
-apparent advantage. `history_symbolic` writes every section in one
+apparent advantage. `history` writes every section in one
 notation and carries no preamble, so what it measures is the evidence.
 
 Numbers from this script before that change are not comparable to numbers
@@ -63,11 +63,11 @@ RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
 KNOWLEDGE = ROOT / "knowledge" / "goals.yaml"
 
-CONDITIONS = ["sparse", "history_symbolic", "rich"]
+CONDITIONS = ["sparse", "history", "rich"]
 
 #: The middle condition, named once so the pairings and the skip rule
 #: cannot disagree about which one it is.
-MIDDLE = "history_symbolic"
+MIDDLE = "history"
 
 
 def from_graph(
@@ -153,8 +153,8 @@ def main() -> None:
     with_history = [s for s in items if s.history]
     pairings = {
         "sparse_vs_rich": (("sparse", "rich"), pair("sparse", "rich", items)),
-        "sparse_vs_history": (("sparse", "history"), pair("sparse", MIDDLE, with_history)),
-        "history_vs_rich": (("history", "rich"), pair(MIDDLE, "rich", with_history)),
+        "sparse_vs_history": (("sparse", "history_mixed"), pair("sparse", MIDDLE, with_history)),
+        "history_vs_rich": (("history_mixed", "rich"), pair(MIDDLE, "rich", with_history)),
     }
 
     RESULTS.mkdir(exist_ok=True)

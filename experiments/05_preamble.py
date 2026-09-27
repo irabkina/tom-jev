@@ -6,7 +6,7 @@ and found the preamble the largest, at -0.08 acceptable mass. It was added
 current world_state", and it does the opposite.
 
 That was measured on narrated events, where the preamble is one prose
-sentence among several. In `history_symbolic` it would be the only prose in
+sentence among several. In `history` it would be the only prose in
 the state, so the effect may not transfer, and the consequence matters:
 if it does, run 03's symbolic arm understated its own middle condition,
 and the share of the sparse-rich gap the history closes is roughly a
@@ -14,8 +14,8 @@ quarter rather than a ninth.
 
 Two conditions, twelve scenarios, differing in the preamble and nothing
 else. When first run the baseline was reused from experiment 03, where
-`history_symbolic` still carried the preamble; the preamble has since been
-dropped from that condition and lives in `history_symbolic_preamble`, so
+`history` still carried the preamble; the preamble has since been
+dropped from that condition and lives in `history_preamble`, so
 both passes are now made here.
 
     python experiments/05_preamble.py
@@ -35,8 +35,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
 
-BASELINE = "history_symbolic_preamble"
-CONDITION = "history_symbolic"
+BASELINE = "history_preamble"
+CONDITION = "history"
 
 SLATE = [
     "report_false_positive",
