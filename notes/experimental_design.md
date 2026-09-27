@@ -6,6 +6,14 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**The mixed history's apparent advantage is entirely formatting.** Its
+0.12 over the consistent arms decomposes into 0.08 from avoiding a
+preamble that only hurts narrated events, 0.06 from the history standing
+out against symbolic surroundings, and -0.02 from event wording. None of
+it is about epistemic access, and the preamble — added to stop superseded
+events reading as contradictions — never helps anywhere. See *Where the
+mixed rendering's advantage comes from*.
+
 **Writing the history in prose rather than symbols is worth almost
 nothing once the whole state is written the same way, and prose actively
 harms nested beliefs.** Measured over a 2x3 of style by richness: +0.03
@@ -653,29 +661,98 @@ project, and it supports the ~0.05 per-cell figure quoted in
 future_scenarios.md while showing that aggregates are far tighter than
 that implies.
 
-### What is still confounded
+## Where the mixed rendering's advantage comes from
 
-The mixed rendering — prose events inside a symbolic state — scores 0.63
-at the history level, above *both* consistent arms. That looks like a
-salience effect, the history standing out by being the only prose in its
-state. It cannot be claimed, because it differs from `history_prose` in
-three ways at once:
+The mixed rendering — prose events inside a symbolic state, which is what
+the `history` condition had always been — scores 0.62 at the history
+level, above *both* internally consistent arms (0.48 symbolic, 0.50
+prose). It differs from `history_prose` in three ways at once, so a chain
+was run that varies one at a time. Twelve scenarios, four conditions, one
+batch.
 
-| condition | surroundings | events | preamble |
-|---|---|---|---|
-| `history` | symbolic | numbered, present tense, `(seen by Sam)` | no |
-| `history_symbolic` | symbolic | symbolic | yes |
-| `history_prose` | prose | unnumbered, past tense, `and Sam saw it` | yes |
+| condition | surroundings | events | preamble | mass | delta | factor |
+|---|---|---|---|---|---|---|
+| `history` | symbolic | listed | no | 0.62 | | |
+| `history_listed` | symbolic | listed | yes | 0.54 | **-0.08** | the preamble |
+| `history_narrated` | symbolic | sentences | yes | 0.56 | +0.02 | event wording |
+| `history_prose` | prose | sentences | yes | 0.50 | **-0.06** | the surroundings |
 
-The `history_symbolic` / `history_prose` contrast is clean — both carry
-the preamble, and they differ in register — and that is the +0.03. The
-mixed condition's advantage is attributable to nothing yet. Filling the
-two empty cells of surroundings x event-rendering would settle it, and is
-24 calls.
+The endpoints replicate across runs to 0.01 — `history` 0.62 against 0.63
+in the 68-item run, `history_prose` 0.50 against 0.51 in the run above —
+so the deltas are readable against the noise floor.
 
-One asymmetry remains in all of this. `HISTORY_PREAMBLE` ends with
-"world_state is the situation now", which glosses a section every
-condition carries, and only the history conditions are told it. It was
-held constant across both arms here so it cannot explain the style
-contrast, but it is an advantage `sparse` and `rich` could have been given
-and were not.
+**None of the 0.12 is about epistemic access.** It is a preamble that
+should not be there and a contrast effect that has nothing to do with
+minds. The corpus's middle condition has been carrying both since it was
+built.
+
+### The preamble never helps, and sometimes hurts a lot
+
+`HISTORY_PREAMBLE` was added "so a superseded early event does not read as
+a contradiction of the current world_state". It costs 0.08 where the events
+are narrated, with two regressions on that link alone — one of them
+`attribution_false_attribution_false_belief` collapsing 0.67 -> 0.08 from
+those two sentences and nothing else.
+
+It does not transfer to a symbolic history, where it was expected to matter
+most, being the only prose in the state:
+
+| condition | mass |
+|---|---|
+| `history_symbolic` (with preamble) | 0.48 |
+| `history_symbolic_bare` (without) | 0.49 |
+
+So it is an interaction with the event rendering rather than a main effect:
+redundant where the narration already carries sequence, inert where the
+notation cannot carry it at all. Either way it never earns its place, and
+the reading to take is **drop it**.
+
+A prediction failed here and the failure is worth keeping. Since the
+preamble cost 0.08 on narrated events, the symbolic arm was expected to be
+understated by about as much, which would have moved the share of the
+sparse-rich gap the history closes from a ninth to roughly a quarter. It
+does not: 0.48 and 0.49 are the same number, the ladder stays
+0.42 -> 0.48 -> 0.95, and the 11% figure stands as first reported.
+
+### Contrast against the surroundings is worth 0.06
+
+Same events, same preamble, only the surrounding sections turning from
+symbolic to prose, and 0.06 of acceptable mass goes with them. Part of the
+history's advantage is that it *looks different from everything around it*.
+Its two regressions on that link are `meeting_false_positive`
+(0.53 -> 0.22) and `attribution_false_attribution_true_belief`
+(0.56 -> 0.26) — nested and attribution cells, as with the preamble, and as
+with the prose penalty at the rich level. Formatting does its damage in the
+same place every time.
+
+A real effect on the corpus and an uninteresting one about the phenomenon.
+It belongs in the design as a nuisance parameter to hold constant, not as
+something the middle condition is entitled to.
+
+### Event wording is a wash
+
++0.02 for past-tense sentences with the witness folded into them, against a
+numbered present-tense list with `(seen by Sam)`. One correction, no
+regressions. The hypothesis that the sentence rendering was simply worse is
+dead, which is the only outcome here that would have required rework.
+
+### What a defensible middle condition looks like
+
+Nothing measured is both internally consistent and preamble-free except
+`history_symbolic_bare`, at 0.49. The untested cell is narrated sentences
+in a symbolic state with no preamble, which the deltas put at around 0.64 —
+near the mixed condition, and for the same reasons, since that is very
+nearly what the mixed condition is.
+
+The choice is not which scores highest. A rendering that scores well by
+standing out is measuring salience. Either hold the contrast constant
+across every condition, which would mean giving `sparse` and `rich` a
+differently formatted section too and is absurd, or take a consistent arm
+and report the smaller number. The second is the honest option, and it puts
+the history's contribution at roughly a ninth of the sparse-rich gap rather
+than the two fifths the mixed rendering suggested.
+
+One asymmetry survives all of this and is now moot. `HISTORY_PREAMBLE`
+ended with "world_state is the situation now", glossing a section every
+condition carries while only the history conditions were told it. Since the
+preamble should go, the asymmetry goes with it.

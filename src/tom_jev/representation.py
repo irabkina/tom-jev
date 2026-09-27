@@ -337,12 +337,8 @@ def history(scenario: Scenario) -> State:
     the event wording, or the absent preamble. Prefer `history_symbolic`
     or `history_prose` when the rendering has to be controlled.
     """
-    agents = {e.id for e in scenario.entities.agents}
     state = _observable(scenario)
-    events = [
-        _narrate_event(e, i, scenario.entities, agents)
-        for i, e in enumerate(scenario.history, start=1)
-    ]
+    events = _listed_events(scenario)
     if events:
         state["history"] = "\n".join(events)
     return state
@@ -443,9 +439,7 @@ def history_prose(scenario: Scenario) -> State:
     nothing else.
     """
     state = _observable_prose(scenario)
-    events = [
-        _narrate_event_prose(e, i == 0, scenario.entities) for i, e in enumerate(scenario.history)
-    ]
+    events = _narrated_events(scenario)
     if events:
         state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
     return state
@@ -465,6 +459,77 @@ def rich_prose(scenario: Scenario) -> State:
     return state
 
 
+def _listed_events(scenario: Scenario) -> list[str]:
+    """The events as a numbered list, present tense, witness in brackets."""
+    agents = {e.id for e in scenario.entities.agents}
+    return [
+        _narrate_event(e, i, scenario.entities, agents)
+        for i, e in enumerate(scenario.history, start=1)
+    ]
+
+
+def _narrated_events(scenario: Scenario) -> list[str]:
+    """The events as sentences, past tense, witness inside the sentence."""
+    return [
+        _narrate_event_prose(e, i == 0, scenario.entities) for i, e in enumerate(scenario.history)
+    ]
+
+
+def history_listed(scenario: Scenario) -> State:
+    """`history`, plus the preamble it does not carry.
+
+    One link in the chain that decomposes why `history` outscores both
+    internally consistent arms. It differs from `history` in the preamble
+    and nothing else, so the difference between them is the preamble's
+    effect on its own. See `experiments/04_history_decomposition.py`.
+    """
+    state = _observable(scenario)
+    events = _listed_events(scenario)
+    if events:
+        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
+    return state
+
+
+def history_narrated(scenario: Scenario) -> State:
+    """Narrated sentences inside a state that is symbolic everywhere else.
+
+    The middle link. Against `history_listed` it isolates the event
+    wording, the two differing only in whether the events are a numbered
+    present-tense list or past-tense sentences. Against `history_prose` it
+    isolates the surroundings, the two carrying identical events and
+    differing only in whether anything around them is prose — which is the
+    test of whether the history's advantage is contrast against its
+    context rather than anything about the history itself.
+    """
+    state = _observable(scenario)
+    events = _narrated_events(scenario)
+    if events:
+        state["history"] = "\n".join([HISTORY_PREAMBLE, *events])
+    return state
+
+
+def history_symbolic_bare(scenario: Scenario) -> State:
+    """`history_symbolic` without the preamble.
+
+    The preamble turned out to be the largest single factor in why the
+    mixed rendering outscored both consistent arms, and it costs 0.08
+    acceptable mass — the opposite of what it was added for. That was
+    measured with narrated events, where it is one prose sentence among
+    several. Here it would have been the only prose in the state, so its
+    absence is worth measuring separately rather than assumed.
+
+    With `sparse` and `rich` this is the first internally consistent arm
+    that is also free of the preamble, which makes it the candidate for a
+    defensible middle condition. See `experiments/05_preamble.py`.
+    """
+    names = scenario.entities.names()
+    state = _observable(scenario)
+    events = [_describe_event(e, i, names) for i, e in enumerate(scenario.history, start=1)]
+    if events:
+        state["history"] = "\n".join(events)
+    return state
+
+
 RENDERERS: dict[str, Callable[[Scenario], State]] = {
     "sparse": sparse,
     "history": history,
@@ -473,6 +538,9 @@ RENDERERS: dict[str, Callable[[Scenario], State]] = {
     "sparse_prose": sparse_prose,
     "history_prose": history_prose,
     "rich_prose": rich_prose,
+    "history_listed": history_listed,
+    "history_narrated": history_narrated,
+    "history_symbolic_bare": history_symbolic_bare,
 }
 
 
