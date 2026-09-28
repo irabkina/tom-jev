@@ -1062,3 +1062,78 @@ second is exactly the shape a sparse-side trigger would have. A third is
 now wanted as well: a scenario where the richer representation makes the
 answer *worse*, so that over-firing has a price and the regression column
 can do some work.
+
+### The policy to be tested, fixed in advance
+
+Written before the held-out scenarios exist, so that the corpus cannot be
+built to suit it.
+
+**Primary selective re-representation policy**
+
+Escalate from the history representation to an explicit mental-state
+representation when the history pass has greater entropy than the sparse
+pass:
+
+`H(history) > H(sparse)`
+
+No minimum entropy increase is required.
+
+**Baselines**
+
+* Never materialize
+* Always materialize
+* `H(history) > 0.5`
+* `TV(sparse, history) > 0.1`
+* Task-family heuristic: materialize for action-prediction tasks
+
+**Primary evaluation**
+
+Evaluate policies on a held-out set of complete matched scenario families
+from previously unseen surface domains.
+
+For each policy, report:
+
+* escalation rate;
+* final acceptable mass;
+* final accuracy;
+* fraction of the available History→Rich acceptable-mass gain recovered;
+* corrections recovered;
+* regressions introduced.
+
+The primary comparison is the tradeoff between escalation rate and
+recovery of the available gain. The task-family policy is treated as a
+development-corpus baseline rather than a proposed general escalation
+mechanism.
+
+The held-out set should cross task family with the distinction between
+re-representations that positively support an alternative interpretation
+and those that primarily undermine an existing interpretation, so that task
+family is not confounded with representational function.
+
+**Three things to know about these baselines before reading the result.**
+
+The two intervention baselines are nearly the same baseline. On the
+development corpus `TV(sparse, history) > 0.1` and `H(history) > 0.5` agree
+on 66 of 68 scenarios — 27 of the 29 movers are inside the 34 uncertain
+items, and the two extra sit at TV 0.11 and 0.13. The 0.2 threshold is a
+strict subset with no exceptions, which is why 0.1 is specified here. If
+the held-out set reproduces that near-collinearity, the two are one
+comparison and should be reported as such rather than as independent
+support.
+
+No regression has ever been observed. `rich` never damages a scenario the
+history pass got right, across all 68. The regressions column therefore
+cannot discriminate between policies unless the held-out set contains
+scenarios where the richer representation is wrong — which is the point of
+crossing with representational function, since a re-representation that
+only undermines is the kind that should be able to hurt. If the held-out
+set also yields zero regressions, that is evidence the corpus is too easy
+rather than evidence the policies are safe.
+
+The task-family baseline is the one to beat, and nothing has beaten it.
+Demoting it to a development-corpus baseline is the right call — it cannot
+generalise, since it is a property of how this corpus was built — but it
+is also the only policy so far that recovers most of the available gain
+without paying for the cheap pass. A held-out result in which
+`H(history) > H(sparse)` does not beat it is a null result for the
+escalation story, not a partial success, and should be reported that way.
