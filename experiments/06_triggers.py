@@ -49,15 +49,33 @@ MIDDLE_ALIASES = (MIDDLE, "history_symbolic")
 #: Fixed before measurement. The last two are baselines rather than
 #: candidates: a task-family prior, and escalating unconditionally.
 TRIGGERS: dict[str, Callable[[dict[str, Any]], bool]] = {
-    "sparse and history disagree": lambda r: r["disagree"],
+    "never": lambda r: False,
     "the cheap pass moved the answer (TV > 0.2)": lambda r: r["moved"] > 0.2,
     "the cheap pass moved the answer (TV > 0.1)": lambda r: r["moved"] > 0.1,
     "the cheap pass raised entropy": lambda r: r["d_entropy"] > 0.0,
     "raised entropy by more than 0.2 bits": lambda r: r["d_entropy"] > 0.2,
     "the history pass is still uncertain": lambda r: r["h_entropy"] > 0.5,
-    "the sparse pass is uncertain": lambda r: r["s_entropy"] > 0.5,
+    "moved a lot OR is still uncertain": lambda r: r["moved"] > 0.2 or r["h_entropy"] > 0.5,
     "the task is action prediction": lambda r: r["family"] == "action_prediction",
     "always": lambda r: True,
+}
+
+#: Two earlier candidates are retired rather than kept as baselines.
+#: `the sparse pass is uncertain` reads the pass before the intervention
+#: and never beat the family prior; `sparse and history disagree` scored
+#: below base rate on the argmax label and above it on the mass labels,
+#: fires 11 times either way, and is too small to read.
+
+
+#: What counts as needing rich. The argmax flip is the label the first
+#: pass used; it is the strictest, and it ignores a pass that moves a lot
+#: of mass the right way without crossing the top-1 boundary. The two mass
+#: thresholds grade that instead. 0.10 sits just above the measured
+#: single-cell noise floor of 0.08; 0.25 is clear of it.
+LABELS: dict[str, Callable[[dict[str, Any]], bool]] = {
+    "rich corrects the history argmax": lambda r: r["corrected"],
+    "rich adds more than 0.10 acceptable mass": lambda r: r["gain"] > 0.10,
+    "rich adds more than 0.25 acceptable mass": lambda r: r["gain"] > 0.25,
 }
 
 
@@ -117,8 +135,16 @@ def measurements() -> list[dict[str, Any]]:
                 "moved": total_variation(before, after),
                 "h_entropy": entropy(after),
                 "s_entropy": entropy(before),
+                # The comparison file calls its baseline `sparse`; under
+                # experiment 01 that baseline is the middle pass.
                 "h_mass": outcome["acceptable_mass_sparse"] or 0.0,
+                "r_mass": outcome["acceptable_mass_rich"] or 0.0,
+                "h_final_entropy": outcome["entropy_sparse"] or 0.0,
+                "r_final_entropy": outcome["entropy_rich"] or 0.0,
+                "h_correct": outcome["sparse_choice"] in outcome["acceptable"],
+                "r_correct": outcome["rich_choice"] in outcome["acceptable"],
                 "corrected": outcome["outcome"] == "correction",
+                "regressed": outcome["outcome"] == "regression",
                 "gain": (outcome["acceptable_mass_rich"] or 0.0)
                 - (outcome["acceptable_mass_sparse"] or 0.0),
             }
@@ -127,72 +153,119 @@ def measurements() -> list[dict[str, Any]]:
 
 
 def score(
-    rows: list[dict[str, Any]], fires: Callable[[dict[str, Any]], bool]
+    rows: list[dict[str, Any]],
+    fires: Callable[[dict[str, Any]], bool],
+    needed: Callable[[dict[str, Any]], bool],
 ) -> tuple[int, float, float, float]:
-    """Fires, precision, recall and F1 against the corrections."""
+    """Fires, precision, recall and F1 against one definition of need."""
     fired = [r for r in rows if fires(r)]
-    positives = sum(r["corrected"] for r in rows)
-    hits = sum(r["corrected"] for r in fired)
+    positives = sum(bool(needed(r)) for r in rows)
+    hits = sum(bool(needed(r)) for r in fired)
     precision = hits / len(fired) if fired else 0.0
     recall = hits / positives if positives else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     return len(fired), precision, recall, f1
 
 
+def materialise(
+    rows: list[dict[str, Any]], fires: Callable[[dict[str, Any]], bool]
+) -> dict[str, float]:
+    """What the corpus looks like once a policy has escalated where it fires.
+
+    Every scenario ends up with exactly one answer: rich's where the policy
+    paid for it, the history pass's where it did not. The `final` measures
+    are taken on that mixture, which is what a deployed policy would
+    actually produce, rather than on either condition alone.
+    """
+    fired = [r for r in rows if fires(r)]
+    mass = [r["r_mass"] if fires(r) else r["h_mass"] for r in rows]
+    entropies = [r["r_final_entropy"] if fires(r) else r["h_final_entropy"] for r in rows]
+    correct = [r["r_correct"] if fires(r) else r["h_correct"] for r in rows]
+
+    available = sum(r["gain"] for r in rows)
+    recovered = sum(r["gain"] for r in fired)
+    corrections = sum(r["corrected"] for r in rows)
+    regressions = sum(r["regressed"] for r in rows)
+
+    return {
+        "fires": len(fired),
+        "rate": len(fired) / len(rows),
+        "mass": mean(mass),
+        "entropy": mean(entropies),
+        "accuracy": sum(correct) / len(rows),
+        "recovery": recovered / available if available else float("nan"),
+        "corrections": sum(r["corrected"] for r in fired),
+        "corrections_total": corrections,
+        "regressions": sum(r["regressed"] for r in fired),
+        "regressions_total": regressions,
+    }
+
+
 def main() -> None:
     rows = measurements()
-    positives = sum(r["corrected"] for r in rows)
+    entropy_rose = TRIGGERS["the cheap pass raised entropy"]
+
+    for label, needed in LABELS.items():
+        positives = sum(bool(needed(r)) for r in rows)
+        print(f"NEED: {label}")
+        print(f"  n={len(rows)}  positives {positives}  base rate {positives / len(rows):.2f}\n")
+        print(f"  {'trigger':44}{'fires':>7}{'prec':>7}{'rec':>7}{'F1':>7}")
+        for name, fires in TRIGGERS.items():
+            count, precision, recall, f1 = score(rows, fires, needed)
+            print(f"  {name:44}{count:>7}{precision:>7.2f}{recall:>7.2f}{f1:>7.2f}")
+
+        print("\n  entropy rise, conditioned on task family:")
+        for family in ("action_prediction", "goal_recognition"):
+            subset = [r for r in rows if r["family"] == family]
+            base = sum(bool(needed(r)) for r in subset) / len(subset)
+            count, precision, _, _ = score(subset, entropy_rose, needed)
+            print(
+                f"    {family:20} n={len(subset):>3}  base {base:.2f}"
+                f"   fires {count:>3} at precision {precision:.2f}"
+                f"   lift {precision - base:+.2f}"
+            )
+        print()
+
+    baseline = materialise(rows, TRIGGERS["never"])
+    ceiling = materialise(rows, TRIGGERS["always"])
+    print("what each policy is worth once it has run.")
     print(
-        f"n={len(rows)}  corrections under {MIDDLE} -> rich: {positives}"
-        f"  (base rate {positives / len(rows):.2f})\n"
+        f"  never escalating ends at {baseline['mass']:.2f} mass,"
+        f" {baseline['accuracy']:.2f} accuracy;"
+        f" escalating always ends at {ceiling['mass']:.2f} and {ceiling['accuracy']:.2f}."
+    )
+    print(
+        f"  recovery is the share of the {ceiling['mass'] - baseline['mass']:+.2f}"
+        f" mass between them that the policy collects.\n"
     )
 
-    print(f"{'trigger':44}{'fires':>7}{'prec':>7}{'rec':>7}{'F1':>7}")
+    print(
+        f"  {'policy':44}{'fires':>6}{'esc':>6}"
+        f"{'mass':>7}{'ent':>6}{'acc':>6}{'recov':>7}{'corr':>7}{'reg':>6}"
+    )
     for name, fires in TRIGGERS.items():
-        count, precision, recall, f1 = score(rows, fires)
-        print(f"{name:44}{count:>7}{precision:>7.2f}{recall:>7.2f}{f1:>7.2f}")
-
-    print("\nmean gain from escalating, split by whether the trigger fired:")
-    for name in ("sparse and history disagree", "the cheap pass raised entropy"):
-        fires = TRIGGERS[name]
-        on = [r["gain"] for r in rows if fires(r)]
-        off = [r["gain"] for r in rows if not fires(r)]
+        m = materialise(rows, fires)
+        corrections = f"{m['corrections']:.0f}/{m['corrections_total']:.0f}"
+        regressions = f"{m['regressions']:.0f}/{m['regressions_total']:.0f}"
         print(
-            f"  {name:44} fired {mean(on):+.2f} (n={len(on)})   quiet {mean(off):+.2f} (n={len(off)})"
+            f"  {name:44}{m['fires']:>6.0f}{m['rate']:>6.0%}"
+            f"{m['mass']:>7.2f}{m['entropy']:>6.2f}{m['accuracy']:>6.2f}"
+            f"{m['recovery']:>7.0%}{corrections:>7}{regressions:>6}"
         )
 
-    print("\nwhy disagreement is anti-predictive:")
-    disagreements = [r for r in rows if r["disagree"]]
-    solved = [r for r in disagreements if r["h_mass"] > 0.5]
-    print(f"  {len(solved)} of {len(disagreements)} disagreements already had more than 0.5")
-    print("  acceptable mass after the cheap pass, so nothing was left to correct")
+    print("\n  esc    share of the corpus escalated")
+    print("  mass   mean final acceptable mass          ent   mean final entropy, bits")
+    print("  acc    final accuracy (argmax acceptable)  recov share of the available gain")
+    print("  corr   argmax corrections materialised     reg   regressions materialised")
 
-    print("\ndoes entropy rise survive conditioning on the task family?")
+    print("\nentropy rise, conditioned on task family, against the argmax label:")
     for family in ("action_prediction", "goal_recognition"):
         subset = [r for r in rows if r["family"] == family]
         base = sum(r["corrected"] for r in subset) / len(subset)
-        count, precision, _, _ = score(subset, TRIGGERS["the cheap pass raised entropy"])
+        count, precision, _, _ = score(subset, entropy_rose, LABELS["rich corrects the history argmax"])
         print(
-            f"  {family:20} n={len(subset):>3}  base {base:.2f}   fires {count:>3} at precision {precision:.2f}"
-        )
-
-    print("\nwhat each policy costs, in rich calls:")
-    policies = {
-        "always": TRIGGERS["always"],
-        "entropy rose": TRIGGERS["the cheap pass raised entropy"],
-        "action prediction": TRIGGERS["the task is action prediction"],
-        "action prediction and entropy rose": lambda r: (
-            r["family"] == "action_prediction" and r["d_entropy"] > 0.0
-        ),
-    }
-    for name, fires in policies.items():
-        fired = [r for r in rows if fires(r)]
-        hits = sum(r["corrected"] for r in fired)
-        gain = sum(r["gain"] for r in fired)
-        per = gain / len(fired) if fired else float("nan")
-        print(
-            f"  {name:36}{len(fired):>4} calls  {hits:>2}/{positives} kept"
-            f"  {gain:+6.1f} mass  {per:.2f} per call"
+            f"  {family:20} n={len(subset):>3}  base {base:.2f}"
+            f"   fires {count:>3} at precision {precision:.2f}   lift {precision - base:+.2f}"
         )
 
 
