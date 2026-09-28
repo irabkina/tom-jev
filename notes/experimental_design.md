@@ -6,6 +6,17 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**The best intervention trigger is the cheap pass raising its own
+entropy, and it still loses to knowing the task family.** A rise in
+entropy from `sparse` to `history` fires on 43 of 68 and recovers 80% of
+the available acceptable-mass gain, beating its base rate on all three
+definitions of "needed" and surviving conditioning on the task family. But
+`is this action prediction` recovers 87% on fewer calls and is free, so no
+trigger yet earns the cheap pass that computes it. An earlier claim here,
+that disagreement between the two passes is *anti*-predictive, was an
+artifact of scoring only argmax flips and has been withdrawn. See *A cheap
+pass that raises its own entropy is the first usable trigger*.
+
 **The mixed history's apparent advantage is entirely formatting.** Its
 0.12 over the consistent arms decomposes into 0.08 from avoiding a
 preamble that only hurts narrated events, 0.06 from the history standing
@@ -791,3 +802,338 @@ One asymmetry survives all of this and is now moot. `HISTORY_PREAMBLE`
 ended with "world_state is the situation now", glossing a section every
 condition carries while only the history conditions were told it. Since the
 preamble should go, the asymmetry goes with it.
+
+
+## A cheap pass that raises its own entropy is the first usable trigger
+
+*Sparse-state signals do not reliably identify the need for
+re-representation* tested three triggers and found nothing. All three read
+the **sparse output**. The three-condition design allows a fourth kind: a
+trigger can be an *intervention* rather than a classifier — run the middle
+pass and watch what happens to the model's own distribution. That is much
+closer to what conflict-triggered re-representation actually claims, and it
+is what the escalation question should have been asking.
+
+Nine candidates, all defined before any was measured, every one computable
+at run time from passes already paid for and none using ground truth.
+Target: does `history -> rich` produce a correction? 23 of 68, base rate
+0.34.
+
+| trigger | fires | precision | recall | F1 |
+|---|---|---|---|---|
+| the cheap pass moved the answer (TV > 0.2) | 19 | 0.32 | 0.26 | 0.29 |
+| the cheap pass moved the answer (TV > 0.1) | 29 | 0.38 | 0.48 | 0.42 |
+| **the cheap pass raised entropy** | 43 | **0.42** | 0.78 | 0.55 |
+| raised entropy by more than 0.2 bits | 29 | 0.45 | 0.57 | 0.50 |
+| the history pass is still uncertain (> 0.5 bits) | 34 | 0.41 | 0.61 | 0.49 |
+| the sparse pass is uncertain (> 0.5 bits) | 26 | 0.31 | 0.35 | 0.33 |
+| sparse and history disagree | 11 | 0.09 | 0.04 | 0.06 |
+| the task is action prediction | 40 | 0.50 | 0.87 | 0.63 |
+| always | 68 | 0.34 | 1.00 | 0.51 |
+
+Sparse uncertainty comes in *below* the base rate, which replicates the
+earlier negative result on fresh numbers and a different middle condition.
+
+### Entropy rise separates, and is not the task-family prior
+
+Mean acceptable-mass gain from escalating, split by whether the trigger
+fired: **+0.38 where entropy rose against +0.16 where it did not**. And it
+survives conditioning on the task family, which is the check that killed
+the dependency-structure signal:
+
+| family | n | base rate | entropy-rise fires | precision |
+|---|---|---|---|---|
+| action prediction | 40 | 0.50 | 26 | **0.62** |
+| goal recognition | 28 | 0.11 | 17 | 0.12 |
+
+It adds where escalation is worth something and adds nothing where it is
+not. That is the shape a real signal should have, rather than a single
+number that happens to beat a base rate.
+
+This joins up with *Consequence for the two-systems framing*, where entropy
+rise was the marker of "triggered but unresolved" — the belief undermines
+the sparse reading and supplies nothing. The same quantity, measured under
+the cheap enrichment rather than the rich one, is diagnostic of *needing*
+the belief. Conflict detection as a trigger for effortful re-representation
+is the motivating claim, and this is the first measurement in the project
+that supports it rather than failing to find it.
+
+### The target definition is doing more work than the triggers are
+
+The table above asks one question — does `rich` flip the top-ranked
+answer? That is the strictest reading of "needed", and it discards a pass
+that moves a great deal of mass the right way without crossing the top-1
+boundary. Two graded targets were added: does `rich` add more than 0.10
+acceptable mass, and more than 0.25. The thresholds bracket the measured
+single-cell noise floor of 0.08 — 0.10 sits just above it, 0.25 clear of
+it.
+
+They are not nested inside the argmax target. Thirty-three scenarios gain
+more than 0.10 where only 23 flip, so `rich` is moving substantial mass on
+items the history pass already ranked correctly.
+
+Precision against each target, with its base rate in the heading:
+
+| trigger | argmax (0.34) | > 0.10 mass (0.49) | > 0.25 mass (0.41) |
+|---|---|---|---|
+| sparse and history disagree | **0.09** | **0.64** | 0.45 |
+| moved the answer (TV > 0.2) | 0.32 | 0.68 | 0.53 |
+| moved the answer (TV > 0.1) | 0.38 | 0.62 | 0.52 |
+| the cheap pass raised entropy | 0.42 | 0.63 | 0.53 |
+| raised entropy by > 0.2 bits | 0.45 | 0.66 | 0.55 |
+| the history pass is still uncertain | 0.41 | **0.71** | **0.56** |
+| the sparse pass is uncertain | 0.31 | 0.62 | 0.46 |
+| the task is action prediction | 0.50 | 0.62 | 0.55 |
+
+Two things change, and one does not.
+
+**Disagreement is not anti-predictive.** An earlier version of this section
+recorded it as the strongest negative result here — precision 0.09 against
+0.34, worse than escalating at random, with the memorable gloss that
+disagreement is a success signal rather than a distress signal. That was an
+artifact of the argmax target. Ten of the 11 disagreements already had more
+than 0.5 acceptable mass after the cheap pass, which makes an argmax flip
+nearly unavailable *arithmetically* — but leaves mass gain perfectly
+available, and under the 0.10 target the same 11 scenarios score 0.64
+against a base rate of 0.49. The honest statement is narrower than either
+version: disagreement fires 11 times out of 68, recovers 0.21 of the
+graded positives, and gains less per escalation than the corpus average
+(+0.20 against +0.32). It is a weak, low-recall signal, not an inverted
+one. Retired as a candidate for being too small to read, not for pointing
+the wrong way.
+
+**Under graded targets a measured signal finally beats the free prior.**
+That never happened under the argmax target, where `is it action
+prediction` won outright at F1 0.63. Under the 0.10 target, *the history
+pass is still uncertain* takes it at precision 0.71 and F1 0.72, against
+0.62 and 0.68 for task family, with entropy rise level at 0.71. This
+matters more than it looks: a trigger that cannot beat a label known before
+any call is not earning the cheap pass that computes it.
+
+**Entropy rise holds across all three, and its weakest leg gets stronger.**
+Lift over the within-family base rate:
+
+| family | argmax | > 0.10 | > 0.25 |
+|---|---|---|---|
+| action prediction | +0.12 | **+0.18** | +0.14 |
+| goal recognition | +0.01 | +0.07 | +0.08 |
+
+Goal recognition had 11% positives under the argmax target, too few for
+the conditioning check to say anything. The graded targets give it
+something to detect, and some of it is detected. The part of the original
+result that was least supported is now the part that improved.
+
+### The movement trigger is contained in the uncertainty trigger
+
+`TV(S,H) > 0.2` and `H_history > 0.5` look like independent readings — how
+far the cheap pass moved, and where it landed. They are not. **All 19
+scenarios the cheap pass moved a long way are inside the 34 it left
+uncertain**, so their union fires 34 times and is identical to
+`H_history > 0.5` on every measure. Nor is it a threshold accident: the
+lowest entropy among the movers is 0.76, and the highest movement among the
+confident items is 0.13. Both margins are wide.
+
+The mechanism is that when the history pass moves mass, it moves it into a
+spread rather than onto a new peak. Evidence about access redistributes
+without concentrating — which is the same fact that *Evidence for a belief
+is worth less than the belief* measures from the other side.
+
+Unions of these two are therefore not worth testing. A second signal has to
+be about something other than the shape of the cheap pass's own output.
+
+### What a policy is actually worth
+
+Precision and recall score a trigger against a label. They do not say what
+the corpus looks like afterwards. These measures do: every scenario is
+given exactly one final answer — `rich`'s where the policy escalated, the
+history pass's where it did not — and measured on that mixture, which is
+what a deployed policy would produce.
+
+Never escalating ends at 0.58 mean acceptable mass and 0.59 accuracy.
+Escalating always ends at 0.87 and 0.93. Recovery is the share of that
++0.30 that a policy collects.
+
+| policy | fires | % escalated | final mass | final entropy | final accuracy | gain recovered | corrections | regressions |
+|---|---|---|---|---|---|---|---|---|
+| never | 0 | 0% | 0.58 | 0.53 | 0.59 | 0% | 0/23 | 0/0 |
+| TV > 0.2 | 19 | 28% | 0.66 | 0.42 | 0.68 | 27% | 6/23 | 0/0 |
+| TV > 0.1 | 29 | 43% | 0.71 | 0.38 | 0.75 | 46% | 11/23 | 0/0 |
+| **entropy rose** | 43 | 63% | 0.81 | 0.34 | 0.85 | **80%** | 18/23 | 0/0 |
+| entropy rose > 0.2 bits | 29 | 43% | 0.74 | 0.38 | 0.78 | 56% | 13/23 | 0/0 |
+| history still uncertain | 34 | 50% | 0.75 | 0.34 | 0.79 | 59% | 14/23 | 0/0 |
+| the task is action prediction | 40 | 59% | 0.84 | 0.39 | 0.88 | 87% | 20/23 | 0/0 |
+| always | 68 | 100% | 0.87 | 0.32 | 0.93 | 100% | 23/23 | 0/0 |
+
+**There are no regressions to incur.** Not "few" — none. `rich` never
+breaks a scenario the history pass got right, anywhere in the corpus. So
+escalation carries no downside risk here and the only cost is calls, which
+makes every trigger a pure efficiency question. It also means the
+regression column cannot discriminate between policies until the corpus
+contains a scenario where `rich` is worse, and none has been built. That
+absence is itself a caution: a corpus where the richer representation never
+hurts is a corpus that cannot punish a trigger for over-firing.
+
+With no downside, the ratio that matters is gain recovered per unit of
+corpus escalated:
+
+| policy | recovery ÷ escalation |
+|---|---|
+| TV > 0.2 | 0.96 |
+| history still uncertain | 1.18 |
+| entropy rose | 1.27 |
+| entropy rose > 0.2 bits | **1.30** |
+| the task is action prediction | 1.47 |
+
+`TV > 0.2` scores below 1.0, which means it is worse than escalating at
+random — it picks 28% of the corpus and recovers 27% of the gain. The
+entropy triggers are the best of the intervention family.
+
+And the standing obstacle is in the last row. **Task family recovers 87% of
+the available gain on 59% of the calls and costs nothing to compute**, because
+it is known before any pass is run. No trigger that requires paying for the
+cheap pass beats it, on any target, on any measure in this section. That was
+true of the argmax table and it is true of the materialised one. Until an
+intervention trigger beats the free prior, the two-stage story is an
+explanation of the corpus rather than a reason to build anything.
+
+Final entropy does not break the tie. Every policy escalating half the
+corpus or more lands at 0.34 against 0.32 for always — `rich`'s confidence
+arrives early in the escalation order, whatever the order is.
+
+### What escalation costs here, and why it is not a saving
+
+The policy comparison, with the number of `rich` calls each choice buys:
+
+| policy | rich calls | corrections kept | mass gained | gain per call |
+|---|---|---|---|---|
+| always | 68 | 23/23 | +20.3 | 0.30 |
+| entropy rose | 43 | 18/23 | +16.3 | 0.38 |
+| action prediction | 40 | 20/23 | +17.8 | 0.45 |
+| action prediction **and** entropy rose | 26 | 16/23 | +14.5 | **0.56** |
+
+Gain per call nearly doubles. But the saving is notional, because the
+trigger has to be paid for:
+
+| condition | mean input tokens |
+|---|---|
+| `sparse` | 381 |
+| `history` | 442 |
+| `rich` | 412 |
+
+The middle pass is the *most expensive* of the three. A two-stage policy
+costs 68 sparse + 68 history + 26 rich = 162 calls where escalating always
+costs 136. Escalation cannot save anything in this pilot; it strictly costs
+more.
+
+That is a fact about the pilot rather than about the architecture. Jev is
+the System One model, so the effortful step is not a larger inference — it
+is *constructing* the richer representation. Here that is free, because
+`mental_state` is read from a file. In a system that had to derive it, from
+a knowledge base or from a chain of inference, the construction is the
+expense and a trigger that avoids two thirds of them is worth having. The
+token counts say the pilot cannot price the thing the architecture is
+trying to economise, not that there is nothing to economise.
+
+### Why this is not yet a result
+
+Sixty-eight items, 23 positives under the argmax target, nine candidates,
+and now three target definitions. Declaring the candidates in advance
+limits the damage but does not remove it, and adding targets multiplies the
+comparisons rather than replicating them — the three are three readings of
+one run, not three runs. The corpus is the set all of this was selected on.
+
+The disagreement correction above is the concrete cost of that. A finding
+stated confidently in this note, with a mechanism attached, turned out to
+be a property of the scoring rule rather than of the model. It was
+discovered by changing the rule, not by collecting data, which means
+nothing protected it except that somebody re-asked the question.
+
+The same caution applies that *Dependency structure does not give a usable
+escalation signal either* records: a trigger once looked usable at
+precision 0.48 and recall 0.75, and dissolved once the concept behind it
+was counted honestly. The conditioning check is the equivalent test here
+and entropy rise passes it on all three targets, which is the reason to
+take it seriously at all.
+
+What would make it a result is scenarios it was not selected on. Two are
+already specified in future_scenarios.md — an observation compatible with
+several goals, and an observation the world cannot account for — and the
+second is exactly the shape a sparse-side trigger would have. A third is
+now wanted as well: a scenario where the richer representation makes the
+answer *worse*, so that over-firing has a price and the regression column
+can do some work.
+
+### The policy to be tested, fixed in advance
+
+Written before the held-out scenarios exist, so that the corpus cannot be
+built to suit it.
+
+**Primary selective re-representation policy**
+
+Escalate from the history representation to an explicit mental-state
+representation when the history pass has greater entropy than the sparse
+pass:
+
+`H(history) > H(sparse)`
+
+No minimum entropy increase is required.
+
+**Baselines**
+
+* Never materialize
+* Always materialize
+* `H(history) > 0.5`
+* `TV(sparse, history) > 0.1`
+* Task-family heuristic: materialize for action-prediction tasks
+
+**Primary evaluation**
+
+Evaluate policies on a held-out set of complete matched scenario families
+from previously unseen surface domains.
+
+For each policy, report:
+
+* escalation rate;
+* final acceptable mass;
+* final accuracy;
+* fraction of the available History→Rich acceptable-mass gain recovered;
+* corrections recovered;
+* regressions introduced.
+
+The primary comparison is the tradeoff between escalation rate and
+recovery of the available gain. The task-family policy is treated as a
+development-corpus baseline rather than a proposed general escalation
+mechanism.
+
+The held-out set should cross task family with the distinction between
+re-representations that positively support an alternative interpretation
+and those that primarily undermine an existing interpretation, so that task
+family is not confounded with representational function.
+
+**Three things to know about these baselines before reading the result.**
+
+The two intervention baselines are nearly the same baseline. On the
+development corpus `TV(sparse, history) > 0.1` and `H(history) > 0.5` agree
+on 66 of 68 scenarios — 27 of the 29 movers are inside the 34 uncertain
+items, and the two extra sit at TV 0.11 and 0.13. The 0.2 threshold is a
+strict subset with no exceptions, which is why 0.1 is specified here. If
+the held-out set reproduces that near-collinearity, the two are one
+comparison and should be reported as such rather than as independent
+support.
+
+No regression has ever been observed. `rich` never damages a scenario the
+history pass got right, across all 68. The regressions column therefore
+cannot discriminate between policies unless the held-out set contains
+scenarios where the richer representation is wrong — which is the point of
+crossing with representational function, since a re-representation that
+only undermines is the kind that should be able to hurt. If the held-out
+set also yields zero regressions, that is evidence the corpus is too easy
+rather than evidence the policies are safe.
+
+The task-family baseline is the one to beat, and nothing has beaten it.
+Demoting it to a development-corpus baseline is the right call — it cannot
+generalise, since it is a property of how this corpus was built — but it
+is also the only policy so far that recovers most of the available gain
+without paying for the cheap pass. A held-out result in which
+`H(history) > H(sparse)` does not beat it is a null result for the
+escalation story, not a partial success, and should be reported that way.
