@@ -51,10 +51,10 @@ reliably identify the need for re-representation*.
 
 ## Corpus
 
-68 scenarios. The directory path is the taxonomy and the only source of
-truth for it:
+68 scenarios, all under the `dev` split. The directory path is the
+taxonomy and the only source of truth for it:
 
-    scenarios/<task_family>/<template>/<domain>/<condition>/<lexicalization>.yaml
+    scenarios/<split>/<task_family>/<template>/<domain>/<condition>/<lexicalization>.yaml
 
 | task family | template | domains | n |
 |---|---|---|---|
@@ -63,6 +63,10 @@ truth for it:
 | `action_prediction` | `attribution` | meeting_rooms, newsroom, observatory | 12 |
 | `goal_recognition` | `first_order` | coffee, darkroom, greenhouse | 12 |
 | `goal_recognition` | `discriminative` | clinic, mailroom, station, workshop | 16 |
+
+`scenarios/test/` is the held-out split and is empty; the escalation policy
+it will be used to test was fixed first, and its README records what that
+commits us to.
 
 See `scenarios/README.md` for the file format and `scenarios/schema.yaml`
 for the fields.

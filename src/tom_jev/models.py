@@ -323,6 +323,7 @@ class Taxonomy(BaseModel):
     directory. See `scenarios.taxonomy`.
     """
 
+    split: str | None = None
     task_family: str | None = None
     template: str | None = None
     domain: str | None = None

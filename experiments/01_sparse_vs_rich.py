@@ -117,7 +117,7 @@ def top_answer(prediction: Prediction, scenario: Scenario) -> str:
 
 def main() -> None:
     load_dotenv()
-    items = scenarios.load(SCENARIOS)
+    items = scenarios.load(SCENARIOS, split="dev")
     if not items:
         raise SystemExit(f"no scenarios found in {SCENARIOS}")
 
