@@ -1,8 +1,7 @@
 # Scenarios
 
 - **`schema.yaml`** — the authoritative field reference, with every field
-  documented inline. (It does not yet cover `history`; until it does, see
-  `models.HistoryEvent` and `scripts/add_histories.py`.)
+  documented inline, including the two rules a `history` must satisfy.
 - **`action_prediction/first_order/report/`** — a complete worked 2x2, and
   the set to copy from.
 
