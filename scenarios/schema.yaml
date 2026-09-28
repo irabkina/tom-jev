@@ -4,14 +4,23 @@
 #   1. Observable events/actions
 #   2. Objective world state
 #   3. Agent goals
-#   4. Agents' explicit mental states
-#   5. Ground-truth answers
+#   4. How an agent came to believe what they believe
+#   5. Agents' explicit mental states
+#   6. Ground-truth answers
 #
-# Sparse representations use (1), (2), and (3).
-# Rich representations additionally use (4).
+# There are three conditions, differing in exactly one section each:
+#
+#   sparse   uses (1), (2) and (3)
+#   history  adds (4) — the evidence a belief follows from
+#   rich     adds (5) instead — the belief itself
 #
 # Mental states should never be inferred from world_state when constructing
 # representations. This separation is the core experimental manipulation.
+#
+# (4) and (5) are two presentations of the same belief: the history must
+# ENTAIL what the mental state ASSERTS, without asserting it. A corpus test
+# recovers the belief from the events and holds the two to agreement, so
+# `history` and `rich` differ in explicitness and not in content.
 
 id: string
 
@@ -104,6 +113,82 @@ goals:
     object: string | null
     location: string | null
     target_agent: string | null
+
+# ---------------------------------------------------------------------------
+# HISTORY
+# ---------------------------------------------------------------------------
+# How the agent came to believe what they believe: observable events, each
+# settling one claim, each witnessed by whoever was there to see it.
+#
+# OMITTED from sparse and rich representations.
+# INCLUDED in the history representation.
+#
+# An agent's belief about a claim is whatever the LAST event they witnessed
+# settled. A false belief is a claim settled one way in their view and
+# settled otherwise out of it:
+#
+#   history:
+#     - proposition:
+#         predicate: located
+#         subject: report
+#         location: office
+#         value: true
+#       witnessed_by: [sam]
+#
+#     - proposition:
+#         predicate: located
+#         subject: report
+#         location: conference_room
+#         value: true
+#       witnessed_by: []
+#
+# `proposition` takes the same form as in world_state and mental_state, and
+# may nest in the same way. A nested event is an agent coming to hold a
+# belief, which is an ordinary observable thing that another agent may
+# witness or miss — this is how the attribution and second-order sets get a
+# history, and it sits at the same level as any other claim:
+#
+#     - proposition:
+#         predicate: believes
+#         subject: alex
+#         proposition:
+#           predicate: located
+#           subject: meeting
+#           location: office
+#           value: true
+#       witnessed_by: [sam]
+#
+# Two rules the corpus tests enforce:
+#
+#   ONE AGENT'S ACCESS. The history represents the access of exactly one
+#   agent — `question.agent`, the one being predicted. Nothing is predicted
+#   about anyone else, so no other agent appears in `witnessed_by`. Another
+#   agent's belief reaches the history only as the event this agent missed.
+#
+#   EQUAL LENGTH. Every belief contributes exactly two events, whether it
+#   is true or false. A false belief is settled in view and settled again
+#   out of view; a true one is settled twice in view, the first sighting
+#   superseded. Without this, event count alone would classify the
+#   condition and a model could score well by counting rather than by
+#   representing a belief.
+#
+# Generated from the stated mental states by scripts/add_histories.py, which
+# guarantees entailment by construction. See notes/future_scenarios.md for
+# what that costs.
+
+history:
+  - proposition:
+      predicate: string
+      subject: string
+      object: string | null
+      location: string | null
+      value: boolean | string | number
+
+    # Agent ids present when the event happened. Empty means nobody saw it.
+    witnessed_by: [string]
+
+    # Optional free-text label for readers; never sent to the model.
+    event: string
 
 # ---------------------------------------------------------------------------
 # MENTAL STATE
@@ -218,6 +303,13 @@ annotations:
   agent_believes_action_supported: boolean
 
   # Does the agent's belief agree with objective reality?
+  #
+  # Presumes a single believer, and is ambiguous where a scenario
+  # represents more than one. In the attribution set, one agent can be
+  # wrong about another while that other is right about the world, and
+  # this field cannot say which it means. Where two agents hold beliefs,
+  # prefer the measured pair — analysis.world_conflict for belief against
+  # world, analysis.attribution_conflict for belief against person.
   belief_matches_reality: boolean
 
   # Does representing the agent's belief change which action is expected?

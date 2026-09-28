@@ -33,6 +33,8 @@ entities:
   objects:
     - id: roll
       name: exposed roll
+    - id: developer
+      name: developer
     - id: drying_line
       name: drying line
     - id: wash_sink
@@ -62,6 +64,27 @@ world_state:
     subject: wash_sink
     location: darkroom
     value: true
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: developer
+        location: darkroom
+        value: false
+    witnessed_by:
+      - ruth
+
+  - proposition:
+        predicate: available
+        subject: developer
+        location: darkroom
+        value: true
+    witnessed_by:
+      - ruth
 
 mental_state:
   - type: belief

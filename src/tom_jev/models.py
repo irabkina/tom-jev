@@ -14,10 +14,28 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Entity(BaseModel):
-    """An agent, location, or object referenced by a scenario."""
+    """An agent, location, or object referenced by a scenario.
+
+    `article` and `preposition` exist only for the narrated `history`
+    representation, which has to put a name into a sentence. Most names
+    take "in the" — "in the office" — but "the front desk" wants "at" and
+    "platform three" wants neither article nor "in". Recording that on the
+    entity beats having the renderer guess from the name.
+    """
 
     id: str
     name: str
+    article: bool = True
+    preposition: str = "in"
+
+    def phrase(self, preposition: str | None = None) -> str:
+        """The name in a prepositional phrase, e.g. `at the front desk`.
+
+        Passing `preposition` overrides the entity's own, for verbs that
+        fix it themselves — you leave a place, you do not leave in it.
+        """
+        head = self.preposition if preposition is None else preposition
+        return " ".join(part for part in (head, "the" if self.article else "", self.name) if part)
 
 
 class Entities(BaseModel):
@@ -26,6 +44,14 @@ class Entities(BaseModel):
     agents: list[Entity] = Field(default_factory=list)
     locations: list[Entity] = Field(default_factory=list)
     objects: list[Entity] = Field(default_factory=list)
+
+    def by_id(self, entity_id: str) -> Entity | None:
+        """The entity with this id, or None if the cast omits it."""
+        for group in (self.agents, self.locations, self.objects):
+            for entity in group:
+                if entity.id == entity_id:
+                    return entity
+        return None
 
     def names(self) -> dict[str, str]:
         """Map every entity id to its display name."""
@@ -120,6 +146,59 @@ class Proposition(BaseModel):
         """The proposition at the bottom of the nesting — the one with a value."""
         return self if self.proposition is None else self.proposition.innermost()
 
+    def signature(self) -> tuple:
+        """What this proposition is *about*, ignoring the value it takes.
+
+        Two propositions share a signature when they make the same claim,
+        so one can supersede the other. The innermost value is excluded
+        for exactly that reason — `located(report, office) = True` and
+        `= False` are the same claim, settled two ways.
+        """
+        inner = None if self.proposition is None else self.proposition.signature()
+        return (self.predicate, self.subject, self.object, self.location, inner)
+
+    def held_value(self) -> bool | float | str | None:
+        """The value at the bottom of the nesting.
+
+        A nested proposition carries no value of its own: what
+        `believes(alex)[located(meeting, office) = True]` settles is the
+        True at the bottom.
+        """
+        return self.innermost().value
+
+    def revalued(self, value: bool | float | str) -> Proposition:
+        """A copy whose innermost proposition takes a different value.
+
+        The counterpart to `relocated` for claims with no location to
+        vary — an availability is settled by flipping it, not by moving
+        it somewhere else.
+        """
+        if self.proposition is None:
+            return self.model_copy(update={"value": value})
+        return self.model_copy(update={"proposition": self.proposition.revalued(value)})
+
+    def relocated(self, location: str) -> Proposition:
+        """A copy whose innermost proposition names a different location.
+
+        Used for locative exclusivity, which passes through nesting:
+        seeing Alex come to believe the meeting is in the office is seeing
+        Alex come to believe it is not in the garden.
+        """
+        if self.proposition is None:
+            return self.model_copy(update={"location": location})
+        return self.model_copy(update={"proposition": self.proposition.relocated(location)})
+
+
+def _mentions(proposition: Proposition) -> set[str]:
+    """Every entity id a proposition names, following any nesting."""
+    ids = {proposition.subject}
+    for argument in (proposition.object, proposition.location):
+        if argument is not None:
+            ids.add(argument)
+    if proposition.proposition is not None:
+        ids |= _mentions(proposition.proposition)
+    return ids
+
 
 class Goal(BaseModel):
     """A goal attributed to an agent.
@@ -143,6 +222,46 @@ class Goal(BaseModel):
             "target_agent": self.target_agent,
         }
         return {k: v for k, v in named.items() if v is not None}
+
+
+class HistoryEvent(BaseModel):
+    """A claim being settled, and who was present to see it settled.
+
+    An epistemic-access history says how an agent came to believe what
+    they believe, instead of stating the belief. Each event settles a
+    proposition and names its witnesses; an agent's belief about a claim
+    is whatever the last event they witnessed settled, which may be stale
+    if the world moved on without them.
+
+    The proposition may be nested, because what an agent believes about
+    another agent's belief is a claim like any other. Sam can witness Alex
+    come to believe the meeting is in the office in the same way Sam can
+    witness coffee being stocked in the kitchen — and can then miss Alex
+    changing their mind, exactly as Sam can miss the coffee running out.
+    That parity is the point: an attribution is not a different level of
+    representation, just a proposition with more structure.
+
+    The history is observable — it goes to the model in the `history`
+    condition — while the belief it entails stays in `mental_state` and is
+    withheld until `rich`. That separates needing the information from
+    needing it made explicit.
+
+    `event` is a human-readable gloss for whoever reads the YAML. It is
+    not rendered; the renderers narrate the proposition themselves.
+    """
+
+    event: str = ""
+    proposition: Proposition
+    witnessed_by: list[str] = Field(default_factory=list)
+
+    def claim(self) -> tuple:
+        """What this event settles, ignoring its value and its witnesses."""
+        return self.proposition.signature()
+
+    @property
+    def value(self) -> bool | float | str | None:
+        """The value this event settles the claim at."""
+        return self.proposition.held_value()
 
 
 class MentalState(BaseModel):
@@ -222,6 +341,7 @@ class Scenario(BaseModel):
 
     entities: Entities = Field(default_factory=Entities)
     observations: list[Observation] = Field(default_factory=list)
+    history: list[HistoryEvent] = Field(default_factory=list)
     world_state: list[Proposition] = Field(default_factory=list)
     goals: list[Goal] = Field(default_factory=list)
     mental_state: list[MentalState] = Field(default_factory=list)
@@ -229,6 +349,53 @@ class Scenario(BaseModel):
     question: Question
     ground_truth: GroundTruth
     annotations: Annotations = Field(default_factory=Annotations)
+
+    def declared(self) -> set[str]:
+        """Every entity id the scenario introduces."""
+        return {
+            e.id
+            for group in (
+                self.entities.agents,
+                self.entities.locations,
+                self.entities.objects,
+            )
+            for e in group
+        }
+
+    def referenced(self) -> set[str]:
+        """Every entity id the scenario's content mentions."""
+        ids: set[str] = set()
+        for proposition in self.world_state:
+            ids |= _mentions(proposition)
+        for mental in self.mental_state:
+            ids.add(mental.agent)
+            ids |= _mentions(mental.proposition)
+        for observation in self.observations:
+            ids.add(observation.agent)
+            ids |= {str(v) for v in observation.arguments().values()}
+        for event in self.history:
+            ids |= set(event.witnessed_by)
+            ids |= _mentions(event.proposition)
+        for goal in self.goals:
+            ids.add(goal.agent)
+            ids |= {str(v) for v in goal.arguments().values()}
+        return ids
+
+    @model_validator(mode="after")
+    def _entities_must_be_declared(self) -> Scenario:
+        """Everything mentioned must be in the cast.
+
+        An undeclared entity is invisible to anything that builds a
+        structure from the scenario rather than reading its propositions as
+        tuples — a graph, say, which has no node to attach the fact to and
+        silently drops it.
+        """
+        undeclared = self.referenced() - self.declared()
+        if undeclared:
+            raise ValueError(
+                f"{self.id}: mentions {sorted(undeclared)}, which entities does not declare"
+            )
+        return self
 
     @model_validator(mode="after")
     def _answers_must_be_options(self) -> Scenario:

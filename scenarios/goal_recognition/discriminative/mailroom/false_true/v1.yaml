@@ -45,6 +45,8 @@ entities:
   locations:
     - id: front_desk
       name: front desk
+      article: true
+      preposition: at
     - id: mailroom
       name: mailroom
   objects:
@@ -76,6 +78,42 @@ world_state:
     subject: alex
     location: mailroom
     value: false
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: package
+        location: front_desk
+        value: true
+    witnessed_by:
+      - sam
+
+  - proposition:
+        predicate: located
+        subject: package
+        location: mailroom
+        value: true
+    witnessed_by: []
+
+  - proposition:
+        predicate: located
+        subject: alex
+        location: mailroom
+        value: true
+    witnessed_by:
+      - sam
+
+  - proposition:
+        predicate: located
+        subject: alex
+        location: front_desk
+        value: true
+    witnessed_by:
+      - sam
 
 mental_state:
   - type: belief

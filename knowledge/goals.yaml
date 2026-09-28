@@ -1,0 +1,112 @@
+# Background relational knowledge.
+#
+# What goals require, as standing facts about the domain rather than about
+# any one episode. A scenario says where things are right now; this says
+# what would have to be true for a goal to be served by going somewhere.
+#
+# The split matters because the two change for different reasons. Move the
+# coffee and every scenario changes; the fact that making coffee needs a mug
+# does not. Repeating it per scenario made it look episodic, and made the
+# conflict rule appear to be about the word `requires` rather than about
+# goals having requirements at all.
+#
+# Each requirement is one of:
+#
+#   present     the named entity must be at the place in question, per the
+#               episodic world state
+#   carried     the agent must be carrying it, per the observed events
+#   co_located  the goal's own argument — its target or object — must be at
+#               the place. Written as a role rather than an entity, since
+#               which entity it is comes from the scenario's goal.
+#
+# A goal is satisfiable at a place when every requirement holds there. An
+# action is accounted for when some goal is satisfiable; see
+# world.accounted_for.
+
+goals:
+  # ---- goal types, used by action-prediction scenarios ------------------
+  - name: meet
+    requires:
+      - co_located: target_agent
+
+  - name: obtain
+    requires:
+      - co_located: object
+
+  # ---- named goals, used as options by goal-recognition scenarios -------
+  - name: get_coffee
+    requires:
+      - present: coffee
+      - carried: mug
+
+  - name: get_food
+    requires:
+      - present: food
+
+  - name: wash_mug
+    requires:
+      - present: sink
+      - carried: mug
+
+  - name: develop_film
+    requires:
+      - present: developer
+      - carried: roll
+
+  - name: collect_prints
+    requires:
+      - present: drying_line
+
+  - name: clean_trays
+    requires:
+      - present: wash_sink
+
+  - name: water_seedlings
+    requires:
+      - present: water
+      - carried: can
+
+  - name: harvest_tomatoes
+    requires:
+      - present: tomato_bed
+
+  - name: repot_cuttings
+    requires:
+      - present: potting_bench
+
+  - name: fetch_twine
+    requires:
+      - present: twine_box
+
+  # ---- the discriminative set: each option needs its target present -----
+  - name: pick_up_package
+    requires:
+      - present: package
+
+  - name: meet_alex
+    requires:
+      - present: alex
+
+  - name: fetch_respirator
+    requires:
+      - present: respirator
+
+  - name: consult_nils
+    requires:
+      - present: nils
+
+  - name: collect_chart
+    requires:
+      - present: chart
+
+  - name: consult_hale
+    requires:
+      - present: hale
+
+  - name: retrieve_bicycle
+    requires:
+      - present: bicycle
+
+  - name: find_amara
+    requires:
+      - present: amara

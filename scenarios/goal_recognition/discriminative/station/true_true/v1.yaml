@@ -34,6 +34,8 @@ entities:
   locations:
     - id: platform_three
       name: platform three
+      article: false
+      preposition: at
     - id: left_luggage
       name: left-luggage office
 
@@ -66,6 +68,43 @@ world_state:
     subject: amara
     location: left_luggage
     value: false
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: bicycle
+        location: platform_three
+        value: true
+    witnessed_by:
+      - rowan
+
+  - proposition:
+        predicate: located
+        subject: bicycle
+        location: left_luggage
+        value: true
+    witnessed_by:
+      - rowan
+
+  - proposition:
+        predicate: located
+        subject: amara
+        location: left_luggage
+        value: true
+    witnessed_by:
+      - rowan
+
+  - proposition:
+        predicate: located
+        subject: amara
+        location: platform_three
+        value: true
+    witnessed_by:
+      - rowan
 
 mental_state:
   - type: belief

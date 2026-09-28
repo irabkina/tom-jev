@@ -2,4 +2,4 @@
 
 __version__ = "0.1.0"
 
-__all__ = ["analysis", "graph", "jev", "models", "representation", "scenarios"]
+__all__ = ["analysis", "graph", "jev", "models", "representation", "scenarios", "world"]
