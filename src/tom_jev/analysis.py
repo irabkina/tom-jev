@@ -71,7 +71,7 @@ from math import log2
 
 from pydantic import BaseModel, Field, computed_field
 
-from .models import Prediction, Proposition, Scenario
+from .models import HistoryEvent, Prediction, Proposition, Scenario
 
 
 class Outcome(StrEnum):
@@ -133,6 +133,42 @@ and what it is about. The value is excluded: that is what the belief says,
 not which belief it is."""
 
 
+def _topic(proposition: Proposition) -> tuple:
+    """What a claim is about, ignoring where and what it settles at.
+
+    Two sightings share a topic when they concern the same subject at the
+    same level of nesting, which is the precondition for one putting the
+    other out of date. An event about Alex's belief shares no topic with
+    one about the meeting's own whereabouts.
+    """
+    chain = []
+    walk = proposition
+    while walk.proposition is not None:
+        chain.append(walk.subject)
+        walk = walk.proposition
+    inner = proposition.innermost()
+    return (tuple(chain), inner.predicate, inner.subject, inner.object)
+
+
+def _supersedes(later: HistoryEvent, earlier: HistoryEvent) -> bool:
+    """Does the later settlement put the earlier one out of date?
+
+    Two ways. The very same claim settled again replaces what it said.
+    Or the same subject seen somewhere else, both times positively — a
+    location is exclusive, so being there now is not being here any more.
+    A later denial elsewhere supersedes nothing: a thing not being in the
+    office is no reason to think it left the conference room.
+
+    The in-memory twin of the SUPERSEDES edge `world.load` writes;
+    tests/test_world.py holds the two to agreement.
+    """
+    if _topic(later.proposition) != _topic(earlier.proposition):
+        return False
+    return later.proposition.signature() == earlier.proposition.signature() or (
+        later.value is True and earlier.value is True
+    )
+
+
 def entailed_beliefs(scenario: Scenario) -> dict[Claim, bool | float | str | None]:
     """What each agent's epistemic access entails they believe.
 
@@ -151,10 +187,22 @@ def entailed_beliefs(scenario: Scenario) -> dict[Claim, bool | float | str | Non
     belief is a claim Sam has access to like any other.
     """
     held: dict[Claim, bool | float | str | None] = {}
-    for event in scenario.history:
+    for index, event in enumerate(scenario.history):
         value = event.value
         innermost = event.proposition.innermost()
         for witness in event.witnessed_by:
+            # A sighting this witness later saw overturned leaves nothing
+            # behind — not even what its exclusivity would have implied.
+            # Seeing the registrar on the ward is seeing them not at the
+            # theatre desk, but watching them leave the ward is no reason
+            # to think they did not go there. Dropping the whole sighting
+            # rather than only its direct claim is the difference; the
+            # superseding event supplies whatever still holds.
+            if any(
+                witness in later.witnessed_by and _supersedes(later, event)
+                for later in scenario.history[index + 1 :]
+            ):
+                continue
             held[(witness, event.claim())] = value
             if innermost.location is not None and value is True:
                 for other in scenario.entities.locations:

@@ -16,7 +16,7 @@ here, so no caller can leak an answer into the model input by accident.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 
 from .models import (
     Entities,
@@ -107,11 +107,20 @@ def sparse(scenario: Scenario) -> State:
     return _observable(scenario)
 
 
-def rich(scenario: Scenario) -> State:
-    """Everything sparse has, plus agents' explicit mental states."""
+def rich(scenario: Scenario, beliefs: Sequence[MentalState] | None = None) -> State:
+    """Everything sparse has, plus agents' explicit mental states.
+
+    `beliefs` overrides what the scenario file states, which is how a
+    materialised representation reaches the model: `world.materialise`
+    derives the same propositions from the epistemic history the graph
+    holds, and they render through here so the pass cannot tell a derived
+    belief from a stated one. Passing None keeps the file-backed
+    behaviour every published run used.
+    """
     names = scenario.entities.names()
     state = _observable(scenario)
-    mental = "\n".join(_describe_mental_state(m, names) for m in scenario.mental_state)
+    held = scenario.mental_state if beliefs is None else beliefs
+    mental = "\n".join(_describe_mental_state(m, names) for m in held)
     if mental:
         state["mental_state"] = mental
     return state
@@ -554,11 +563,18 @@ def render(scenario: Scenario, name: str) -> State:
         raise ValueError(f"unknown representation {name!r}; have {sorted(RENDERERS)}") from None
 
 
-def rerepresent(scenario: Scenario, source: str, target: str) -> State:
-    """Convert a scenario from one representation into another.
+def rerepresent(scenario: Scenario, beliefs: Sequence[MentalState]) -> State:
+    """The rich state built from beliefs worked out rather than read.
 
-    TODO: implement the transformation under study. `source` and `target`
-    name representations in RENDERERS. The result is a state dict, same as
-    the renderers produce, so it can be passed straight to `jev.evaluate`.
+    The step the two-stage architecture exists to economise. `sparse` and
+    `history` are cheap because the scenario already contains what they
+    render; `rich` is cheap *here* only because `mental_state` sits in the
+    file beside everything else. Give it beliefs derived from the history
+    — `world.materialise` does that from the graph — and the construction
+    becomes real work that something other than Jev has to do, which is
+    what a System One model not performing it for itself amounts to.
+
+    The output is a state dict like any renderer's, so it goes straight to
+    `jev.evaluate`.
     """
-    raise NotImplementedError("TODO: implement re-representation")
+    return rich(scenario, beliefs)
