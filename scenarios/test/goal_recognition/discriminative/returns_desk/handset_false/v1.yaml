@@ -1,0 +1,171 @@
+# returns_desk — discriminative goal recognition, handset false
+#
+# Nadia is seen walking to the returns counter. She may be there to hand
+# back the faulty handset or to collect the parcel being held for her.
+#
+# The walk is the same in every cell. Nadia holds two beliefs
+# throughout, one about each item, and believes exactly one of them to
+# be at the counter — so the belief always names a goal rather than
+# merely ruling one out. What varies is which item she believes is there
+# and whether she is right. The repair slip and the replacement unit are
+# in the storeroom in every cell and she believes nothing about them;
+# they are there so that a uniform guess scores what it scores in the
+# action-prediction sets rather than twice as much.
+
+id: returns_desk_handset_false
+description: >
+  Nadia believes the handset is at the counter, though both items are in
+  fact in the storeroom. She is walking there to hand the handset back;
+  the belief names the goal the world does not support.
+
+scenario_set: returns_desk
+
+variant:
+  type: handset_false
+
+entities:
+  agents:
+    - id: nadia
+      name: Nadia
+
+  locations:
+    - id: returns_counter
+      name: returns counter
+    - id: storeroom
+      name: storeroom
+
+  objects:
+    - id: handset
+      name: handset
+    - id: parcel
+      name: parcel
+    - id: repair_slip
+      name: repair slip
+    - id: replacement_unit
+      name: replacement unit
+
+observations:
+  - type: walks_to
+    agent: nadia
+    destination: returns_counter
+
+world_state:
+  - predicate: located
+    subject: handset
+    location: returns_counter
+    value: false
+
+  - predicate: located
+    subject: handset
+    location: storeroom
+    value: true
+
+  - predicate: located
+    subject: parcel
+    location: returns_counter
+    value: false
+
+  - predicate: located
+    subject: parcel
+    location: storeroom
+    value: true
+
+  - predicate: located
+    subject: repair_slip
+    location: returns_counter
+    value: false
+
+  - predicate: located
+    subject: repair_slip
+    location: storeroom
+    value: true
+
+  - predicate: located
+    subject: replacement_unit
+    location: returns_counter
+    value: false
+
+  - predicate: located
+    subject: replacement_unit
+    location: storeroom
+    value: true
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: handset
+        location: returns_counter
+        value: true
+    witnessed_by:
+      - nadia
+
+  - proposition:
+        predicate: located
+        subject: handset
+        location: storeroom
+        value: true
+    witnessed_by: []
+
+  - proposition:
+        predicate: located
+        subject: parcel
+        location: returns_counter
+        value: true
+    witnessed_by:
+      - nadia
+
+  - proposition:
+        predicate: located
+        subject: parcel
+        location: returns_counter
+        value: false
+    witnessed_by:
+      - nadia
+
+mental_state:
+  - type: belief
+    agent: nadia
+    proposition:
+      predicate: located
+      subject: handset
+      location: returns_counter
+      value: true
+
+  - type: belief
+    agent: nadia
+    proposition:
+      predicate: located
+      subject: parcel
+      location: returns_counter
+      value: false
+
+question:
+  type: goal
+  agent: nadia
+  options:
+    - hand_back_the_handset
+    - collect_the_parcel
+    - collect_the_repair_slip
+    - swap_the_replacement_unit
+
+ground_truth:
+  answer: hand_back_the_handset
+  explanation: >
+    Nadia believes the handset is at the counter, though both items are
+    in fact in the storeroom. She is walking there to hand the handset
+    back; the belief names the goal the world does not support.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - goal_recognition
+    - discriminative
+    - presence_belief
+    - designates_a_goal

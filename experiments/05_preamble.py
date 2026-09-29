@@ -69,7 +69,7 @@ def mean(values: list[float | None]) -> float | None:
 
 def main() -> None:
     load_dotenv()
-    everything = {s.id: s for s in scenarios.load(SCENARIOS)}
+    everything = {s.id: s for s in scenarios.load(SCENARIOS, split="dev")}
     items = [everything[sid] for sid in SLATE]
 
     print(f"{len(items)} scenarios x 2 conditions = {len(items) * 2} calls\n")

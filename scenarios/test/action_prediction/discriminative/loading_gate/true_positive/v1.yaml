@@ -1,0 +1,148 @@
+# loading_gate — discriminative action prediction, true positive
+#
+# Rasheed has to bring the consignment in from the dock, and the yard is
+# walled. What varies is not where the consignment is — that is at the
+# dock in every cell and he knows it — but which way in he takes.
+#
+# Exactly one gate is open. Rasheed holds two beliefs in every cell, one
+# about the north gate and one about the canal gate, so belief count and
+# history length cannot separate the cells. The target action throughout
+# is entering by the north gate: world_supports_action says whether that
+# gate is really open, and agent_believes_action_supported says whether
+# he thinks so.
+
+id: loading_gate_true_positive
+description: >
+  The north gate is open and Rasheed believes it is, so he goes that
+  way. Belief and world agree and representing the belief changes
+  nothing.
+
+scenario_set: loading_gate
+
+variant:
+  type: true_positive
+
+entities:
+  agents:
+    - id: rasheed
+      name: Rasheed
+
+  locations:
+    - id: north_gate
+      name: north gate
+    - id: south_gate
+      name: south gate
+    - id: canal_gate
+      name: canal gate
+    - id: yard_gate
+      name: yard gate
+    - id: dock
+      name: dock
+
+  objects:
+    - id: consignment
+      name: consignment
+
+observations: []
+
+world_state:
+  - predicate: available
+    subject: north_gate
+    value: true
+
+  - predicate: available
+    subject: south_gate
+    value: false
+
+  - predicate: available
+    subject: canal_gate
+    value: false
+
+  - predicate: available
+    subject: yard_gate
+    value: false
+
+  - predicate: located
+    subject: consignment
+    location: dock
+    value: true
+
+goals:
+  - agent: rasheed
+    type: obtain
+    object: consignment
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: north_gate
+        value: false
+    witnessed_by:
+      - rasheed
+
+  - proposition:
+        predicate: available
+        subject: north_gate
+        value: true
+    witnessed_by:
+      - rasheed
+
+  - proposition:
+        predicate: available
+        subject: canal_gate
+        value: true
+    witnessed_by:
+      - rasheed
+
+  - proposition:
+        predicate: available
+        subject: canal_gate
+        value: false
+    witnessed_by:
+      - rasheed
+
+mental_state:
+  - type: belief
+    agent: rasheed
+    proposition:
+      predicate: available
+      subject: north_gate
+      value: true
+
+  - type: belief
+    agent: rasheed
+    proposition:
+      predicate: available
+      subject: canal_gate
+      value: false
+
+question:
+  type: action_prediction
+  agent: rasheed
+  options:
+    - enter_by_north_gate
+    - enter_by_south_gate
+    - enter_by_canal_gate
+    - enter_by_yard_gate
+
+ground_truth:
+  answer: enter_by_north_gate
+  explanation: >
+    The north gate is open and Rasheed believes it is, so he goes that
+    way. Belief and world agree and representing the belief changes
+    nothing.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - action_prediction
+    - discriminative
+    - access_belief
+    - rerepresentation_target

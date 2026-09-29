@@ -115,7 +115,7 @@ def measurements() -> list[dict[str, Any]]:
     outcomes = {c["scenario_id"]: c for c in json.loads(COMPARISONS.read_text())}
 
     rows = []
-    for scenario in scenarios.load(SCENARIOS):
+    for scenario in scenarios.load(SCENARIOS, split="dev"):
         question = scenario.question.type
         by_condition = passes.get(scenario.id, {})
         sparse = by_condition.get("sparse")

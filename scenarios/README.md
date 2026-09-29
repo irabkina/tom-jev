@@ -40,10 +40,11 @@ identically under sparse and differently under rich.
 The directory path *is* the taxonomy, and it is the only source of truth
 for it:
 
-    scenarios/<task_family>/<template>/<domain>/<condition>/<lexicalization>.yaml
+    scenarios/<split>/<task_family>/<template>/<domain>/<condition>/<lexicalization>.yaml
 
 | level | what it varies | values |
 |---|---|---|
+| `split` | development or held out | `dev`, `test` |
 | `task_family` | what Jev is asked | `action_prediction`, `goal_recognition` |
 | `template` | the belief structure | `first_order`, `second_order`, `attribution`, `discriminative` |
 | `domain` | surface content only | `bakery`, `clinic`, `workshop`, … |
@@ -53,6 +54,12 @@ for it:
 A scenario file therefore carries only its content; the loader fills the
 taxonomy in from where the file sits. Moving a file reclassifies it, and a
 file cannot disagree with its own directory.
+
+All 68 scenarios are under `dev/`. `test/` is empty, held out against the
+policy fixed in *The policy to be tested, fixed in advance*, and has its
+own README saying what belongs there. `scenarios.load` takes a `split`, and
+every experiment names `dev` rather than taking whatever is on disk, so
+adding files under `test/` cannot quietly enlarge a development run.
 
 Conditions are named per template, because "F" means different things in
 different 2x2s:

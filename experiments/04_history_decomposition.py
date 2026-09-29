@@ -100,7 +100,7 @@ def mean(values: list[float | None]) -> float | None:
 
 def main() -> None:
     load_dotenv()
-    everything = {s.id: s for s in scenarios.load(SCENARIOS)}
+    everything = {s.id: s for s in scenarios.load(SCENARIOS, split="dev")}
     missing = [sid for sid in SLATE if sid not in everything]
     if missing:
         raise SystemExit(f"not in the corpus: {missing}")
