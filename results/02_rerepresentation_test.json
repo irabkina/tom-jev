@@ -1,0 +1,1666 @@
+[
+  {
+    "scenario_id": "loading_gate_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_canal_gate",
+        "confidence": 0.99,
+        "probabilities": {
+          "enter_by_canal_gate": 1.0,
+          "enter_by_north_gate": 0.0,
+          "enter_by_south_gate": 0.0,
+          "enter_by_yard_gate": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9153877906a16ef2643fd28184",
+    "variant": "false_negative",
+    "ground_truth": "enter_by_canal_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_canal_gate",
+        "confidence": 0.99,
+        "probabilities": {
+          "enter_by_north_gate": 0.0,
+          "enter_by_south_gate": 0.0,
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9153fa79f7bb4475698d56dc95",
+    "variant": "false_negative",
+    "ground_truth": "enter_by_canal_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_north_gate",
+        "confidence": 0.83,
+        "probabilities": {
+          "enter_by_north_gate": 0.87,
+          "enter_by_south_gate": 0.13,
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9154c674c9a91c4fe4aaa726d8",
+    "variant": "false_positive",
+    "ground_truth": "enter_by_north_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_north_gate",
+        "confidence": 0.86,
+        "probabilities": {
+          "enter_by_south_gate": 0.1,
+          "enter_by_canal_gate": 0.0,
+          "enter_by_north_gate": 0.9,
+          "enter_by_yard_gate": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee91557b722eaf0f5a60e0bdd46c",
+    "variant": "false_positive",
+    "ground_truth": "enter_by_north_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_canal_gate",
+        "confidence": 1.0,
+        "probabilities": {
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 1.0,
+          "enter_by_south_gate": 0.0,
+          "enter_by_north_gate": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee915608781c8f17e25bbbe9a6a9",
+    "variant": "true_negative",
+    "ground_truth": "enter_by_canal_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_canal_gate",
+        "confidence": 1.0,
+        "probabilities": {
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 1.0,
+          "enter_by_north_gate": 0.0,
+          "enter_by_south_gate": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9156c07517a97fb43e48088493",
+    "variant": "true_negative",
+    "ground_truth": "enter_by_canal_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_north_gate",
+        "confidence": 1.0,
+        "probabilities": {
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 0.0,
+          "enter_by_south_gate": 0.0,
+          "enter_by_north_gate": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9157387ee285b9fd2f5fbbe12e",
+    "variant": "true_positive",
+    "ground_truth": "enter_by_north_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "loading_gate_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "enter_by_north_gate",
+        "confidence": 0.99,
+        "probabilities": {
+          "enter_by_south_gate": 0.0,
+          "enter_by_north_gate": 0.99,
+          "enter_by_yard_gate": 0.0,
+          "enter_by_canal_gate": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 423,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9157b67e049e0f35d84239800f",
+    "variant": "true_positive",
+    "ground_truth": "enter_by_north_gate",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_radar_head",
+        "confidence": 0.95,
+        "probabilities": {
+          "use_the_radar_head": 0.96,
+          "use_the_staff_board": 0.0,
+          "use_the_float_gauge": 0.04,
+          "use_the_pressure_sensor": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee91582579e5a5b842c76a9927e1",
+    "variant": "false_negative",
+    "ground_truth": "use_the_radar_head",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_radar_head",
+        "confidence": 0.93,
+        "probabilities": {
+          "use_the_float_gauge": 0.05,
+          "use_the_pressure_sensor": 0.0,
+          "use_the_staff_board": 0.0,
+          "use_the_radar_head": 0.95
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee9158e57365b7c5c22af1a71913",
+    "variant": "false_negative",
+    "ground_truth": "use_the_radar_head",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_float_gauge",
+        "confidence": 0.85,
+        "probabilities": {
+          "use_the_pressure_sensor": 0.11,
+          "use_the_radar_head": 0.0,
+          "use_the_staff_board": 0.0,
+          "use_the_float_gauge": 0.89
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee91594b70eb8084031efc82bf54",
+    "variant": "false_positive",
+    "ground_truth": "use_the_float_gauge",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_float_gauge",
+        "confidence": 0.86,
+        "probabilities": {
+          "use_the_radar_head": 0.0,
+          "use_the_float_gauge": 0.89,
+          "use_the_staff_board": 0.0,
+          "use_the_pressure_sensor": 0.11
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee9159e973faafd23a5ed219af2b",
+    "variant": "false_positive",
+    "ground_truth": "use_the_float_gauge",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_radar_head",
+        "confidence": 1.0,
+        "probabilities": {
+          "use_the_radar_head": 1.0,
+          "use_the_staff_board": 0.0,
+          "use_the_pressure_sensor": 0.0,
+          "use_the_float_gauge": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee915ae5797a8c881171d9b478ee",
+    "variant": "true_negative",
+    "ground_truth": "use_the_radar_head",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_radar_head",
+        "confidence": 1.0,
+        "probabilities": {
+          "use_the_staff_board": 0.0,
+          "use_the_float_gauge": 0.0,
+          "use_the_radar_head": 1.0,
+          "use_the_pressure_sensor": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee915b5e78ff8c9a5c59fa4e7b78",
+    "variant": "true_negative",
+    "ground_truth": "use_the_radar_head",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_float_gauge",
+        "confidence": 1.0,
+        "probabilities": {
+          "use_the_float_gauge": 1.0,
+          "use_the_radar_head": 0.0,
+          "use_the_staff_board": 0.0,
+          "use_the_pressure_sensor": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee915c007851a2b6a45d3f908977",
+    "variant": "true_positive",
+    "ground_truth": "use_the_float_gauge",
+    "correct": true
+  },
+  {
+    "scenario_id": "tide_gauge_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "use_the_float_gauge",
+        "confidence": 1.0,
+        "probabilities": {
+          "use_the_pressure_sensor": 0.0,
+          "use_the_radar_head": 0.0,
+          "use_the_float_gauge": 1.0,
+          "use_the_staff_board": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 429,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0ee915c6d70b98c4ac2b2f9eb7762",
+    "variant": "true_positive",
+    "ground_truth": "use_the_float_gauge",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_west_bypass",
+        "confidence": 0.66,
+        "probabilities": {
+          "take_the_ridge_cut": 0.08,
+          "take_the_west_bypass": 0.74,
+          "take_the_river_track": 0.08,
+          "take_the_haul_road": 0.1
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915cf27e2fa621ed6382889710",
+    "variant": "false_negative",
+    "ground_truth": "take_the_west_bypass",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_west_bypass",
+        "confidence": 0.56,
+        "probabilities": {
+          "take_the_haul_road": 0.15,
+          "take_the_river_track": 0.09,
+          "take_the_west_bypass": 0.67,
+          "take_the_ridge_cut": 0.09
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915d737ab0a0710c8797f1b285",
+    "variant": "false_negative",
+    "ground_truth": "take_the_west_bypass",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_haul_road",
+        "confidence": 0.98,
+        "probabilities": {
+          "take_the_west_bypass": 0.01,
+          "take_the_river_track": 0.0,
+          "take_the_haul_road": 0.99,
+          "take_the_ridge_cut": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915de57284897bfc87302ddad8",
+    "variant": "false_positive",
+    "ground_truth": "take_the_haul_road",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_haul_road",
+        "confidence": 0.97,
+        "probabilities": {
+          "take_the_ridge_cut": 0.0,
+          "take_the_river_track": 0.0,
+          "take_the_west_bypass": 0.02,
+          "take_the_haul_road": 0.98
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915e537cefa40a1903420f43db",
+    "variant": "false_positive",
+    "ground_truth": "take_the_haul_road",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_west_bypass",
+        "confidence": 0.54,
+        "probabilities": {
+          "take_the_haul_road": 0.1,
+          "take_the_west_bypass": 0.65,
+          "take_the_river_track": 0.11,
+          "take_the_ridge_cut": 0.14
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915efe745484840dbc8879caee",
+    "variant": "true_negative",
+    "ground_truth": "take_the_west_bypass",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_west_bypass",
+        "confidence": 0.59,
+        "probabilities": {
+          "take_the_haul_road": 0.09,
+          "take_the_west_bypass": 0.69,
+          "take_the_ridge_cut": 0.1,
+          "take_the_river_track": 0.12
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915f8175bf911448b9b5d786c5",
+    "variant": "true_negative",
+    "ground_truth": "take_the_west_bypass",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_haul_road",
+        "confidence": 1.0,
+        "probabilities": {
+          "take_the_ridge_cut": 0.0,
+          "take_the_haul_road": 1.0,
+          "take_the_west_bypass": 0.0,
+          "take_the_river_track": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee915fed7ec38cbb56d55c127157",
+    "variant": "true_positive",
+    "ground_truth": "take_the_haul_road",
+    "correct": true
+  },
+  {
+    "scenario_id": "quarry_road_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "take_the_haul_road",
+        "confidence": 1.0,
+        "probabilities": {
+          "take_the_haul_road": 1.0,
+          "take_the_river_track": 0.0,
+          "take_the_ridge_cut": 0.0,
+          "take_the_west_bypass": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 73
+    },
+    "request_id": "req_01a0ee9160457627b08a9319d7af8d97",
+    "variant": "true_positive",
+    "ground_truth": "take_the_haul_road",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_theatre_desk",
+        "confidence": 0.19,
+        "probabilities": {
+          "go_to_the_mess": 0.08,
+          "go_to_the_theatre_desk": 0.39,
+          "go_to_the_ward": 0.32,
+          "page_the_switchboard": 0.21
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 72
+    },
+    "request_id": "req_01a0ee9160b77c048f5ed80a1f3099da",
+    "variant": "false_negative",
+    "ground_truth": "go_to_the_theatre_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_ward",
+        "confidence": 0.13,
+        "probabilities": {
+          "go_to_the_theatre_desk": 0.34,
+          "page_the_switchboard": 0.22,
+          "go_to_the_mess": 0.09,
+          "go_to_the_ward": 0.35
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 70
+    },
+    "request_id": "req_01a0ee9161307d339951a48eeb0e8bf8",
+    "variant": "false_negative",
+    "ground_truth": "go_to_the_theatre_desk",
+    "correct": false
+  },
+  {
+    "scenario_id": "ward_round_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_ward",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_the_mess": 0.0,
+          "go_to_the_ward": 0.97,
+          "go_to_the_theatre_desk": 0.03,
+          "page_the_switchboard": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 70
+    },
+    "request_id": "req_01a0ee91619375ce9bf2de2522235f49",
+    "variant": "false_positive",
+    "ground_truth": "go_to_the_ward",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_ward",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_the_ward": 0.97,
+          "go_to_the_theatre_desk": 0.02,
+          "go_to_the_mess": 0.0,
+          "page_the_switchboard": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 447,
+      "output_tokens": 70
+    },
+    "request_id": "req_01a0ee9162297286a8291c0901a0f991",
+    "variant": "false_positive",
+    "ground_truth": "go_to_the_ward",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_theatre_desk",
+        "confidence": 0.79,
+        "probabilities": {
+          "go_to_the_ward": 0.09,
+          "page_the_switchboard": 0.06,
+          "go_to_the_mess": 0.0,
+          "go_to_the_theatre_desk": 0.85
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 72
+    },
+    "request_id": "req_01a0ee916294729ab28e9226a9f968d5",
+    "variant": "true_negative",
+    "ground_truth": "go_to_the_theatre_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_theatre_desk",
+        "confidence": 0.74,
+        "probabilities": {
+          "go_to_the_theatre_desk": 0.8,
+          "go_to_the_mess": 0.01,
+          "go_to_the_ward": 0.11,
+          "page_the_switchboard": 0.08
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 72
+    },
+    "request_id": "req_01a0ee9163187f0c9600e5b508c7946a",
+    "variant": "true_negative",
+    "ground_truth": "go_to_the_theatre_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_ward",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_the_mess": 0.0,
+          "page_the_switchboard": 0.0,
+          "go_to_the_theatre_desk": 0.0,
+          "go_to_the_ward": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 70
+    },
+    "request_id": "req_01a0ee9163cc734d9019113525f78fa1",
+    "variant": "true_positive",
+    "ground_truth": "go_to_the_ward",
+    "correct": true
+  },
+  {
+    "scenario_id": "ward_round_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_the_ward",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_the_ward": 1.0,
+          "go_to_the_theatre_desk": 0.0,
+          "page_the_switchboard": 0.0,
+          "go_to_the_mess": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 447,
+      "output_tokens": 70
+    },
+    "request_id": "req_01a0ee91646c7f3ab64e71e1523d1836",
+    "variant": "true_positive",
+    "ground_truth": "go_to_the_ward",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_handset_false",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "hand_back_the_handset",
+        "confidence": 0.86,
+        "probabilities": {
+          "collect_the_repair_slip": 0.01,
+          "collect_the_parcel": 0.06,
+          "hand_back_the_handset": 0.9,
+          "swap_the_replacement_unit": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 485,
+      "output_tokens": 68
+    },
+    "request_id": "req_01a0ee9165247447bba1738c9c42b2f8",
+    "variant": "handset_false",
+    "ground_truth": "hand_back_the_handset",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_handset_false",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "hand_back_the_handset",
+        "confidence": 0.92,
+        "probabilities": {
+          "collect_the_parcel": 0.03,
+          "swap_the_replacement_unit": 0.02,
+          "hand_back_the_handset": 0.94,
+          "collect_the_repair_slip": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 502,
+      "output_tokens": 68
+    },
+    "request_id": "req_01a0ee9165a87256842ed754ffa8aeae",
+    "variant": "handset_false",
+    "ground_truth": "hand_back_the_handset",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_handset_true",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "hand_back_the_handset",
+        "confidence": 0.9,
+        "probabilities": {
+          "hand_back_the_handset": 0.92,
+          "collect_the_parcel": 0.05,
+          "collect_the_repair_slip": 0.01,
+          "swap_the_replacement_unit": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 485,
+      "output_tokens": 68
+    },
+    "request_id": "req_01a0ee91660172f5a0c909558bed3f30",
+    "variant": "handset_true",
+    "ground_truth": "hand_back_the_handset",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_handset_true",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "hand_back_the_handset",
+        "confidence": 0.96,
+        "probabilities": {
+          "collect_the_repair_slip": 0.0,
+          "collect_the_parcel": 0.01,
+          "swap_the_replacement_unit": 0.01,
+          "hand_back_the_handset": 0.98
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 502,
+      "output_tokens": 68
+    },
+    "request_id": "req_01a0ee91666f779a98b2f86b9112cba3",
+    "variant": "handset_true",
+    "ground_truth": "hand_back_the_handset",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_parcel_false",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_parcel",
+        "confidence": 0.98,
+        "probabilities": {
+          "collect_the_parcel": 0.99,
+          "swap_the_replacement_unit": 0.0,
+          "collect_the_repair_slip": 0.0,
+          "hand_back_the_handset": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 485,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9167337135813d3c43e31e8a69",
+    "variant": "parcel_false",
+    "ground_truth": "collect_the_parcel",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_parcel_false",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_parcel",
+        "confidence": 0.98,
+        "probabilities": {
+          "hand_back_the_handset": 0.01,
+          "collect_the_parcel": 0.99,
+          "swap_the_replacement_unit": 0.0,
+          "collect_the_repair_slip": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 500,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9167c1754286bc20a375d01708",
+    "variant": "parcel_false",
+    "ground_truth": "collect_the_parcel",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_parcel_true",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_parcel",
+        "confidence": 0.93,
+        "probabilities": {
+          "collect_the_repair_slip": 0.0,
+          "swap_the_replacement_unit": 0.01,
+          "hand_back_the_handset": 0.04,
+          "collect_the_parcel": 0.95
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 485,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee91682e704bb577eb6327e611d3",
+    "variant": "parcel_true",
+    "ground_truth": "collect_the_parcel",
+    "correct": true
+  },
+  {
+    "scenario_id": "returns_desk_parcel_true",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_parcel",
+        "confidence": 0.95,
+        "probabilities": {
+          "hand_back_the_handset": 0.02,
+          "collect_the_repair_slip": 0.0,
+          "swap_the_replacement_unit": 0.01,
+          "collect_the_parcel": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 500,
+      "output_tokens": 66
+    },
+    "request_id": "req_01a0ee9168967a78807d55d865f679d2",
+    "variant": "parcel_true",
+    "ground_truth": "collect_the_parcel",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_book_false",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "sign_the_launch_book",
+        "confidence": 0.91,
+        "probabilities": {
+          "fetch_the_bailer": 0.0,
+          "check_the_tide_board": 0.03,
+          "collect_the_oars": 0.04,
+          "sign_the_launch_book": 0.93
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee91696b7bda81f1cf1a40acb940",
+    "variant": "book_false",
+    "ground_truth": "sign_the_launch_book",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_book_false",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "sign_the_launch_book",
+        "confidence": 0.91,
+        "probabilities": {
+          "sign_the_launch_book": 0.93,
+          "fetch_the_bailer": 0.0,
+          "check_the_tide_board": 0.03,
+          "collect_the_oars": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee9169d577499c1f4ef585537337",
+    "variant": "book_false",
+    "ground_truth": "sign_the_launch_book",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_book_true",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "sign_the_launch_book",
+        "confidence": 0.84,
+        "probabilities": {
+          "check_the_tide_board": 0.03,
+          "collect_the_oars": 0.09,
+          "fetch_the_bailer": 0.0,
+          "sign_the_launch_book": 0.88
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916a3e7e67913790ef25387ece",
+    "variant": "book_true",
+    "ground_truth": "sign_the_launch_book",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_book_true",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "sign_the_launch_book",
+        "confidence": 0.81,
+        "probabilities": {
+          "fetch_the_bailer": 0.01,
+          "collect_the_oars": 0.1,
+          "sign_the_launch_book": 0.85,
+          "check_the_tide_board": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916ac67878b99cfb96c98a45fc",
+    "variant": "book_true",
+    "ground_truth": "sign_the_launch_book",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_oars_false",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_oars",
+        "confidence": 0.91,
+        "probabilities": {
+          "fetch_the_bailer": 0.0,
+          "check_the_tide_board": 0.01,
+          "collect_the_oars": 0.93,
+          "sign_the_launch_book": 0.05
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916b537ece852ddb4d7f32756f",
+    "variant": "oars_false",
+    "ground_truth": "collect_the_oars",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_oars_false",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_oars",
+        "confidence": 0.96,
+        "probabilities": {
+          "sign_the_launch_book": 0.02,
+          "check_the_tide_board": 0.01,
+          "fetch_the_bailer": 0.0,
+          "collect_the_oars": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916bb7798d9846145600792c4c",
+    "variant": "oars_false",
+    "ground_truth": "collect_the_oars",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_oars_true",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_oars",
+        "confidence": 0.94,
+        "probabilities": {
+          "fetch_the_bailer": 0.0,
+          "collect_the_oars": 0.96,
+          "sign_the_launch_book": 0.03,
+          "check_the_tide_board": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916c337d2087337171017b5419",
+    "variant": "oars_true",
+    "ground_truth": "collect_the_oars",
+    "correct": true
+  },
+  {
+    "scenario_id": "slipway_oars_true",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_the_oars",
+        "confidence": 0.97,
+        "probabilities": {
+          "fetch_the_bailer": 0.0,
+          "collect_the_oars": 0.98,
+          "sign_the_launch_book": 0.01,
+          "check_the_tide_board": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 439,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916ca67b3484f543b954dc82c2",
+    "variant": "oars_true",
+    "ground_truth": "collect_the_oars",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.94,
+        "probabilities": {
+          "fetch_the_ledger": 0.96,
+          "collect_the_transfer_list": 0.01,
+          "meet_the_archivist": 0.03,
+          "return_the_plates": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee916d537067ae528bf686d277f5",
+    "variant": "false_negative",
+    "ground_truth": "meet_the_archivist",
+    "correct": false
+  },
+  {
+    "scenario_id": "archive_desk_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.94,
+        "probabilities": {
+          "return_the_plates": 0.0,
+          "meet_the_archivist": 0.03,
+          "collect_the_transfer_list": 0.01,
+          "fetch_the_ledger": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee916dd07c51a56f7c21ad720c73",
+    "variant": "false_negative",
+    "ground_truth": "meet_the_archivist",
+    "correct": false
+  },
+  {
+    "scenario_id": "archive_desk_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.91,
+        "probabilities": {
+          "collect_the_transfer_list": 0.0,
+          "fetch_the_ledger": 0.9400000000000001,
+          "return_the_plates": 0.0,
+          "meet_the_archivist": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee916e4e742a8635006ae153e5ac",
+    "variant": "false_positive",
+    "ground_truth": "fetch_the_ledger",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.92,
+        "probabilities": {
+          "fetch_the_ledger": 0.94,
+          "return_the_plates": 0.0,
+          "collect_the_transfer_list": 0.0,
+          "meet_the_archivist": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 480,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee916f51714ab5f55efc83af805b",
+    "variant": "false_positive",
+    "ground_truth": "fetch_the_ledger",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_the_archivist",
+        "confidence": 0.64,
+        "probabilities": {
+          "meet_the_archivist": 0.73,
+          "collect_the_transfer_list": 0.02,
+          "fetch_the_ledger": 0.25,
+          "return_the_plates": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee916fc27855a30aea42eb846bc1",
+    "variant": "true_negative",
+    "ground_truth": "meet_the_archivist",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_the_archivist",
+        "confidence": 0.72,
+        "probabilities": {
+          "collect_the_transfer_list": 0.02,
+          "meet_the_archivist": 0.79,
+          "fetch_the_ledger": 0.19,
+          "return_the_plates": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 62
+    },
+    "request_id": "req_01a0ee91704977f284170ad8ec0e3057",
+    "variant": "true_negative",
+    "ground_truth": "meet_the_archivist",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.99,
+        "probabilities": {
+          "return_the_plates": 0.0,
+          "collect_the_transfer_list": 0.0,
+          "meet_the_archivist": 0.01,
+          "fetch_the_ledger": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 464,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee9170d272198e2686e05de5bcda",
+    "variant": "true_positive",
+    "ground_truth": "fetch_the_ledger",
+    "correct": true
+  },
+  {
+    "scenario_id": "archive_desk_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_the_ledger",
+        "confidence": 0.99,
+        "probabilities": {
+          "collect_the_transfer_list": 0.0,
+          "fetch_the_ledger": 0.99,
+          "meet_the_archivist": 0.01,
+          "return_the_plates": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 480,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0ee91716b7ff5a5dca91190baebfa",
+    "variant": "true_positive",
+    "ground_truth": "fetch_the_ledger",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_false_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.83,
+        "probabilities": {
+          "log_the_meter": 0.87,
+          "sign_the_permit": 0.02,
+          "meet_the_duty_fitter": 0.07,
+          "collect_the_spares": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee9171e27d998f50f7902b2483ee",
+    "variant": "false_negative",
+    "ground_truth": "meet_the_duty_fitter",
+    "correct": false
+  },
+  {
+    "scenario_id": "plant_room_false_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.87,
+        "probabilities": {
+          "meet_the_duty_fitter": 0.06,
+          "collect_the_spares": 0.03,
+          "sign_the_permit": 0.01,
+          "log_the_meter": 0.9
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee91726a7b00bcf80815c1fe75cf",
+    "variant": "false_negative",
+    "ground_truth": "meet_the_duty_fitter",
+    "correct": false
+  },
+  {
+    "scenario_id": "plant_room_false_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.91,
+        "probabilities": {
+          "log_the_meter": 0.94,
+          "meet_the_duty_fitter": 0.05,
+          "collect_the_spares": 0.01,
+          "sign_the_permit": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee9172d87b349466681df02defbf",
+    "variant": "false_positive",
+    "ground_truth": "log_the_meter",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_false_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.91,
+        "probabilities": {
+          "sign_the_permit": 0.0,
+          "collect_the_spares": 0.01,
+          "log_the_meter": 0.93,
+          "meet_the_duty_fitter": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee917378796fbbd41473ee3dcce7",
+    "variant": "false_positive",
+    "ground_truth": "log_the_meter",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_true_negative",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_the_duty_fitter",
+        "confidence": 0.43,
+        "probabilities": {
+          "log_the_meter": 0.38,
+          "meet_the_duty_fitter": 0.58,
+          "collect_the_spares": 0.03,
+          "sign_the_permit": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0ee917433746394d5794b615071d3",
+    "variant": "true_negative",
+    "ground_truth": "meet_the_duty_fitter",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_true_negative",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_the_duty_fitter",
+        "confidence": 0.52,
+        "probabilities": {
+          "meet_the_duty_fitter": 0.64,
+          "log_the_meter": 0.32,
+          "sign_the_permit": 0.01,
+          "collect_the_spares": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0ee9174be7aa4876a5bef81c87d15",
+    "variant": "true_negative",
+    "ground_truth": "meet_the_duty_fitter",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_true_positive",
+    "condition": "rich_direct",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.96,
+        "probabilities": {
+          "log_the_meter": 0.97,
+          "collect_the_spares": 0.01,
+          "sign_the_permit": 0.0,
+          "meet_the_duty_fitter": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee917586781e9f49f010ac2f5431",
+    "variant": "true_positive",
+    "ground_truth": "log_the_meter",
+    "correct": true
+  },
+  {
+    "scenario_id": "plant_room_true_positive",
+    "condition": "rich_derived",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "log_the_meter",
+        "confidence": 0.94,
+        "probabilities": {
+          "log_the_meter": 0.96,
+          "meet_the_duty_fitter": 0.03,
+          "collect_the_spares": 0.01,
+          "sign_the_permit": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 412,
+      "output_tokens": 60
+    },
+    "request_id": "req_01a0ee9176027e89a49d5f1420a3da6d",
+    "variant": "true_positive",
+    "ground_truth": "log_the_meter",
+    "correct": true
+  }
+]

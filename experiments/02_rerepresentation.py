@@ -24,9 +24,14 @@ instead of leaving it to be inferred. Dropping other agents removes a
 distractor the attribution set exists to test resistance to. `direct` sits
 between them so each can be measured alone.
 
-Development split only. The held-out split is spent.
+    python experiments/02_rerepresentation.py                 # dev
+    python experiments/02_rerepresentation.py --split test    # the other corpus
 
-    python experiments/02_rerepresentation.py
+The held-out split is spent — it was used once, for the escalation policy,
+and `notes/held_out_corpus.md` records that anything measured there
+afterwards is development data whatever the directory says. Running here
+is a replication on a second independently built corpus, not out-of-sample
+validation, and should not be written up as the latter.
 
 Where a rendering comes out byte-identical to the stored `rich` stimulus
 the call is made anyway rather than reusing the stored answer. Those
@@ -37,6 +42,7 @@ it costs.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import pathlib
@@ -50,16 +56,17 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 SCENARIOS = ROOT / "scenarios"
 
-#: The stored `rich` pass these are compared against.
-STORED = RESULTS / "01_sparse_vs_rich.json"
+#: The stored `rich` pass these are compared against, by split.
+STORED = {"dev": RESULTS / "01_sparse_vs_rich.json",
+          "test": RESULTS / "01_sparse_vs_rich_test.json"}
 
 #: This experiment's own output, and a fingerprint of what was sent to
 #: produce each row. A stored answer is reused only when the rendering
 #: still hashes to what it hashed to then — so a change anywhere in the
 #: graph, the derivation or the renderer forces the call again, and a
 #: reused answer is one nothing could have changed.
-OUTPUT = RESULTS / "02_rerepresentation.json"
-FINGERPRINTS = RESULTS / "02_fingerprints.json"
+OUTPUT = RESULTS / "02_rerepresentation{suffix}.json"
+FINGERPRINTS = RESULTS / "02_fingerprints{suffix}.json"
 
 #: Each derived condition, and whether it spells exclusivity out.
 DERIVED = {"rich_direct": False, "rich_derived": True}
@@ -84,16 +91,25 @@ def states(driver, scenario: Scenario) -> dict[str, dict[str, str]]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--split", default="dev", choices=("dev", "test"))
+    split = parser.parse_args().split
+    suffix = "" if split == "dev" else f"_{split}"
+    output = pathlib.Path(str(OUTPUT).format(suffix=suffix))
+    stamps_at = pathlib.Path(str(FINGERPRINTS).format(suffix=suffix))
+
     load_dotenv()
-    items = scenarios.load(SCENARIOS, split="dev")
+    items = scenarios.load(SCENARIOS, split=split)
     if not items:
-        raise SystemExit(f"no dev scenarios found in {SCENARIOS}")
-    if not STORED.exists():
-        raise SystemExit(f"{STORED} not found; run experiments/01_sparse_vs_rich.py first")
+        raise SystemExit(f"no {split} scenarios found in {SCENARIOS}")
+    if not STORED[split].exists():
+        raise SystemExit(
+            f"{STORED[split]} not found; run 01_sparse_vs_rich.py --split {split} first"
+        )
 
     stored = {
         row["scenario_id"]: Prediction.model_validate(row)
-        for row in json.loads(STORED.read_text())
+        for row in json.loads(STORED[split].read_text())
         if row["condition"] == "rich"
     }
     missing = [s.id for s in items if s.id not in stored]
@@ -108,9 +124,9 @@ def main() -> None:
 
     previous = {
         (row["scenario_id"], row["condition"]): Prediction.model_validate(row)
-        for row in (json.loads(OUTPUT.read_text()) if OUTPUT.exists() else [])
+        for row in (json.loads(output.read_text()) if output.exists() else [])
     }
-    stamped = json.loads(FINGERPRINTS.read_text()) if FINGERPRINTS.exists() else {}
+    stamped = json.loads(stamps_at.read_text()) if stamps_at.exists() else {}
     reusable = {
         key: previous[key]
         for scenario in items
@@ -119,7 +135,7 @@ def main() -> None:
         and stamped.get(f"{scenario.id}|{name}") == fingerprint(state)
     }
     wanted = len(items) * len(DERIVED)
-    print(f"{len(items)} dev scenarios, {wanted} passes: "
+    print(f"{len(items)} {split} scenarios, {wanted} passes: "
           f"{len(reusable)} reused unchanged, {wanted - len(reusable)} calls\n")
 
     predictions: dict[str, dict[str, Prediction]] = {}
@@ -168,10 +184,10 @@ def main() -> None:
 
     RESULTS.mkdir(exist_ok=True)
     flat = [p.model_dump(mode="json") for byid in predictions.values() for p in byid.values()]
-    OUTPUT.write_text(json.dumps(flat, indent=2))
-    FINGERPRINTS.write_text(json.dumps(fingerprints, indent=2, sort_keys=True))
+    output.write_text(json.dumps(flat, indent=2))
+    stamps_at.write_text(json.dumps(fingerprints, indent=2, sort_keys=True))
     for name, (_, comparisons) in pairings.items():
-        (RESULTS / f"02_{name}_comparisons.json").write_text(
+        (RESULTS / f"02_{name}_comparisons{suffix}.json").write_text(
             json.dumps([c.model_dump(mode="json") for c in comparisons], indent=2)
         )
 

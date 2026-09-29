@@ -1360,3 +1360,49 @@ rendering looked ordinary. What caught it was reading one — the decisive
 evidence was four lines of rendered text, not a summary statistic. The
 chain had already been written up in the shape it takes above, with the
 16-and-16 as a finding about exclusivity, before the example was printed.
+
+### It replicates on the second corpus, and the wobble does not
+
+The same 64 passes over the 32 scenarios of the other corpus:
+
+| pairing | n | influence | utility | mass | corrections | regressions |
+|---|---|---|---|---|---|---|
+| stated → direct | 32 | 0.021 | −0.003 | 0.88 → 0.87 | 0 | 0 |
+| direct → derived | 32 | 0.021 | +0.004 | 0.87 → 0.88 | 0 | 1 |
+| stated → derived | 32 | 0.023 | +0.001 | 0.88 → 0.88 | 0 | 1 |
+
+Not a held-out result. That split was spent on the escalation policy, and
+`notes/held_out_corpus.md` records that anything measured there afterwards
+is development data whatever the directory says. It is a replication on a
+second, independently built corpus with different domains and a designed
+crossing of task family against representational function — worth having,
+and not worth more than that.
+
+The null replicates. What does not replicate is the small movement that
+came with it. The drift floor here is 0.022, twice the development
+corpus's, and the influence on *changed* stimuli is 0.020 and 0.016 —
+**below** the floor. So the derived rendering does not detectably move the
+distribution at all on this corpus, where on the other it moved about five
+times the floor. Only 8 of 32 scenarios have a changed stimulus, so this
+is thin, but it argues the earlier wobble was nearer noise than the
+development figures made it look. The claim to keep is the one both
+corpora support: the answers do not change.
+
+### The one regression is the model, not the representation
+
+    ward_round_false_negative     mass 0.70 -> 0.65
+      go_to_the_theatre_desk -> go_to_the_ward
+      acceptable: theatre_desk, mess, switchboard
+
+One of the inhibitory cells built so that escalating *could* be wrong. The
+derived representation gives Bijan exactly one belief — the registrar is
+not on the ward — and Jev answers *go to the ward*, contradicting the only
+thing it was told. The stated rendering says the same thing in the same
+words, so nothing about materialising produced this; it is the model
+failing on a denial, which *The policy replicates out of sample* already
+found it does when what is denied is a presence rather than a route.
+
+The drop is 0.05, under the 0.08 single-cell noise floor, so it may not
+survive a rerun. Recorded because it is the first time anything in this
+project has gone backwards under a richer representation by more than
+rounding, and because the cell was built for exactly that possibility.
