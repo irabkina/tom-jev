@@ -16,7 +16,7 @@ import pathlib
 import pytest
 from dotenv import load_dotenv
 
-from tom_jev import analysis, scenarios, world
+from tom_jev import analysis, knowledge, scenarios, world
 
 SCENARIOS = pathlib.Path(__file__).resolve().parents[1] / "scenarios"
 
@@ -174,32 +174,62 @@ def test_supersession_survives_without_exclusivity(driver, loaded):
             placed[key] = inner.location
 
 
-def test_the_graph_and_the_reference_agree_on_supersession(driver, loaded):
-    """`analysis._supersedes` and the SUPERSEDES edge are one definition.
+def test_the_graph_and_the_reference_agree_on_both_relations(driver, loaded):
+    """SUPERSEDES and EXCLUDES are each one definition, written twice.
 
-    The graph writes the edge at load; the reference recomputes it when
-    working out what a history entails. Two implementations again, so
-    something has to check them.
+    The graph writes both edges at load; the reference recomputes them
+    when working out what a history entails. They were a single edge
+    until it became clear it was carrying two different things — a later
+    settling of the same claim, which is temporal and predicate-blind,
+    and two claims that cannot both hold, which is semantic and symmetric
+    and depends on what knowledge/predicates.yaml declares.
     """
     for scenario in loaded:
         if len(scenario.history) < 2:
             continue
         with driver.session() as session:
-            edges = {
-                (row["later"], row["earlier"])
-                for row in session.run(
-                    """
-                    MATCH (l:Entity:Settlement {scenario: $scenario})-[:SUPERSEDES]->
-                          (e:Entity:Settlement {scenario: $scenario})
-                    RETURN l.index AS later, e.index AS earlier
-                    """,
-                    scenario=scenario.id,
-                ).data()
-            }
-        expected = {
-            (j, i)
-            for i, earlier in enumerate(scenario.history)
-            for j, later in enumerate(scenario.history)
-            if j > i and analysis._supersedes(later, earlier)
-        }
+            rows = session.run(
+                """
+                MATCH (l:Entity:Settlement {scenario: $scenario})-[r:SUPERSEDES|EXCLUDES]->
+                      (e:Entity:Settlement {scenario: $scenario})
+                RETURN type(r) AS kind, l.index AS one, e.index AS other
+                """,
+                scenario=scenario.id,
+            ).data()
+        edges = {(row["kind"], row["one"], row["other"]) for row in rows}
+        expected = set()
+        for i, earlier in enumerate(scenario.history):
+            for j, later in enumerate(scenario.history):
+                if i == j:
+                    continue
+                if j > i and analysis._supersedes(later, earlier):
+                    expected.add(("SUPERSEDES", j, i))
+                if analysis._excludes(later, earlier):
+                    expected.add(("EXCLUDES", j, i))
         assert edges == expected, scenario.id
+
+
+def test_exclusion_needs_a_declared_functional_predicate(driver, loaded):
+    """A location argument is not the same as being exclusive in it.
+
+    `available` carries a location and is not functional in it — coffee
+    can be in the kitchen and the pantry at once — so no EXCLUDES edge
+    may join two availability settlements however they are placed. This
+    was inferred from argument shape until knowledge/predicates.yaml
+    declared it, and no scenario in the corpus distinguished the two, so
+    the rule was wrong where nothing measured it.
+    """
+    functional = set(knowledge.functional_in_location())
+    assert "located" in functional and "available" not in functional
+    for scenario in loaded:
+        with driver.session() as session:
+            rows = session.run(
+                """
+                MATCH (a:Entity:Settlement {scenario: $scenario})-[:EXCLUDES]->
+                      (:Entity:Settlement)
+                MATCH (a)-[:SETTLES]->(p:Proposition)
+                RETURN DISTINCT p.predicate AS predicate
+                """,
+                scenario=scenario.id,
+            ).data()
+        assert {row["predicate"] for row in rows} <= functional, scenario.id

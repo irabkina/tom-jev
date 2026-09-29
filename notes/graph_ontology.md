@@ -183,24 +183,46 @@ it happened in, linked `SETTLES` to the proposition it settles and
 stated second-order belief. An event about an attitude is an event like
 any other, which is the parity the flattening already assumed.
 
-### Supersession is a fact about events, not about anybody
+### Two relations, because they are two different things
 
-`SUPERSEDES` is written between settlements at load time. Two ways one
-supersedes another:
+`SUPERSEDES` is temporal: the same claim settled again replaces what it
+said before. Nothing about the predicate enters into it.
 
-- **same claim** — the later settling of the very same thing replaces it;
-- **moved** — the same subject seen somewhere else, *both times
-  positively*. A location is exclusive, so being there now is not being
-  here any more.
+`EXCLUDES` is semantic and symmetric: two claims that cannot both hold. A
+thing is in one place, so seeing the meeting in the office is seeing it not
+in the conference room. There is no time in it at all.
 
-A later denial elsewhere supersedes nothing. A thing not being in the
-office is no reason to think it left the conference room.
-
-Nothing about witnesses enters into it, and that is the point. The edge
-says the world moved on; whether a particular agent's belief is *stale* is
-then only the question of whether they witnessed the superseding event —
+Neither says anything about witnesses, and that is the point. The edges
+say what the world is like; whether a particular agent's belief is *stale*
+is then only the question of whether they witnessed the later event —
 the edge exists and no `WITNESSED` edge reaches it. False belief stops
 being a special case and becomes a missing edge.
+
+Recency is applied in the query that asks what an agent currently holds,
+not baked into either relation. A sighting still stands unless something
+the same chain saw *later* either settled the same claim again or is
+incompatible with it.
+
+### Which predicates are exclusive is declared, not inferred
+
+`located` is functional in its location; `available` is not. Coffee can be
+in the kitchen and the pantry at once, so stocking it in one place says
+nothing about the other, and stocking it elsewhere does not supersede a
+belief about the kitchen — running out there does.
+
+That distinction lived, until recently, in whether a proposition happened
+to carry a location argument. Anything with one was treated as exclusive
+in it, which made the algebra of a predicate an accident of its arguments
+and meant a new predicate required editing Cypher rather than data.
+`knowledge/predicates.yaml` declares it instead, beside what goals
+require, and both the graph and the in-memory reference read the same
+declaration rather than hardcoding the same guess twice.
+
+No scenario in the corpus distinguished the two rules — `available`
+claims either carry no location or sit in single-location scenarios — so
+nothing measured was wrong. The rule was, and it was wrong in the
+direction that would have quietly produced false beliefs the first time
+somebody wrote a scenario with coffee in two rooms.
 
 ### Why it had to be an edge rather than an inference
 
@@ -220,8 +242,10 @@ being told an agent believed something impossible.
 
 Separating the two makes them independently variable, which is what let
 the stated and derived representations be decomposed at all. It also makes
-a staleness question answerable by traversal: the superseding event an
-agent missed is a path, not a re-derivation.
+a staleness question answerable by traversal: the later event an agent
+missed is a path, not a re-derivation — and now a labelled one, so the
+answer distinguishes having missed a correction from having missed
+something incompatible.
 
 ### Materialising
 

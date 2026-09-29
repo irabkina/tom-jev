@@ -77,6 +77,7 @@ from enum import StrEnum
 import yaml
 from neo4j import Driver, GraphDatabase
 
+from . import knowledge
 from .models import MentalState, Proposition, Scenario
 
 WORLD = "world"
@@ -325,31 +326,47 @@ def load(driver: Driver, scenario: Scenario) -> None:
                     holders=holders,
                 )
 
-        # Which settlements put which others out of date. A fact about
-        # the events, settled here once, and independent of who saw
-        # anything: whether an agent's belief is *stale* is then only a
-        # question of whether they witnessed the superseding event, which
-        # is what `materialise` asks.
+        # Two relations, because they are two different things.
         #
-        # Two ways one settlement supersedes another. SAME CLAIM: the
-        # later settling of the very same thing replaces the earlier.
-        # MOVED: the same subject seen somewhere else, both times
-        # positively — a location is exclusive, so being there now is not
-        # being here any more. A later *denial* elsewhere supersedes
-        # nothing, because a thing not being in the office is no reason
-        # to think it left the conference room.
+        # SUPERSEDES is temporal: the same claim settled again replaces
+        # what it said before. Nothing about the predicate enters into it.
+        #
+        # EXCLUDES is semantic and symmetric: two claims that cannot both
+        # hold. A thing is in one place, so `located` being functional in
+        # its location means seeing it in the office is seeing it not in
+        # the conference room. Which predicates are functional is declared
+        # in knowledge/predicates.yaml, not inferred from whether a
+        # location argument happens to be present — `available` carries
+        # one and is not exclusive in it.
+        #
+        # Neither edge says anything about witnesses, and EXCLUDES says
+        # nothing about time. Recency is applied where it belongs, in the
+        # query that asks what an agent currently holds.
         session.run(
             """
             MATCH (later:Entity:Settlement {scenario: $scenario})
             MATCH (earlier:Entity:Settlement {scenario: $scenario})
             WHERE later.index > earlier.index
               AND later.about = earlier.about
-              AND later.topic = earlier.topic
-              AND (later.claim = earlier.claim
-                   OR (later.value = true AND earlier.value = true))
+              AND later.claim = earlier.claim
             MERGE (later)-[:SUPERSEDES]->(earlier)
             """,
             scenario=scenario.id,
+        )
+        session.run(
+            """
+            MATCH (a:Entity:Settlement {scenario: $scenario})-[:SETTLES]->(ap:Proposition)
+            MATCH (b:Entity:Settlement {scenario: $scenario})-[:SETTLES]->(bp:Proposition)
+            WHERE a.index <> b.index
+              AND a.about = b.about
+              AND a.topic = b.topic
+              AND a.claim <> b.claim
+              AND a.value = true AND b.value = true
+              AND ap.predicate IN $locational
+            MERGE (a)-[:EXCLUDES]->(b)
+            """,
+            scenario=scenario.id,
+            locational=knowledge.functional_in_location(),
         )
 
         for index, observation in enumerate(scenario.observations):
@@ -411,9 +428,9 @@ CALL () {
           (s:Entity:Settlement {scenario: $scenario})
     WHERE ($agent IS NULL OR w.holders[0] = $agent)
       AND NOT EXISTS {
-          MATCH (later:Entity:Settlement)-[:SUPERSEDES]->(s)
-          MATCH (a)-[w2:WITNESSED]->(later)
-          WHERE w2.holders = w.holders
+          MATCH (a)-[w2:WITNESSED]->(later:Entity:Settlement)
+          WHERE w2.holders = w.holders AND later.index > s.index
+            AND (later)-[:SUPERSEDES|EXCLUDES]->(s)
       }
     MATCH (s)-[:SETTLES]->(p:Proposition)
     MATCH (subject:Entity)-[:SUBJECT_OF]->(p)
@@ -426,12 +443,13 @@ CALL () {
           (s:Entity:Settlement {scenario: $scenario})
     WHERE $exclusivity AND ($agent IS NULL OR w.holders[0] = $agent) AND s.value = true
       AND NOT EXISTS {
-          MATCH (later:Entity:Settlement)-[:SUPERSEDES]->(s)
-          MATCH (a)-[w2:WITNESSED]->(later)
-          WHERE w2.holders = w.holders
+          MATCH (a)-[w2:WITNESSED]->(later:Entity:Settlement)
+          WHERE w2.holders = w.holders AND later.index > s.index
+            AND (later)-[:SUPERSEDES|EXCLUDES]->(s)
       }
     MATCH (s)-[:SETTLES]->(p:Proposition)
     MATCH (subject:Entity)-[:SUBJECT_OF]->(p)
+    WHERE p.predicate IN $locational
     MATCH (p)-[:LOCATION]->(l:Entity:Location)
     MATCH (other:Entity:Location {scenario: $scenario})
     WHERE other.id <> l.id
@@ -489,7 +507,11 @@ def materialise(
     """
     with driver.session() as session:
         rows = session.run(
-            MATERIALISE, scenario=scenario.id, agent=agent, exclusivity=exclusivity
+            MATERIALISE,
+            scenario=scenario.id,
+            agent=agent,
+            exclusivity=exclusivity,
+            locational=knowledge.functional_in_location(),
         ).data()
 
     beliefs: list[MentalState] = []

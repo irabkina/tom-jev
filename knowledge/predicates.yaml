@@ -1,0 +1,28 @@
+# Background knowledge about predicates: which are functional, and in what.
+#
+# A predicate is FUNCTIONAL in an argument when at most one value of that
+# argument can hold at once. `located` is functional in its location: a
+# thing is in one place, so being in the office is not being in the
+# conference room, and a later sighting elsewhere means it moved.
+#
+# `available` is not. Coffee can be available in the kitchen and in the
+# pantry at the same time, so stocking it in one place says nothing about
+# the other, and stocking it elsewhere does not supersede a belief about
+# the kitchen — running out there does.
+#
+# This was inferred rather than declared until now: anything carrying a
+# location argument was treated as exclusive in it, which made the algebra
+# of a predicate an accident of which arguments it happened to use. No
+# scenario in the corpus distinguished the two, so nothing measured was
+# wrong; the rule was.
+#
+# Standing fact about the domain, not about an episode, so it lives here
+# beside what goals require rather than in any scenario. See
+# notes/graph_ontology.md.
+#
+# Only the `location` argument is implemented. A predicate declared
+# functional in anything else raises rather than being silently ignored.
+
+predicates:
+  - name: located
+    functional_in: location
