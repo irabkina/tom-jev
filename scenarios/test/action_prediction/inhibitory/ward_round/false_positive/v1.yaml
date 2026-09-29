@@ -1,0 +1,128 @@
+# ward_round — inhibitory action prediction, false positive
+#
+# Bijan has to hand the chart to the duty registrar before the round. He
+# can look on the ward, at the theatre desk or in the mess, or have the
+# registrar paged. What varies is whether he takes the registrar to be
+# on the ward.
+#
+# Bijan holds exactly one belief in every cell, and it concerns only the
+# ward. Denying it leaves three ways of finding the registrar and picks
+# out none of them, so the acceptable set is those three and entropy is
+# the measure. Unlike the quarry, the denial here is about where a
+# person is rather than whether a way is open.
+
+id: ward_round_false_positive
+description: >
+  The registrar is at the theatre desk, but Bijan believes the ward and
+  goes there. Believing someone is somewhere names a place, so this cell
+  has a determinate answer even though the set is otherwise inhibitory.
+
+scenario_set: ward_round
+
+variant:
+  type: false_positive
+
+entities:
+  agents:
+    - id: bijan
+      name: Bijan
+    - id: registrar
+      name: the duty registrar
+
+  locations:
+    - id: ward
+      name: ward
+    - id: theatre_desk
+      name: theatre desk
+    - id: mess
+      name: mess
+
+  objects:
+    - id: chart
+      name: chart
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: registrar
+    location: ward
+    value: false
+
+  - predicate: located
+    subject: registrar
+    location: theatre_desk
+    value: true
+
+  - predicate: located
+    subject: registrar
+    location: mess
+    value: false
+
+  - predicate: located
+    subject: chart
+    location: ward
+    value: true
+
+goals:
+  - agent: bijan
+    type: meet
+    target_agent: registrar
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: registrar
+        location: ward
+        value: true
+    witnessed_by:
+      - bijan
+
+  - proposition:
+        predicate: located
+        subject: registrar
+        location: theatre_desk
+        value: true
+    witnessed_by: []
+
+mental_state:
+  - type: belief
+    agent: bijan
+    proposition:
+      predicate: located
+      subject: registrar
+      location: ward
+      value: true
+
+question:
+  type: action_prediction
+  agent: bijan
+  options:
+    - go_to_the_ward
+    - go_to_the_theatre_desk
+    - go_to_the_mess
+    - page_the_switchboard
+
+ground_truth:
+  answer: go_to_the_ward
+  explanation: >
+    The registrar is at the theatre desk, but Bijan believes the ward
+    and goes there. Believing someone is somewhere names a place, so
+    this cell has a determinate answer even though the set is otherwise
+    inhibitory.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: true
+  belief_matches_reality: false
+  belief_changes_expected_action: true
+  tags:
+    - action_prediction
+    - inhibitory
+    - presence_belief
+    - denial_only
+    - ambiguous_by_design

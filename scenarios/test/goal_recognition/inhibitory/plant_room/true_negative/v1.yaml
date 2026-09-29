@@ -1,0 +1,128 @@
+# plant_room — inhibitory goal recognition, true negative
+#
+# Halima is seen walking through to the pump bay. She may be there to
+# log the meter, to catch the duty fitter, to collect spares, or to sign
+# the permit.
+#
+# Halima holds exactly one belief in every cell, about the meter. The
+# relation is whether a thing is to hand rather than where it is, which
+# is what distinguishes this set from the archive. Denying the meter
+# leaves three errands and picks out none of them.
+
+id: plant_room_true_negative
+description: >
+  The meter really is down and Halima believes so. The world would say
+  the duty fitter, who is on the bay; Halima only knows the meter is no
+  use, so the remaining three stay equally acceptable.
+
+scenario_set: plant_room
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: halima
+      name: Halima
+    - id: fitter
+      name: the duty fitter
+
+  locations:
+    - id: pump_bay
+      name: pump bay
+
+  objects:
+    - id: meter
+      name: meter
+    - id: spares
+      name: spares
+    - id: permit
+      name: permit
+
+observations:
+  - type: walks_to
+    agent: halima
+    destination: pump_bay
+
+world_state:
+  - predicate: available
+    subject: meter
+    location: pump_bay
+    value: false
+
+  - predicate: available
+    subject: fitter
+    location: pump_bay
+    value: true
+
+  - predicate: available
+    subject: spares
+    location: pump_bay
+    value: false
+
+  - predicate: available
+    subject: permit
+    location: pump_bay
+    value: false
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: meter
+        location: pump_bay
+        value: true
+    witnessed_by:
+      - halima
+
+  - proposition:
+        predicate: available
+        subject: meter
+        location: pump_bay
+        value: false
+    witnessed_by:
+      - halima
+
+mental_state:
+  - type: belief
+    agent: halima
+    proposition:
+      predicate: available
+      subject: meter
+      location: pump_bay
+      value: false
+
+question:
+  type: goal
+  agent: halima
+  options:
+    - log_the_meter
+    - meet_the_duty_fitter
+    - collect_the_spares
+    - sign_the_permit
+
+ground_truth:
+  answer: meet_the_duty_fitter
+  acceptable:
+    - meet_the_duty_fitter
+    - collect_the_spares
+    - sign_the_permit
+  explanation: >
+    The meter really is down and Halima believes so. The world would say
+    the duty fitter, who is on the bay; Halima only knows the meter is
+    no use, so the remaining three stay equally acceptable.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: true
+  belief_changes_expected_action: true
+  tags:
+    - goal_recognition
+    - inhibitory
+    - fitness_belief
+    - denial_only
+    - ambiguous_by_design

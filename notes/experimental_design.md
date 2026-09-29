@@ -1110,6 +1110,11 @@ re-representations that positively support an alternative interpretation
 and those that primarily undermine an existing interpretation, so that task
 family is not confounded with representational function.
 
+The corpus this will run on is built: 32 scenarios under
+`scenarios/test/`, described in `notes/held_out_corpus.md`, which also
+records what was checked and the two design faults found and fixed in
+review. Nothing there has been run against the model.
+
 **Three things to know about these baselines before reading the result.**
 
 The two intervention baselines are nearly the same baseline. On the

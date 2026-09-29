@@ -1,0 +1,158 @@
+# archive_desk — inhibitory goal recognition, true negative
+#
+# Perrin is seen walking into the reading room. He may be after the
+# ledger, or the archivist, or returning the plates, or collecting the
+# transfer list.
+#
+# Perrin holds exactly one belief in every cell, about the ledger.
+# Affirming it names an errand; denying it removes one and names no
+# other, leaving three that nothing he believes chooses between. He
+# never learns where anything else is, so a denial costs the reading
+# whatever the world happens to know.
+#
+# A true belief that still costs certainty, as in the ward round. What
+# the agent knows is a strict subset of what the world does, and
+# representing the smaller thing turns a determinate reading into a
+# spread.
+
+id: archive_desk_true_negative
+description: >
+  The ledger really is in the stack and Perrin believes so. The world
+  would say the archivist, who is in the reading room; Perrin cannot,
+  because he only knows where the ledger is not, so the remaining three
+  stay equally acceptable.
+
+scenario_set: archive_desk
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: perrin
+      name: Perrin
+    - id: archivist
+      name: the archivist
+
+  locations:
+    - id: reading_room
+      name: reading room
+    - id: stack
+      name: stack
+
+  objects:
+    - id: ledger
+      name: ledger
+    - id: plates
+      name: plates
+    - id: transfer_list
+      name: transfer list
+
+observations:
+  - type: walks_to
+    agent: perrin
+    destination: reading_room
+
+world_state:
+  - predicate: located
+    subject: ledger
+    location: reading_room
+    value: false
+
+  - predicate: located
+    subject: ledger
+    location: stack
+    value: true
+
+  - predicate: located
+    subject: archivist
+    location: reading_room
+    value: true
+
+  - predicate: located
+    subject: archivist
+    location: stack
+    value: false
+
+  - predicate: located
+    subject: plates
+    location: reading_room
+    value: false
+
+  - predicate: located
+    subject: plates
+    location: stack
+    value: true
+
+  - predicate: located
+    subject: transfer_list
+    location: reading_room
+    value: false
+
+  - predicate: located
+    subject: transfer_list
+    location: stack
+    value: true
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: ledger
+        location: reading_room
+        value: true
+    witnessed_by:
+      - perrin
+
+  - proposition:
+        predicate: located
+        subject: ledger
+        location: reading_room
+        value: false
+    witnessed_by:
+      - perrin
+
+mental_state:
+  - type: belief
+    agent: perrin
+    proposition:
+      predicate: located
+      subject: ledger
+      location: reading_room
+      value: false
+
+question:
+  type: goal
+  agent: perrin
+  options:
+    - fetch_the_ledger
+    - meet_the_archivist
+    - return_the_plates
+    - collect_the_transfer_list
+
+ground_truth:
+  answer: meet_the_archivist
+  acceptable:
+    - meet_the_archivist
+    - return_the_plates
+    - collect_the_transfer_list
+  explanation: >
+    The ledger really is in the stack and Perrin believes so. The world
+    would say the archivist, who is in the reading room; Perrin cannot,
+    because he only knows where the ledger is not, so the remaining
+    three stay equally acceptable.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: true
+  belief_changes_expected_action: true
+  tags:
+    - goal_recognition
+    - inhibitory
+    - presence_belief
+    - denial_only
+    - ambiguous_by_design

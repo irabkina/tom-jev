@@ -1,0 +1,147 @@
+# slipway — discriminative goal recognition, oars true
+#
+# Tomas is seen walking down to the slipway. He may be going for the
+# oars, or to sign the launch book before taking a boat out.
+#
+# The walk is the same in every cell, and Tomas believes exactly one of
+# the two things to be out at the slipway rather than locked away. The
+# relation is whether a thing is there to be used, not where it is kept,
+# which is what distinguishes this set from the returns desk. The bailer
+# and the tide board are never out and Tomas believes nothing about
+# them; they are there to hold the option count at four, as in every
+# other set.
+
+id: slipway_oars_true
+description: >
+  Tomas believes the oars are out at the slipway and the launch book is
+  not, and he is right. The walk is for the oars.
+
+scenario_set: slipway
+
+variant:
+  type: oars_true
+
+entities:
+  agents:
+    - id: tomas
+      name: Tomas
+
+  locations:
+    - id: slipway
+      name: slipway
+
+  objects:
+    - id: oars
+      name: oars
+    - id: launch_book
+      name: launch book
+    - id: bailer
+      name: bailer
+    - id: tide_board
+      name: tide board
+
+observations:
+  - type: walks_to
+    agent: tomas
+    destination: slipway
+
+world_state:
+  - predicate: available
+    subject: oars
+    location: slipway
+    value: true
+
+  - predicate: available
+    subject: launch_book
+    location: slipway
+    value: false
+
+  - predicate: available
+    subject: bailer
+    location: slipway
+    value: false
+
+  - predicate: available
+    subject: tide_board
+    location: slipway
+    value: false
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: oars
+        location: slipway
+        value: false
+    witnessed_by:
+      - tomas
+
+  - proposition:
+        predicate: available
+        subject: oars
+        location: slipway
+        value: true
+    witnessed_by:
+      - tomas
+
+  - proposition:
+        predicate: available
+        subject: launch_book
+        location: slipway
+        value: true
+    witnessed_by:
+      - tomas
+
+  - proposition:
+        predicate: available
+        subject: launch_book
+        location: slipway
+        value: false
+    witnessed_by:
+      - tomas
+
+mental_state:
+  - type: belief
+    agent: tomas
+    proposition:
+      predicate: available
+      subject: oars
+      location: slipway
+      value: true
+
+  - type: belief
+    agent: tomas
+    proposition:
+      predicate: available
+      subject: launch_book
+      location: slipway
+      value: false
+
+question:
+  type: goal
+  agent: tomas
+  options:
+    - collect_the_oars
+    - sign_the_launch_book
+    - fetch_the_bailer
+    - check_the_tide_board
+
+ground_truth:
+  answer: collect_the_oars
+  explanation: >
+    Tomas believes the oars are out at the slipway and the launch book
+    is not, and he is right. The walk is for the oars.
+
+annotations:
+  world_supports_action: true
+  agent_believes_action_supported: true
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - goal_recognition
+    - discriminative
+    - fitness_belief
+    - designates_a_goal

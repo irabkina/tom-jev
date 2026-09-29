@@ -1,0 +1,138 @@
+# quarry_road — inhibitory action prediction, true negative
+#
+# Idris has to fetch the load from the crusher. The haul road is the
+# direct way and three bypasses all reach the same place. What varies is
+# whether he takes the haul road to be passable.
+#
+# All three bypasses are passable in every cell and nothing
+# distinguishes them, so a denial of the haul road licenses all three
+# equally and no answer is determined. Idris holds exactly one belief in
+# every cell. Where that belief denies, the acceptable set is the three
+# bypasses and entropy is the measure that carries information;
+# `outcome` cannot fail.
+
+id: quarry_road_true_negative
+description: >
+  The haul road is shut and Idris believes so. He takes a bypass, but
+  nothing in the world or in what he believes says which, so all three
+  are acceptable. The world alone already rules out the haul road, so
+  the belief adds nothing.
+
+scenario_set: quarry_road
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: idris
+      name: Idris
+
+  locations:
+    - id: haul_road
+      name: haul road
+    - id: west_bypass
+      name: west bypass
+    - id: river_track
+      name: river track
+    - id: ridge_cut
+      name: ridge cut
+    - id: crusher
+      name: crusher
+
+  objects:
+    - id: load
+      name: load
+
+observations: []
+
+world_state:
+  - predicate: available
+    subject: haul_road
+    value: false
+
+  - predicate: available
+    subject: west_bypass
+    value: true
+
+  - predicate: available
+    subject: river_track
+    value: true
+
+  - predicate: available
+    subject: ridge_cut
+    value: true
+
+  - predicate: direct
+    subject: haul_road
+    value: true
+
+  - predicate: located
+    subject: load
+    location: crusher
+    value: true
+
+goals:
+  - agent: idris
+    type: obtain
+    object: load
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: available
+        subject: haul_road
+        value: true
+    witnessed_by:
+      - idris
+
+  - proposition:
+        predicate: available
+        subject: haul_road
+        value: false
+    witnessed_by:
+      - idris
+
+mental_state:
+  - type: belief
+    agent: idris
+    proposition:
+      predicate: available
+      subject: haul_road
+      value: false
+
+question:
+  type: action_prediction
+  agent: idris
+  options:
+    - take_the_haul_road
+    - take_the_west_bypass
+    - take_the_river_track
+    - take_the_ridge_cut
+
+ground_truth:
+  answer: take_the_west_bypass
+  acceptable:
+    - take_the_west_bypass
+    - take_the_river_track
+    - take_the_ridge_cut
+  explanation: >
+    The haul road is shut and Idris believes so. He takes a bypass, but
+    nothing in the world or in what he believes says which, so all three
+    are acceptable. The world alone already rules out the haul road, so
+    the belief adds nothing.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: true
+  belief_changes_expected_action: false
+  tags:
+    - action_prediction
+    - inhibitory
+    - access_belief
+    - denial_only
+    - ambiguous_by_design

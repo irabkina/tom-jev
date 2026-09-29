@@ -1,6 +1,7 @@
 # Held-out scenarios
 
-Empty on purpose. Nothing here has been measured.
+Thirty-two scenarios, none of them measured. The design, the verification
+and the two faults found in review are in `notes/held_out_corpus.md`.
 
 The escalation policy was fixed before this directory had contents, in *The
 policy to be tested, fixed in advance* in `notes/experimental_design.md`.
@@ -18,25 +19,27 @@ move it to `dev` rather than to quietly keep it.
 rule the corpus already follows — see *Not tuning stimuli to results* —
 applies with more force here, because there is no second held-out set.
 
-## What belongs here
+## What is here
 
-Complete matched scenario families, in surface domains that do not appear
-under `dev/`. Domain novelty is part of the test: a policy that only works
-on the sixteen domains it was selected on has not been shown to generalise.
-
-The set should cross task family with **representational function** — the
-distinction between a re-representation that positively supports an
-alternative reading and one that only undermines the existing reading —
+Eight sets of four cells, crossing task family with **representational
+function** — whether the belief names an alternative or only denies one —
 so that task family is not confounded with what the richer representation
 is doing. On the development corpus those two are entangled, which is why
 the task-family heuristic is the strongest policy there and why it cannot
 be trusted to generalise.
 
-It should also contain scenarios where the richer representation makes the
-answer **worse**. The development corpus has none: `rich` never damages a
-scenario the history pass got right, across all 68. While that holds,
-nothing can penalise a policy for escalating too often, and every
-escalation rate looks free.
+    action_prediction/discriminative   loading_gate, tide_gauge
+    action_prediction/inhibitory       quarry_road, ward_round
+    goal_recognition/discriminative    returns_desk, slipway
+    goal_recognition/inhibitory        archive_desk, plant_room
+
+Seven cells have a determinate world reading and a spread belief reading,
+so representing the belief replaces a confident correct answer with
+uncertainty. The development corpus has none, which is why nothing there
+can penalise a policy for escalating too often.
+
+Anything added later belongs in a surface domain that appears in neither
+split. Domain novelty is part of the test.
 
 ## Layout
 

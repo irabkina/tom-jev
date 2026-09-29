@@ -1,0 +1,140 @@
+# ward_round — inhibitory action prediction, true negative
+#
+# Bijan has to hand the chart to the duty registrar before the round. He
+# can look on the ward, at the theatre desk or in the mess, or have the
+# registrar paged. What varies is whether he takes the registrar to be
+# on the ward.
+#
+# Bijan holds exactly one belief in every cell, and it concerns only the
+# ward. Denying it leaves three ways of finding the registrar and picks
+# out none of them, so the acceptable set is those three and entropy is
+# the measure. Unlike the quarry, the denial here is about where a
+# person is rather than whether a way is open.
+#
+# A true belief that still costs certainty. The world pins the registrar
+# down and Bijan's beliefs do not, so representing what he knows turns a
+# determinate reading into a spread. The quarry has no cell like this,
+# because a shut road leaves the bypasses undetermined for the world
+# too.
+
+id: ward_round_true_negative
+description: >
+  The registrar is not on the ward and Bijan believes so. He has no
+  belief about where they are instead, so the three remaining courses
+  are equally acceptable. The world alone would say the theatre desk;
+  Bijan cannot, because he only knows where the registrar is not.
+
+scenario_set: ward_round
+
+variant:
+  type: true_negative
+
+entities:
+  agents:
+    - id: bijan
+      name: Bijan
+    - id: registrar
+      name: the duty registrar
+
+  locations:
+    - id: ward
+      name: ward
+    - id: theatre_desk
+      name: theatre desk
+    - id: mess
+      name: mess
+
+  objects:
+    - id: chart
+      name: chart
+
+observations: []
+
+world_state:
+  - predicate: located
+    subject: registrar
+    location: ward
+    value: false
+
+  - predicate: located
+    subject: registrar
+    location: theatre_desk
+    value: true
+
+  - predicate: located
+    subject: registrar
+    location: mess
+    value: false
+
+  - predicate: located
+    subject: chart
+    location: ward
+    value: true
+
+goals:
+  - agent: bijan
+    type: meet
+    target_agent: registrar
+
+# How the agent came to believe what they believe. The history entails the
+# mental states below rather than restating them, so the `history`
+# condition carries the evidence while `rich` carries the belief. Derived
+# from the scenario by scripts/add_histories.py.
+history:
+  - proposition:
+        predicate: located
+        subject: registrar
+        location: ward
+        value: true
+    witnessed_by:
+      - bijan
+
+  - proposition:
+        predicate: located
+        subject: registrar
+        location: ward
+        value: false
+    witnessed_by:
+      - bijan
+
+mental_state:
+  - type: belief
+    agent: bijan
+    proposition:
+      predicate: located
+      subject: registrar
+      location: ward
+      value: false
+
+question:
+  type: action_prediction
+  agent: bijan
+  options:
+    - go_to_the_ward
+    - go_to_the_theatre_desk
+    - go_to_the_mess
+    - page_the_switchboard
+
+ground_truth:
+  answer: go_to_the_theatre_desk
+  acceptable:
+    - go_to_the_theatre_desk
+    - go_to_the_mess
+    - page_the_switchboard
+  explanation: >
+    The registrar is not on the ward and Bijan believes so. He has no
+    belief about where they are instead, so the three remaining courses
+    are equally acceptable. The world alone would say the theatre desk;
+    Bijan cannot, because he only knows where the registrar is not.
+
+annotations:
+  world_supports_action: false
+  agent_believes_action_supported: false
+  belief_matches_reality: true
+  belief_changes_expected_action: true
+  tags:
+    - action_prediction
+    - inhibitory
+    - presence_belief
+    - denial_only
+    - ambiguous_by_design

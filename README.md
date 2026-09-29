@@ -64,9 +64,11 @@ taxonomy and the only source of truth for it:
 | `goal_recognition` | `first_order` | coffee, darkroom, greenhouse | 12 |
 | `goal_recognition` | `discriminative` | clinic, mailroom, station, workshop | 16 |
 
-`scenarios/test/` is the held-out split and is empty; the escalation policy
-it will be used to test was fixed first, and its README records what that
-commits us to.
+`scenarios/test/` is the held-out split: 32 scenarios crossing task family
+with what the richer representation does — names an alternative, or only
+denies one. The escalation policy it tests was fixed before it was built.
+Nothing there has been run against the model. See
+`notes/held_out_corpus.md`.
 
 See `scenarios/README.md` for the file format and `scenarios/schema.yaml`
 for the fields.
