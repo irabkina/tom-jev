@@ -1,0 +1,293 @@
+[
+  {
+    "scenario_id": "report_false_positive",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.71,
+        "probabilities": {
+          "go_to_office": 0.14,
+          "go_to_conference_room": 0.86
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4c806b67cfbbf402b4a840d59cc",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_false_negative",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_office": 0.99,
+          "go_to_conference_room": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 382,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4c80756789dbd74137383fedb24",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_true_positive",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_conference_room": 0.01,
+          "go_to_office": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4c807d57e0f948ef3066271b3a8",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_true",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.09,
+        "probabilities": {
+          "meet_alex": 0.54,
+          "pick_up_package": 0.46
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4c8089a71479cd7b5898550e9b4",
+    "variant": "false_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_false",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.19,
+        "probabilities": {
+          "meet_alex": 0.6,
+          "pick_up_package": 0.4
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4c808fc7a009f039b1798e44a97",
+    "variant": "false_false",
+    "ground_truth": "pick_up_package",
+    "correct": false
+  },
+  {
+    "scenario_id": "mailroom_true_true",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.27,
+        "probabilities": {
+          "pick_up_package": 0.37,
+          "meet_alex": 0.63
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4c809797ca3b66b2742a8032429",
+    "variant": "true_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_false_positive",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_conference_room": 0.96,
+          "go_to_office": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4c809d97336ab310362e0f24021",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_false_negative",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.87,
+        "probabilities": {
+          "go_to_office": 0.94,
+          "go_to_conference_room": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4c80a4b7246a5326d597c97d9a8",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_true_positive",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.8,
+        "probabilities": {
+          "go_to_conference_room": 0.1,
+          "go_to_office": 0.9
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4c80ab57d63ad9822fc5247cba7",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_false_attribution_true_belief",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.36,
+        "probabilities": {
+          "go_to_conference_room": 0.58,
+          "go_to_office": 0.42,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 418,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4c80b217497ac2d410f0bb134f1",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_false_attribution_false_belief",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.7,
+        "probabilities": {
+          "go_to_office": 0.19,
+          "go_to_garden": 0.01,
+          "go_to_conference_room": 0.8
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 417,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4c80bb3740b96aa33b49b02362d",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_true_attribution_true_belief",
+    "condition": "history_symbolic_bare",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.84,
+        "probabilities": {
+          "go_to_conference_room": 0.11,
+          "go_to_office": 0.89,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 418,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4c80c207ce1b4ff32f98037f791",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_office",
+    "correct": true
+  }
+]

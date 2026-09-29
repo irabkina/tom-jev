@@ -108,7 +108,7 @@ into `world_state` and reached the model.
 | `experiments/` | Runnable studies; each writes to `results/` |
 | `scripts/` | Corpus maintenance — `generate_scenarios.py`, `add_histories.py`, `make_test_corpus.py` |
 | `notes/` | Findings, backlog, and representational commitments |
-| `results/` | Experiment output (gitignored except `.gitkeep`) |
+| `results/` | Experiment output. The runs behind the notes are committed as a record, so every table can be rechecked without spending calls; new output is still ignored by default |
 | `tests/` | Test suite, including the corpus invariants |
 
 Inside the package:
