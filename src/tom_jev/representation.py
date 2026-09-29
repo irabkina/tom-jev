@@ -4,14 +4,27 @@ Jev takes a `state` mapping rather than a prompt string, so a representation
 produces a dict: the keys name the parts of the state, the values carry the
 content.
 
-The two base representations differ in exactly one thing:
+Three conditions, differing in what they say about the agent's mind and in
+nothing else:
 
-    sparse = observations + world_state + goals
-    rich   = observations + world_state + goals + mental_state
+    sparse  = observations + world_state + goals
+    history = sparse + the epistemic-access events the belief follows from
+    rich    = sparse + the belief itself
 
-Nothing else varies between them. `ground_truth` and `annotations` are
-researcher metadata and are never included in either — that exclusion lives
-here, so no caller can leak an answer into the model input by accident.
+`ground_truth` and `annotations` are researcher metadata and are never
+included in any of them — that exclusion lives here, so no caller can leak
+an answer into the model input by accident.
+
+`rich` takes its beliefs from the scenario file by default, or from
+whatever is passed to it; `world.materialise` derives the same
+propositions from the epistemic history the graph holds, and
+`rerepresent` renders those. The two give the same answers, so the graph
+path is a drop-in for the file path — which is what makes constructing the
+richer representation cost something rather than nothing.
+
+The other renderers exist so superseded experiments stay reproducible, not
+as alternatives to choose between. See notes/representation.md for what
+each of them settled, and why the surface form is fixed the way it is.
 """
 
 from __future__ import annotations
