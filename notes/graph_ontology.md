@@ -167,3 +167,99 @@ is* — so the graph derives it visibly at query time and it never touches
 error. An agent's position is legitimate episodic fact when nothing derives
 it: the discriminative set locates Alex, who holds no belief there, and that
 is primitive rather than inferred.
+
+## The epistemic history lives in the graph, and supersession is an edge
+
+The graph held world state, stated beliefs, goals and observations. It did
+not hold the history, so the one thing the history is for — working out
+what an agent believes from what they saw — was done in Python and the
+graph was only ever asked about conflicts.
+
+It holds the history now. Each event is a `Settlement` carrying the order
+it happened in, linked `SETTLES` to the proposition it settles and
+`WITNESSED` to each agent who was there. The holder chain rides on the
+`WITNESSED` edge: Sam watching Alex come to believe something stores
+`holders: [sam, alex]`, which is the same shape `unfold` produces from a
+stated second-order belief. An event about an attitude is an event like
+any other, which is the parity the flattening already assumed.
+
+### Supersession is a fact about events, not about anybody
+
+`SUPERSEDES` is written between settlements at load time. Two ways one
+supersedes another:
+
+- **same claim** — the later settling of the very same thing replaces it;
+- **moved** — the same subject seen somewhere else, *both times
+  positively*. A location is exclusive, so being there now is not being
+  here any more.
+
+A later denial elsewhere supersedes nothing. A thing not being in the
+office is no reason to think it left the conference room.
+
+Nothing about witnesses enters into it, and that is the point. The edge
+says the world moved on; whether a particular agent's belief is *stale* is
+then only the question of whether they witnessed the superseding event —
+the edge exists and no `WITNESSED` edge reaches it. False belief stops
+being a special case and becomes a missing edge.
+
+### Why it had to be an edge rather than an inference
+
+It was implicit before, and that turned out to be a coupling rather than
+an economy. A later sighting replaced an earlier one *because* exclusivity
+said seeing the meeting in the office is seeing it not in the conference
+room. So supersession was carried by exclusivity, and asking for the
+beliefs without exclusivity left two sightings settling different keys,
+neither replacing the other, and the agent believing the meeting was in
+two places at once.
+
+That is not a less explicit representation. It is a false one, and it
+looked ordinary: each belief well-formed, the rendering unremarkable. It
+only surfaced because a measurement was built on top of it and produced
+sixteen regressions that were really the model reacting, correctly, to
+being told an agent believed something impossible.
+
+Separating the two makes them independently variable, which is what let
+the stated and derived representations be decomposed at all. It also makes
+a staleness question answerable by traversal: the superseding event an
+agent missed is a path, not a re-derivation.
+
+### Materialising
+
+`world.materialise` returns what an agent's access entails, as
+`MentalState` with the holder chain folded back into nesting, so a
+renderer cannot tell a derived belief from a stated one. One query, two
+branches unioned: what the chain currently holds, and what a location
+being exclusive implies about everywhere else. Both start from settlements
+that nothing the chain also witnessed has superseded.
+
+Results are written back under a `derived` perspective beside the `belief`
+ones the file states, never over them, so the graph can always say which
+beliefs it worked out and which it was told.
+
+Restricting to one agent is not an optimisation. The history represents
+the access of exactly one agent by construction, so asking for anyone
+else's beliefs should return nothing rather than somebody else's.
+
+### What this cost the in-memory reference
+
+`analysis.entailed_beliefs` was wrong, and making supersession explicit is
+what showed it. It applied exclusivity from every sighting a witness ever
+had, including ones later overturned:
+
+    history    1. located(registrar, ward) = True  [witnessed by Bijan]
+               2. located(registrar, ward) = False [witnessed by Bijan]
+
+    was        ward = False, theatre_desk = False, mess = False
+    now        ward = False
+
+Bijan saw the registrar on the ward — so not at the theatre desk — and
+then saw them leave. The old rule kept the first sighting's exclusivity,
+leaving him certain of two places he has no business being certain about.
+Seven of a hundred scenarios were affected, and in
+`ward_round_true_negative` the surplus would have ruled out two of the
+three answers its own ground truth calls acceptable.
+
+The graph was never missing anything the reference had rightly; the
+reference only ever had extra. So the reference was changed to match, and
+`tests/test_world.py` now holds the two to agreement on supersession
+itself as well as on what it entails.

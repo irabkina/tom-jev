@@ -6,6 +6,15 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**Explicitness is not what the rich representation buys.** Beliefs derived
+from the epistemic history in the graph — never read from the file — give
+the same answers as stated ones, on 68 development scenarios, with zero
+corrections and zero regressions and acceptable mass unmoved at 0.87.
+Spelling the negatives out changes nothing, and neither does dropping
+other agents' beliefs. So the gap between the history and the belief is
+not about how plainly the belief is written. See *Explicitness is not what
+the rich representation buys*.
+
 **A cheap pass that raises its own entropy is a usable escalation
 signal, and it holds up out of sample.** `H(history) > H(sparse)`,
 pre-registered before the held-out corpus existed, recovers 81% of the
@@ -1272,3 +1281,82 @@ exists and generalises, not that using it saves anything in this setup.
 
 Thirty-two scenarios and 13 corrections, so every cell of the cross rests
 on 8 items. The replication is of the headline pair, not of the breakdown.
+
+## Explicitness is not what the rich representation buys
+
+Until now `rich` read `mental_state` straight from the scenario file. That
+is why the escalation saving stayed notional: the expensive step in a
+two-stage architecture is *constructing* the richer representation, and
+construction cost nothing.
+
+It costs something now. `world.materialise` derives the beliefs from the
+epistemic history the graph holds — which settlement each agent saw last,
+which of those a later event has superseded, and what a location being
+exclusive implies about the ones they never saw. See *The epistemic
+history lives in the graph* in notes/graph_ontology.md.
+
+The derived representation is not the stated one. It says roughly twice as
+much, because it spells out the negatives the file leaves implicit, and it
+names nobody but the agent the question is about, because the history
+carries one agent's access by construction. Three renderings, then, and a
+chain between them:
+
+    stated    exclusivity implicit, other agents' beliefs named
+    direct    exclusivity implicit, only the question's agent
+    derived   exclusivity explicit, only the question's agent
+
+136 passes over the 68 development scenarios:
+
+| pairing | n | influence | utility | mass | corrections | regressions |
+|---|---|---|---|---|---|---|
+| stated → direct | 68 | 0.025 | +0.001 | 0.87 → 0.87 | 0 | 0 |
+| direct → derived | 68 | 0.038 | −0.006 | 0.87 → 0.87 | 0 | 0 |
+| stated → derived | 68 | 0.044 | −0.005 | 0.87 → 0.87 | 0 | 0 |
+
+Against the drift floor, measured inside the same run on the scenarios
+whose stimulus did not change at all:
+
+| step | identical stimulus | changed stimulus |
+|---|---|---|
+| stated → direct | n=44, influence 0.010 | n=24, influence 0.052, utility +0.005 |
+| direct → derived | n=14, influence 0.009 | n=54, influence 0.046, utility −0.009 |
+
+**Neither factor does anything.** Not dropping the other agents' beliefs,
+not spelling exclusivity out, not both together. Zero corrections and zero
+regressions at every step; acceptable mass pinned at 0.87 throughout. On
+changed stimuli the distribution moves about five times the drift floor,
+so the model is reading the difference — it simply never changes its mind.
+
+### What that settles
+
+Beliefs worked out from the history are as good as beliefs read from the
+file. The graph path is a drop-in for the file path, which is what makes
+the construction cost real rather than hypothetical, and removes the
+standing caveat that this pilot cannot price the thing the architecture
+economises.
+
+And what `rich` buys is not explicitness. *Evidence for a belief is worth
+less than the belief* measured a large gap between the history and the
+belief; this says the gap is not about how plainly the belief is written,
+because writing it twice as plainly changes nothing. Having the belief at
+all is the whole of it.
+
+### The first version of this measurement was an artefact
+
+Worth recording, because the numbers were large and clean and wrong:
+
+| pairing | before | after |
+|---|---|---|
+| stated → direct | 0.87 → 0.65, **16 regressions** | 0.87 → 0.87, 0 |
+| direct → derived | 0.65 → 0.86, **16 corrections** | 0.87 → 0.87, 0 |
+
+The `direct` rendering was unsound. Supersession was carried by
+exclusivity, so suppressing exclusivity left an agent described as
+believing the meeting was in two places at once. All 32 outcome changes
+were the model reacting correctly to an impossible stimulus.
+
+Nothing in the corpus tests caught it: each belief was well-formed and the
+rendering looked ordinary. What caught it was reading one — the decisive
+evidence was four lines of rendered text, not a summary statistic. The
+chain had already been written up in the shape it takes above, with the
+16-and-16 as a finding about exclusivity, before the example was printed.

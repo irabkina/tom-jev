@@ -149,6 +149,28 @@ def unfold(mental: MentalState) -> tuple[list[str], Proposition]:
     return holders, proposition
 
 
+def witnessed_chain(witness: str, proposition: Proposition) -> tuple[list[str], Proposition]:
+    """Who ends up holding what, when `witness` sees `proposition` settled.
+
+    The same unfolding `unfold` performs on a stated mental state, applied
+    to an event instead. Sam watching Alex come to believe the meeting is
+    in the office leaves Sam believing that Alex believes it — holders
+    `[sam, alex]` over the innermost claim — which is the same shape a
+    stated second-order belief has. That parity is the point: an event
+    about an attitude is an event like any other.
+    """
+    holders = [witness]
+    while proposition.proposition is not None:
+        if proposition.predicate != NESTING_PREDICATE:
+            raise ValueError(
+                f"history event nests with {proposition.predicate!r}; the flattened "
+                f"representation can only express {NESTING_PREDICATE!r}."
+            )
+        holders.append(proposition.subject)
+        proposition = proposition.proposition
+    return holders, proposition
+
+
 def _entity(tx, scenario: str, entity_id: str, label: str, name: str | None = None) -> None:
     tx.run(
         f"""
@@ -237,6 +259,99 @@ def load(driver: Driver, scenario: Scenario) -> None:
                     type=goal.type,
                 )
 
+        # The epistemic history, in order. `index` is load-bearing: an
+        # agent's belief is whatever the LAST event they witnessed
+        # settled, so materialising is a max-index query and an unordered
+        # set of events would not answer it.
+        for index, event in enumerate(scenario.history):
+            settlement = f"settles:{index}"
+            name = event.event or claim_of(event.proposition.innermost())
+            session.execute_write(_entity, scenario.id, settlement, "Settlement", name)
+            innermost = event.proposition.innermost()
+            # `about` is the nesting chain without a witness — whose
+            # belief the event is about, if anyone's. Two settlements can
+            # only supersede one another if they concern the same thing
+            # at the same level: an event about Alex's belief says
+            # nothing about the meeting's own whereabouts.
+            about, _ = witnessed_chain("", event.proposition)
+            session.run(
+                """
+                MATCH (s:Entity:Settlement {scenario: $scenario, id: $id})
+                SET s.index = $index, s.value = $value, s.claim = $claim,
+                    s.topic = $topic, s.about = $about
+                """,
+                scenario=scenario.id,
+                id=settlement,
+                index=index,
+                value=event.value,
+                claim=claim_of(innermost),
+                # The claim with its location removed: two sightings of
+                # one subject in different places share a topic, and a
+                # location is exclusive, so the later one moves it.
+                topic="|".join((innermost.predicate, innermost.subject, innermost.object or "")),
+                about=about[1:],
+            )
+            # The proposition it settles, written from the perspective of
+            # nobody: an event is a public fact about what was settled,
+            # not yet anybody's belief. Who comes to hold it is the
+            # WITNESSED_BY edge, and materialising is what turns the two
+            # into a belief.
+            session.execute_write(_proposition, scenario.id, event.proposition.innermost(),
+                                  f"{SETTLED}:{index}", [])
+            session.run(
+                """
+                MATCH (s:Entity:Settlement {scenario: $scenario, id: $id})
+                MATCH (p:Proposition {scenario: $scenario, signature: $signature})
+                MERGE (s)-[:SETTLES]->(p)
+                """,
+                scenario=scenario.id,
+                id=settlement,
+                signature=(
+                    f"{claim_of(event.proposition.innermost())}|{SETTLED}:{index}|"
+                ),
+            )
+            for witness in event.witnessed_by:
+                holders, _ = witnessed_chain(witness, event.proposition)
+                session.run(
+                    """
+                    MATCH (s:Entity:Settlement {scenario: $scenario, id: $id})
+                    MATCH (a:Entity:Agent {scenario: $scenario, id: $witness})
+                    MERGE (a)-[w:WITNESSED]->(s)
+                    SET w.holders = $holders
+                    """,
+                    scenario=scenario.id,
+                    id=settlement,
+                    witness=witness,
+                    holders=holders,
+                )
+
+        # Which settlements put which others out of date. A fact about
+        # the events, settled here once, and independent of who saw
+        # anything: whether an agent's belief is *stale* is then only a
+        # question of whether they witnessed the superseding event, which
+        # is what `materialise` asks.
+        #
+        # Two ways one settlement supersedes another. SAME CLAIM: the
+        # later settling of the very same thing replaces the earlier.
+        # MOVED: the same subject seen somewhere else, both times
+        # positively — a location is exclusive, so being there now is not
+        # being here any more. A later *denial* elsewhere supersedes
+        # nothing, because a thing not being in the office is no reason
+        # to think it left the conference room.
+        session.run(
+            """
+            MATCH (later:Entity:Settlement {scenario: $scenario})
+            MATCH (earlier:Entity:Settlement {scenario: $scenario})
+            WHERE later.index > earlier.index
+              AND later.about = earlier.about
+              AND later.topic = earlier.topic
+              AND (later.claim = earlier.claim
+                   OR (later.value = true AND earlier.value = true))
+            MERGE (later)-[:SUPERSEDES]->(earlier)
+            """,
+            scenario=scenario.id,
+        )
+
         for index, observation in enumerate(scenario.observations):
             arguments = observation.arguments()
             event_id = f"{observation.type}:{observation.agent}:{index}"
@@ -270,6 +385,139 @@ def load(driver: Driver, scenario: Scenario) -> None:
                     id=event_id,
                     target=target,
                 )
+
+
+#: What an agent's access entails they believe, as one query.
+#:
+#: Both branches start from what the chain CURRENTLY holds: settlements
+#: it witnessed that nothing it also witnessed has superseded. That is
+#: what makes a belief stale rather than wrong — the superseding event
+#: happened, the agent simply missed it, so the SUPERSEDES edge is there
+#: and no WITNESSED edge reaches it.
+#:
+#: DIRECT returns those settlements. EXCLUSIVE adds what a location being
+#: exclusive implies about everywhere else: seeing the thing there is
+#: seeing it not here. Exclusivity passes through nesting untouched,
+#: because the holders travel with the row.
+#:
+#: Supersession used to be left implicit in the exclusivity branch, which
+#: worked but coupled the two: with exclusivity off, two sightings of one
+#: subject settled different keys and neither replaced the other. Making
+#: it an edge at load time separates being out of date from being
+#: negated, and lets the two be varied independently.
+MATERIALISE = """
+CALL () {
+    MATCH (a:Entity:Agent {scenario: $scenario})-[w:WITNESSED]->
+          (s:Entity:Settlement {scenario: $scenario})
+    WHERE ($agent IS NULL OR w.holders[0] = $agent)
+      AND NOT EXISTS {
+          MATCH (later:Entity:Settlement)-[:SUPERSEDES]->(s)
+          MATCH (a)-[w2:WITNESSED]->(later)
+          WHERE w2.holders = w.holders
+      }
+    MATCH (s)-[:SETTLES]->(p:Proposition)
+    MATCH (subject:Entity)-[:SUBJECT_OF]->(p)
+    OPTIONAL MATCH (p)-[:LOCATION]->(l:Entity:Location)
+    OPTIONAL MATCH (p)-[:OBJECT]->(o:Entity)
+    RETURN w.holders AS holders, p.predicate AS predicate, subject.id AS subject,
+           o.id AS object, l.id AS location, s.value AS value, s.index AS index
+  UNION ALL
+    MATCH (a:Entity:Agent {scenario: $scenario})-[w:WITNESSED]->
+          (s:Entity:Settlement {scenario: $scenario})
+    WHERE $exclusivity AND ($agent IS NULL OR w.holders[0] = $agent) AND s.value = true
+      AND NOT EXISTS {
+          MATCH (later:Entity:Settlement)-[:SUPERSEDES]->(s)
+          MATCH (a)-[w2:WITNESSED]->(later)
+          WHERE w2.holders = w.holders
+      }
+    MATCH (s)-[:SETTLES]->(p:Proposition)
+    MATCH (subject:Entity)-[:SUBJECT_OF]->(p)
+    MATCH (p)-[:LOCATION]->(l:Entity:Location)
+    MATCH (other:Entity:Location {scenario: $scenario})
+    WHERE other.id <> l.id
+    OPTIONAL MATCH (p)-[:OBJECT]->(o:Entity)
+    RETURN w.holders AS holders, p.predicate AS predicate, subject.id AS subject,
+           o.id AS object, other.id AS location, false AS value, s.index AS index
+}
+WITH holders, predicate, subject, object, location, value, index
+ORDER BY index
+WITH holders, predicate, subject, object, location, collect(value) AS settled
+RETURN holders, predicate, subject, object, location, last(settled) AS value
+"""
+
+def materialise(
+    driver: Driver,
+    scenario: Scenario,
+    agent: str | None = None,
+    exclusivity: bool = True,
+) -> list[MentalState]:
+    """Derive the beliefs an agent's access entails, and store them.
+
+    This is the step the two-stage architecture is meant to economise. In
+    the pilot `rich` reads `mental_state` straight from the scenario file,
+    which costs nothing and so cannot be priced; here the beliefs are
+    *worked out* from the history the graph holds — which settlement each
+    agent saw last, and what a location being exclusive implies about the
+    ones they did not see. That is the effortful construction Jev, being a
+    System One model, does not perform for itself.
+
+    Derived propositions are written back under the `derived` perspective,
+    beside rather than over the `belief` ones the file states, so the
+    graph can always say which beliefs it worked out and which it was
+    told. `tests/test_world.py` holds the two to agreement.
+
+    Returns them as MentalState, innermost-first with the holder chain
+    folded back into nesting, so a renderer cannot tell them from stated
+    ones. Restricting to `agent` gives the pass only what it is entitled
+    to: the question's subject, not everyone in the scenario.
+
+    `exclusivity=False` keeps only what the chain currently holds about
+    claims it directly witnessed, dropping what a location being
+    exclusive implies about everywhere else. Sound, but less explicit:
+    the same beliefs with fewer of the negatives spelled out, which is
+    what makes it usable as an intermediate between the stated
+    representation and the derived one.
+
+    It was not always sound. Supersession of a locative claim used to be
+    carried by exclusivity — a later sighting replaced an earlier one
+    only because seeing a thing in the office is seeing it not in the
+    conference room — so with exclusivity off the two sightings settled
+    different keys, neither replaced the other, and the agent came out
+    believing the meeting was in two places. Writing SUPERSEDES at load
+    time separates being out of date from being negated, and that is what
+    makes the two independently variable.
+    """
+    with driver.session() as session:
+        rows = session.run(
+            MATERIALISE, scenario=scenario.id, agent=agent, exclusivity=exclusivity
+        ).data()
+
+    beliefs: list[MentalState] = []
+    for row in sorted(rows, key=lambda r: (r["holders"], r["predicate"], r["subject"],
+                                           r["object"] or "", r["location"] or "")):
+        innermost = Proposition(
+            predicate=row["predicate"],
+            subject=row["subject"],
+            object=row["object"],
+            location=row["location"],
+            value=row["value"],
+        )
+        holders = list(row["holders"])
+        proposition = innermost
+        # Fold the chain back into nesting, innermost outwards, leaving
+        # the first holder as the agent who holds the whole thing.
+        for holder in reversed(holders[1:]):
+            proposition = Proposition(
+                predicate=NESTING_PREDICATE, subject=holder, proposition=proposition
+            )
+        belief = MentalState(type=ATTITUDE, agent=holders[0], proposition=proposition)
+        beliefs.append(belief)
+
+    with driver.session() as session:
+        for belief in beliefs:
+            chain, held = unfold(belief)
+            session.execute_write(_proposition, scenario.id, held, DERIVED, chain)
+    return beliefs
 
 
 def conflicts(driver: Driver, scenario_id: str) -> list[dict]:
@@ -359,6 +607,16 @@ class Consistency(StrEnum):
 #: way falls through to NOT_APPLICABLE rather than being judged wrongly.
 GO_TO = "go_to_"
 
+
+#: Perspective tag for a proposition a history event settled. An event is
+#: a public fact about what was settled; whose belief it becomes is the
+#: WITNESSED edge, and `materialise` is what turns the two into a belief.
+SETTLED = "settled"
+
+#: Perspective tag for a belief derived from the history rather than read
+#: from the scenario file. Kept distinct from `BELIEF` so the graph can say
+#: which beliefs it worked out and which it was told.
+DERIVED = "derived"
 
 #: Background knowledge is scenario-independent, so it is scoped by a name
 #: no scenario can use. Everything else keys on a scenario id.
