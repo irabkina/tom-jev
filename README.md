@@ -81,10 +81,18 @@ where they would go stale.
 | note | contents |
 |---|---|
 | `notes/experimental_design.md` | what has been measured and what it supports, with the caveats each result carries |
+| `notes/held_out_corpus.md` | the held-out split: how it was built, what was checked, and the two design faults review found |
 | `notes/future_scenarios.md` | gaps in the corpus, and which of them are worth building |
 | `notes/graph_ontology.md` | how the graph represents nested attitudes, and where episodic fact ends and background knowledge begins |
 
-Two of them are methodological and outlive any particular number: *Not
+The one result measured out of sample is *The policy replicates out of
+sample, and the free prior does not*: an escalation policy fixed before the
+held-out corpus existed recovers 81% of the available gain on 62% of the
+calls, where the heuristic that beat it in development falls from 87% to
+57%. Everything else in that note was measured on the corpus it was
+selected on and is labelled accordingly.
+
+Two notes are methodological and outlive any particular number: *Not
 tuning stimuli to results* records which parts of the corpus were revised
 against their own measurements and are therefore not independent evidence,
 and *Where the line falls* records the one time a derived fact was written
@@ -98,7 +106,7 @@ into `world_state` and reached the model.
 | `scenarios/` | Scenario definitions, one YAML file per cell — see `scenarios/README.md` |
 | `knowledge/goals.yaml` | Background knowledge: what each goal requires. Shared across the corpus rather than repeated in it |
 | `experiments/` | Runnable studies; each writes to `results/` |
-| `scripts/` | Corpus maintenance — `generate_scenarios.py`, `add_histories.py` |
+| `scripts/` | Corpus maintenance — `generate_scenarios.py`, `add_histories.py`, `make_test_corpus.py` |
 | `notes/` | Findings, backlog, and representational commitments |
 | `results/` | Experiment output (gitignored except `.gitkeep`) |
 | `tests/` | Test suite, including the corpus invariants |

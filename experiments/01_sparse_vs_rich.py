@@ -45,11 +45,17 @@ tom_jev/analysis.py.
 World/belief conflict is computed by querying the Neo4j graph the world
 state is loaded into, not read from that annotation.
 
-    python experiments/01_sparse_vs_rich.py
+    python experiments/01_sparse_vs_rich.py            # the dev corpus
+    python experiments/01_sparse_vs_rich.py --split test   # the held-out corpus
+
+The split is named rather than defaulted to whatever is on disk, and the
+held-out run writes to its own files so that it cannot overwrite the
+development predictions the earlier analyses read.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import pathlib
 
@@ -116,10 +122,19 @@ def top_answer(prediction: Prediction, scenario: Scenario) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--split", default="dev", choices=("dev", "test"))
+    split = parser.parse_args().split
+    #: The dev files keep their original names, so every earlier analysis
+    #: and the stored run still resolve.
+    suffix = "" if split == "dev" else f"_{split}"
+
     load_dotenv()
-    items = scenarios.load(SCENARIOS, split="dev")
+    items = scenarios.load(SCENARIOS, split=split)
     if not items:
-        raise SystemExit(f"no scenarios found in {SCENARIOS}")
+        raise SystemExit(f"no {split} scenarios found in {SCENARIOS}")
+    print(f"{len(items)} scenarios in the {split} split, "
+          f"{len(items) * len(CONDITIONS)} calls\n")
 
     predictions: dict[str, dict[str, Prediction]] = {}
     with jev.client() as c:
@@ -159,9 +174,9 @@ def main() -> None:
 
     RESULTS.mkdir(exist_ok=True)
     flat = [p.model_dump(mode="json") for byid in predictions.values() for p in byid.values()]
-    (RESULTS / "01_sparse_vs_rich.json").write_text(json.dumps(flat, indent=2))
+    (RESULTS / f"01_sparse_vs_rich{suffix}.json").write_text(json.dumps(flat, indent=2))
     for name, (_, comparisons) in pairings.items():
-        (RESULTS / f"01_{name}_comparisons.json").write_text(
+        (RESULTS / f"01_{name}_comparisons{suffix}.json").write_text(
             json.dumps([c.model_dump(mode="json") for c in comparisons], indent=2)
         )
 

@@ -6,16 +6,18 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
-**The best intervention trigger is the cheap pass raising its own
-entropy, and it still loses to knowing the task family.** A rise in
-entropy from `sparse` to `history` fires on 43 of 68 and recovers 80% of
-the available acceptable-mass gain, beating its base rate on all three
-definitions of "needed" and surviving conditioning on the task family. But
-`is this action prediction` recovers 87% on fewer calls and is free, so no
-trigger yet earns the cheap pass that computes it. An earlier claim here,
-that disagreement between the two passes is *anti*-predictive, was an
-artifact of scoring only argmax flips and has been withdrawn. See *A cheap
-pass that raises its own entropy is the first usable trigger*.
+**A cheap pass that raises its own entropy is a usable escalation
+signal, and it holds up out of sample.** `H(history) > H(sparse)`,
+pre-registered before the held-out corpus existed, recovers 81% of the
+available acceptable-mass gain on 62% of the calls — against 80% on 63% in
+development. The obstacle is gone with it: `is this action prediction`
+recovered 87% in development and 57% held out, because that corpus
+entangled task family with what the richer representation does and the
+held-out one does not. Escalation still cannot hurt, on 100 scenarios
+across two corpora, one built so that it could. What the pilot still cannot
+price is the saving, since the middle pass is the most expensive of the
+three. See *The policy replicates out of sample, and the free prior does
+not*.
 
 **The mixed history's apparent advantage is entirely formatting.** Its
 0.12 over the consistent arms decomposes into 0.08 from avoiding a
@@ -1110,10 +1112,11 @@ re-representations that positively support an alternative interpretation
 and those that primarily undermine an existing interpretation, so that task
 family is not confounded with representational function.
 
-The corpus this will run on is built: 32 scenarios under
-`scenarios/test/`, described in `notes/held_out_corpus.md`, which also
-records what was checked and the two design faults found and fixed in
-review. Nothing there has been run against the model.
+**This has now been run.** The corpus is 32 scenarios under
+`scenarios/test/`, described in `notes/held_out_corpus.md`; the result is
+*The policy replicates out of sample, and the free prior does not*. What
+follows is left in the future tense it was written in, because the value of
+a pre-registration is that it can be read against the outcome.
 
 **Three things to know about these baselines before reading the result.**
 
@@ -1142,3 +1145,130 @@ is also the only policy so far that recovers most of the available gain
 without paying for the cheap pass. A held-out result in which
 `H(history) > H(sparse)` does not beat it is a null result for the
 escalation story, not a partial success, and should be reported that way.
+
+## The policy replicates out of sample, and the free prior does not
+
+The first result in this project measured on scenarios it was not selected
+on. Thirty-two held-out scenarios, 96 calls, the policy and its five
+baselines fixed in *The policy to be tested, fixed in advance* before the
+corpus existed and the corpus built before either was run.
+
+    policy                            held out          development
+    H(history) > H(sparse)   *    62% esc -> 81%      63% esc -> 80%
+    never materialize                0% esc ->  0%       0% esc ->  0%
+    always materialize             100% esc -> 100%    100% esc -> 100%
+    H(history) > 0.5                56% esc -> 71%      50% esc -> 59%
+    TV(sparse, history) > 0.1       47% esc -> 60%      43% esc -> 46%
+    task family                     50% esc -> 57%      59% esc -> 87%
+
+The primary policy recovers 81% of the available acceptable-mass gain on
+62% of the calls, against 80% on 63% in development. That is as close to a
+clean replication as 32 scenarios can give, and it is the best efficiency
+in the table at 1.31 recovery per unit escalated.
+
+### The task-family heuristic was a property of the corpus
+
+It falls from 87% recovery to 57%, from beating everything to last. The
+standing obstacle to the whole two-stage story is gone, and it went for the
+reason the held-out corpus was built to test.
+
+Final acceptable mass inside each cell of the cross:
+
+| cell | n | never | policy | task family |
+|---|---|---|---|---|
+| action prediction / discriminative | 8 | 0.57 | 0.96 | 0.96 |
+| action prediction / inhibitory | 8 | 0.54 | 0.73 | 0.92 |
+| goal recognition / discriminative | 8 | 0.53 | **0.88** | **0.53** |
+| goal recognition / inhibitory | 8 | 0.52 | 0.67 | 0.52 |
+
+The heuristic never fires on goal recognition, so it scores the base rate
+there by construction. On the development corpus that was nearly free,
+because those goal-recognition sets happened to be cases where the belief
+barely mattered — a correction base rate of 0.11. Decouple task family from
+representational function and goal-recognition discriminative has 0.53 to
+0.88 of gain sitting in it, every bit of which the heuristic walks past.
+
+This is what *Dependency structure does not give a usable escalation signal
+either* and *Sparse-state signals do not reliably identify the need* were
+each missing: not a better signal, but a corpus on which a bad signal
+cannot look good. The entropy trigger survived that corpus and the family
+prior did not.
+
+### The held-out table in full
+
+    policy                            esc   mass   ent   acc  recov   corr   reg
+    H(history) > H(sparse)     *      62%   0.81  0.48  0.84   81%  10/13  0/0
+    never materialize                  0%   0.54  0.74  0.53    0%   0/13  0/0
+    always materialize               100%   0.88  0.45  0.94  100%  13/13  0/0
+    H(history) > 0.5                  56%   0.78  0.32  0.81   71%   9/13  0/0
+    TV(sparse, history) > 0.1         47%   0.74  0.40  0.78   60%   8/13  0/0
+    task family                       50%   0.73  0.76  0.78   57%   8/13  0/0
+
+The chance floor on this split is 0.38, so `never materialize` at 0.54 is
+above guessing rather than at it. Raw masses are not comparable to the
+development table, whose floor is 0.45; recovery is, being scale-free,
+which is why it is the pre-registered primary measure.
+
+The two intervention baselines both improve in relative terms — 59 to 71,
+46 to 60 — so it is not that the held-out split is easier for the winner.
+Only the free prior collapses.
+
+### Escalation still cannot hurt, on a corpus built so that it could
+
+Zero argmax regressions, again. One scenario lost more than the measured
+noise floor in acceptable mass: `ward_round_true_negative`, at −0.08 — a
+cell where the belief is *true* and still costs certainty, because what
+Bijan knows is a strict subset of what the world does. So the design that
+was meant to let escalation be wrong did work, barely, in one cell of 32.
+
+The two cells expected to punish escalation hardest did something else.
+`archive_desk_false_negative` (0.04 to 0.03) and `plant_room_false_negative`
+(0.08 to 0.16) are cells where *both* passes fail rather than where `rich`
+regresses, while `quarry_road_false_negative` went 0.03 to 0.85, a clean
+correction. Jev handles an inhibitory denial well when what is denied is a
+route and badly when it is a presence or a fitness. That is a finding about
+the model rather than about the policy, and it is not one this corpus was
+designed to produce.
+
+The broader point stands and is now tested twice: across 100 scenarios in
+two independently built corpora, representing a belief has never made an
+answer worse by more than the noise floor except once. Escalation is safe;
+the only question is what it costs.
+
+### What the function manipulation shows
+
+| function | n | never | always | available gain | policy escalates |
+|---|---|---|---|---|---|
+| discriminative | 16 | 0.55 | 0.95 | +0.40 | 81% |
+| inhibitory | 16 | 0.53 | 0.80 | +0.27 | 44% |
+
+There is a third less to gain when the belief only denies, and the policy
+escalates roughly half as often there. That is the right direction:
+*Re-representation needs an alternative, not just a problem* said a belief
+that only undermines buys less, and this measures how much less on stimuli
+built to isolate it.
+
+Within `goal_recognition / discriminative` the policy is not discriminating
+at all — it fires on 7 of 8, and the one it skips had the higher gain
+(+0.47 quiet against +0.41 fired). There it is `always` wearing a trigger's
+clothes.
+
+### What this settles, and what it does not
+
+Settled: a cheap pass that raises its own entropy is a usable escalation
+signal, it beats every baseline including the free prior on data it was not
+selected on, and the reason the free prior looked good before was the
+corpus rather than the task. Conflict detection as a trigger for effortful
+re-representation is supported rather than merely not-found.
+
+Not settled, and unchanged by this run: the saving is still notional. Mean
+input tokens are 381 sparse, 442 history, 412 rich, so the middle pass is
+the most expensive of the three and a two-stage policy costs more calls
+than escalating always. Jev is the System One model, so the effort the
+architecture wants to economise is *constructing* the rich representation,
+which is free here because `mental_state` is read from a file. This
+experiment prices the wrong thing; what it establishes is that a trigger
+exists and generalises, not that using it saves anything in this setup.
+
+Thirty-two scenarios and 13 corrections, so every cell of the cross rests
+on 8 items. The replication is of the headline pair, not of the breakdown.
