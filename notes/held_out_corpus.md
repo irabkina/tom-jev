@@ -5,11 +5,22 @@ policy fixed in *The policy to be tested, fixed in advance*. Written after
 that policy and before any of it was measured, which is the only thing that
 makes this a test rather than more development data.
 
-**Run once, on 2026-09-28**, three conditions over all 32 scenarios, 96
-calls. The result is *The policy replicates out of sample, and the free
-prior does not* in `notes/experimental_design.md`. The split is spent: it
-can no longer settle a question it has already answered, and a second
-held-out corpus would be needed for the next one.
+**Used twice.**
+
+*2026-09-28* — three conditions over all 32 scenarios, 96 calls, the
+pre-registered escalation policy. The result is *The policy replicates out
+of sample, and the free prior does not*. This is the one measurement here
+that carries out-of-sample weight, because it was the first.
+
+*2026-09-29* — two derived renderings, 64 calls, graph-materialised
+beliefs. Reported as a replication on a second corpus rather than as
+held-out evidence, in *It replicates on the second corpus*. By then the
+split was already spent, and one of its scenarios had been read while
+debugging `analysis.entailed_beliefs`.
+
+The split is spent and stays spent. It cannot settle a question it has
+already answered, and a genuinely new question needs a genuinely new
+corpus.
 
 ## What it is for
 

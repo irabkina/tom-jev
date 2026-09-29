@@ -81,7 +81,9 @@ where they would go stale.
 | note | contents |
 |---|---|
 | `notes/experimental_design.md` | what has been measured and what it supports, with the caveats each result carries |
+| `notes/representation.md` | what Jev is shown, where each part comes from, and which of those choices were measured |
 | `notes/held_out_corpus.md` | the held-out split: how it was built, what was checked, and the two design faults review found |
+| `notes/open_questions.md` | what is not settled — what a write-up should not claim, and what a reader would be right to ask |
 | `notes/future_scenarios.md` | gaps in the corpus, and which of them are worth building |
 | `notes/graph_ontology.md` | how the graph represents nested attitudes, and where episodic fact ends and background knowledge begins |
 

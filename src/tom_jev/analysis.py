@@ -71,6 +71,7 @@ from math import log2
 
 from pydantic import BaseModel, Field, computed_field
 
+from . import knowledge
 from .models import HistoryEvent, Prediction, Proposition, Scenario
 
 
@@ -151,21 +152,55 @@ def _topic(proposition: Proposition) -> tuple:
 
 
 def _supersedes(later: HistoryEvent, earlier: HistoryEvent) -> bool:
-    """Does the later settlement put the earlier one out of date?
+    """Is this the same claim, settled again?
 
-    Two ways. The very same claim settled again replaces what it said.
-    Or the same subject seen somewhere else, both times positively — a
-    location is exclusive, so being there now is not being here any more.
-    A later denial elsewhere supersedes nothing: a thing not being in the
-    office is no reason to think it left the conference room.
+    Temporal only. Nothing about the predicate enters into it: a later
+    settling of the very same thing replaces what the earlier one said.
 
-    The in-memory twin of the SUPERSEDES edge `world.load` writes;
-    tests/test_world.py holds the two to agreement.
+    The in-memory twin of the SUPERSEDES edge `world.load` writes.
     """
-    if _topic(later.proposition) != _topic(earlier.proposition):
+    return _topic(later.proposition) == _topic(earlier.proposition) and (
+        later.proposition.signature() == earlier.proposition.signature()
+    )
+
+
+def _excludes(one: HistoryEvent, other: HistoryEvent) -> bool:
+    """Can these two not both hold?
+
+    Semantic and symmetric, with no time in it. A thing is in one place,
+    so `located` being functional in its location means seeing it in the
+    office is seeing it not in the conference room. Which predicates are
+    functional is declared in knowledge/predicates.yaml rather than
+    inferred from whether a location argument is present: `available`
+    carries one and is not exclusive in it, so stocking coffee in the
+    pantry says nothing about the kitchen.
+
+    The in-memory twin of the EXCLUDES edge `world.load` writes.
+    """
+    if _topic(one.proposition) != _topic(other.proposition):
         return False
-    return later.proposition.signature() == earlier.proposition.signature() or (
-        later.value is True and earlier.value is True
+    if one.proposition.innermost().predicate not in knowledge.functional_in_location():
+        return False
+    return (
+        one.proposition.signature() != other.proposition.signature()
+        and one.value is True
+        and other.value is True
+    )
+
+
+def _current(scenario: Scenario, index: int, witness: str) -> bool:
+    """Does this sighting still stand, for this witness?
+
+    It does unless something the same witness saw later either settled the
+    same claim again or is incompatible with it. Recency lives here rather
+    than in either relation, which is what lets the two be different kinds
+    of thing.
+    """
+    event = scenario.history[index]
+    return not any(
+        witness in later.witnessed_by
+        and (_supersedes(later, event) or _excludes(later, event))
+        for later in scenario.history[index + 1 :]
     )
 
 
@@ -198,13 +233,14 @@ def entailed_beliefs(scenario: Scenario) -> dict[Claim, bool | float | str | Non
             # to think they did not go there. Dropping the whole sighting
             # rather than only its direct claim is the difference; the
             # superseding event supplies whatever still holds.
-            if any(
-                witness in later.witnessed_by and _supersedes(later, event)
-                for later in scenario.history[index + 1 :]
-            ):
+            if not _current(scenario, index, witness):
                 continue
             held[(witness, event.claim())] = value
-            if innermost.location is not None and value is True:
+            if (
+                innermost.location is not None
+                and value is True
+                and innermost.predicate in knowledge.functional_in_location()
+            ):
                 for other in scenario.entities.locations:
                     if other.id != innermost.location:
                         elsewhere = event.proposition.relocated(other.id).signature()
