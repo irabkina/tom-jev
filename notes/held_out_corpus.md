@@ -5,7 +5,11 @@ policy fixed in *The policy to be tested, fixed in advance*. Written after
 that policy and before any of it was measured, which is the only thing that
 makes this a test rather than more development data.
 
-Nothing here has been run against the model.
+**Run once, on 2026-09-28**, three conditions over all 32 scenarios, 96
+calls. The result is *The policy replicates out of sample, and the free
+prior does not* in `notes/experimental_design.md`. The split is spent: it
+can no longer settle a question it has already answered, and a second
+held-out corpus would be needed for the next one.
 
 ## What it is for
 
@@ -223,10 +227,10 @@ whoever reads the result knows which way the one remaining asymmetry runs.
 
 From `scenarios/test/README.md`, repeated because they are easy to break:
 
-**Do not run experiments against this split while building it.** The
-experiments pass `split="dev"` for that reason. A scenario measured here
-before the corpus is complete has been spent, and the honest response is to
-move it to `dev` rather than quietly keep it.
+**It has been used, so it is used up.** Experiments 01 to 06 pass
+`split="dev"`; experiment 07 is the held-out evaluation and reads the run
+above. Anything measured here from now on is development data whatever the
+directory says, and a genuinely new question needs a genuinely new corpus.
 
 **Do not tune a scenario because of how a model answered it.** The rule in
 *Not tuning stimuli to results* applies with more force here, because there

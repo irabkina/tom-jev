@@ -1,0 +1,5126 @@
+[
+  {
+    "scenario_id": "attribution_false_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.98,
+        "probabilities": {
+          "go_to_garden": 0.0,
+          "go_to_office": 0.01,
+          "go_to_conference_room": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 364,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61ae4775f81d383062c2bc63f",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_false_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.73,
+        "probabilities": {
+          "go_to_garden": 0.02,
+          "go_to_office": 0.16,
+          "go_to_conference_room": 0.82
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 417,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61b75775985852f6245656e3c",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_false_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_conference_room": 0.06,
+          "go_to_office": 0.94,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 401,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4d61bee79ddb715e355d80d5ced",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_false_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_garden": 0.0,
+          "go_to_conference_room": 0.03,
+          "go_to_office": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 364,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4d61c8d755491c57474eb9e013b",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_false_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.37,
+        "probabilities": {
+          "go_to_conference_room": 0.58,
+          "go_to_office": 0.42,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 418,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61d0b7bc79183c97a3437d161",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_false_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.93,
+        "probabilities": {
+          "go_to_conference_room": 0.95,
+          "go_to_office": 0.05,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 402,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61d867e96bb383a1000fbc090",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_true_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.98,
+        "probabilities": {
+          "go_to_office": 0.01,
+          "go_to_garden": 0.0,
+          "go_to_conference_room": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 364,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61dec7c62b3a160632b8b1899",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_garden",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_true_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.87,
+        "probabilities": {
+          "go_to_conference_room": 0.91,
+          "go_to_office": 0.07,
+          "go_to_garden": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 417,
+      "output_tokens": 56
+    },
+    "request_id": "req_01a0e4d61e917d0a9f7f2533b75cea46",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_garden",
+    "correct": false
+  },
+  {
+    "scenario_id": "attribution_true_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_garden",
+        "confidence": 0.94,
+        "probabilities": {
+          "go_to_office": 0.0,
+          "go_to_conference_room": 0.04,
+          "go_to_garden": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 401,
+      "output_tokens": 55
+    },
+    "request_id": "req_01a0e4d61f047215b973164a765834f0",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_garden",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_true_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_conference_room": 0.03,
+          "go_to_office": 0.97,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 364,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4d61f977ce0b05aba573325bf4e",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_true_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.86,
+        "probabilities": {
+          "go_to_office": 0.91,
+          "go_to_conference_room": 0.09,
+          "go_to_garden": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 418,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4d620217394b8134b9367678944",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "attribution_true_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_garden": 0.0,
+          "go_to_conference_room": 0.0,
+          "go_to_office": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 401,
+      "output_tokens": 54
+    },
+    "request_id": "req_01a0e4d620b1767cb6a5e0c0fc0e7ac5",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wire_room",
+        "confidence": 0.88,
+        "probabilities": {
+          "go_to_archive": 0.01,
+          "go_to_copy_desk": 0.04,
+          "go_to_wire_room": 0.9,
+          "go_to_roof_deck": 0.05
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 389,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0e4d6214e7da7906f95b6f5e7e647",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wire_room",
+        "confidence": 0.52,
+        "probabilities": {
+          "go_to_wire_room": 0.64,
+          "go_to_copy_desk": 0.31,
+          "go_to_roof_deck": 0.05,
+          "go_to_archive": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 446,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0e4d621d27c33bc658120650d862a",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_copy_desk": 0.93,
+          "go_to_archive": 0.0,
+          "go_to_wire_room": 0.06,
+          "go_to_roof_deck": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d62241787193fa4d99a49c0c47",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 0.82,
+        "probabilities": {
+          "go_to_archive": 0.02,
+          "go_to_wire_room": 0.07,
+          "go_to_roof_deck": 0.05,
+          "go_to_copy_desk": 0.86
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 389,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d622bf7374bd5e34ba1b4212f3",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_wire_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 0.73,
+        "probabilities": {
+          "go_to_wire_room": 0.2,
+          "go_to_roof_deck": 0.0,
+          "go_to_copy_desk": 0.8,
+          "go_to_archive": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 446,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6232e73c2a6526276a06b6309",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_wire_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_false_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wire_room",
+        "confidence": 0.85,
+        "probabilities": {
+          "go_to_roof_deck": 0.0,
+          "go_to_archive": 0.0,
+          "go_to_copy_desk": 0.11,
+          "go_to_wire_room": 0.89
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0e4d6239d765698461d8e94413f01",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_wire_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wire_room",
+        "confidence": 0.9,
+        "probabilities": {
+          "go_to_wire_room": 0.92,
+          "go_to_roof_deck": 0.04,
+          "go_to_archive": 0.01,
+          "go_to_copy_desk": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 389,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0e4d624167642a005a2ba7312032e",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_roof_deck",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wire_room",
+        "confidence": 0.75,
+        "probabilities": {
+          "go_to_wire_room": 0.81,
+          "go_to_roof_deck": 0.09,
+          "go_to_copy_desk": 0.1,
+          "go_to_archive": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 446,
+      "output_tokens": 63
+    },
+    "request_id": "req_01a0e4d624b979fc9d4d3ed39d1f4eda",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_roof_deck",
+    "correct": false
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_roof_deck",
+        "confidence": 0.84,
+        "probabilities": {
+          "go_to_wire_room": 0.11,
+          "go_to_copy_desk": 0.01,
+          "go_to_archive": 0.0,
+          "go_to_roof_deck": 0.88
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d625257f349e9519e958668452",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_roof_deck",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 0.82,
+        "probabilities": {
+          "go_to_wire_room": 0.07,
+          "go_to_roof_deck": 0.05,
+          "go_to_copy_desk": 0.86,
+          "go_to_archive": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 389,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d625e97150aace34d228ec2f97",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_wire_room": 0.02,
+          "go_to_copy_desk": 0.98,
+          "go_to_roof_deck": 0.0,
+          "go_to_archive": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 446,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6266f7c51bd5c4ca0316b377a",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "newsroom_true_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_copy_desk",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_copy_desk": 1.0,
+          "go_to_archive": 0.0,
+          "go_to_roof_deck": 0.0,
+          "go_to_wire_room": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6272a7faa8fab752f7b9b773c",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_copy_desk",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_false_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_control_room",
+        "confidence": 0.78,
+        "probabilities": {
+          "go_to_dormitory": 0.05,
+          "go_to_dome": 0.08,
+          "go_to_tape_vault": 0.01,
+          "go_to_spectrograph_lab": 0.03,
+          "go_to_control_room": 0.83
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d627917ea5b5cab25a7d549f55",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_dome",
+    "correct": false
+  },
+  {
+    "scenario_id": "observatory_false_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.47,
+        "probabilities": {
+          "go_to_dormitory": 0.0,
+          "go_to_dome": 0.58,
+          "go_to_control_room": 0.39,
+          "go_to_tape_vault": 0.0,
+          "go_to_spectrograph_lab": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 484,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d627ef71d6be3e017b23fbe3ca",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_dome",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_false_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_tape_vault": 0.0,
+          "go_to_dome": 0.96,
+          "go_to_dormitory": 0.0,
+          "go_to_spectrograph_lab": 0.01,
+          "go_to_control_room": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 470,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d628d473549e48102bf3526288",
+    "variant": "false_attribution_false_belief",
+    "ground_truth": "go_to_dome",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_false_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.88,
+        "probabilities": {
+          "go_to_dormitory": 0.04,
+          "go_to_tape_vault": 0.0,
+          "go_to_dome": 0.9,
+          "go_to_control_room": 0.04,
+          "go_to_spectrograph_lab": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d629497fa09c5e4c1ae1564952",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_control_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "observatory_false_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.44,
+        "probabilities": {
+          "go_to_tape_vault": 0.0,
+          "go_to_dormitory": 0.0,
+          "go_to_dome": 0.56,
+          "go_to_spectrograph_lab": 0.0,
+          "go_to_control_room": 0.44
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 482,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d629c37d82ac619e94b5b9893f",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_control_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "observatory_false_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_control_room",
+        "confidence": 0.82,
+        "probabilities": {
+          "go_to_control_room": 0.86,
+          "go_to_spectrograph_lab": 0.0,
+          "go_to_dormitory": 0.0,
+          "go_to_dome": 0.14,
+          "go_to_tape_vault": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 468,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62a437db5b491f857f36fa917",
+    "variant": "false_attribution_true_belief",
+    "ground_truth": "go_to_control_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_true_attribution_false_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_control_room",
+        "confidence": 0.84,
+        "probabilities": {
+          "go_to_tape_vault": 0.01,
+          "go_to_dome": 0.05,
+          "go_to_spectrograph_lab": 0.03,
+          "go_to_dormitory": 0.04,
+          "go_to_control_room": 0.87
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62ae27663b89a1b25ebd792d7",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_spectrograph_lab",
+    "correct": false
+  },
+  {
+    "scenario_id": "observatory_true_attribution_false_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_control_room",
+        "confidence": 0.5,
+        "probabilities": {
+          "go_to_spectrograph_lab": 0.08,
+          "go_to_dormitory": 0.0,
+          "go_to_tape_vault": 0.0,
+          "go_to_dome": 0.31,
+          "go_to_control_room": 0.61
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 484,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62b4577ebb08f5a7a4c9f2d62",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_spectrograph_lab",
+    "correct": false
+  },
+  {
+    "scenario_id": "observatory_true_attribution_false_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_spectrograph_lab",
+        "confidence": 0.94,
+        "probabilities": {
+          "go_to_tape_vault": 0.0,
+          "go_to_dome": 0.0,
+          "go_to_control_room": 0.04,
+          "go_to_spectrograph_lab": 0.96,
+          "go_to_dormitory": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 473,
+      "output_tokens": 80
+    },
+    "request_id": "req_01a0e4d62bda7b50911bef777a99066e",
+    "variant": "true_attribution_false_belief",
+    "ground_truth": "go_to_spectrograph_lab",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_true_attribution_true_belief",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_dome": 0.92,
+          "go_to_control_room": 0.04,
+          "go_to_dormitory": 0.03,
+          "go_to_tape_vault": 0.0,
+          "go_to_spectrograph_lab": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 422,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62c4e7e878b38485d17ccd58a",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_dome",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_true_attribution_true_belief",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_dormitory": 0.0,
+          "go_to_tape_vault": 0.0,
+          "go_to_dome": 0.91,
+          "go_to_control_room": 0.09,
+          "go_to_spectrograph_lab": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 482,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62cea71859c1053c3bf83ff82",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_dome",
+    "correct": true
+  },
+  {
+    "scenario_id": "observatory_true_attribution_true_belief",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_dome",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_control_room": 0.0,
+          "go_to_tape_vault": 0.0,
+          "go_to_dormitory": 0.0,
+          "go_to_dome": 1.0,
+          "go_to_spectrograph_lab": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 467,
+      "output_tokens": 77
+    },
+    "request_id": "req_01a0e4d62d9b73479bfb2b962be29b70",
+    "variant": "true_attribution_true_belief",
+    "ground_truth": "go_to_dome",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_pantry": 0.0,
+          "go_to_delivery_van": 0.0,
+          "go_to_cold_room": 1.0,
+          "go_to_back_bench": 0.0,
+          "go_to_flour_store": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 420,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d62e277e30847255521e166e3d",
+    "variant": "false_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": false
+  },
+  {
+    "scenario_id": "bakery_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 0.98,
+        "probabilities": {
+          "go_to_cold_room": 0.98,
+          "go_to_back_bench": 0.0,
+          "go_to_delivery_van": 0.0,
+          "go_to_pantry": 0.0,
+          "go_to_flour_store": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 470,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d62e8d76f9ba107dfc58569653",
+    "variant": "false_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": false
+  },
+  {
+    "scenario_id": "bakery_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_flour_store": 0.96,
+          "go_to_back_bench": 0.0,
+          "go_to_cold_room": 0.04,
+          "go_to_pantry": 0.0,
+          "go_to_delivery_van": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 444,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d62f107c0790c8203e32106be0",
+    "variant": "false_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_flour_store": 1.0,
+          "go_to_cold_room": 0.0,
+          "go_to_back_bench": 0.0,
+          "go_to_pantry": 0.0,
+          "go_to_delivery_van": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 420,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d62f827f2a97c5989097656616",
+    "variant": "false_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "bakery_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_cold_room": 0.08,
+          "go_to_back_bench": 0.0,
+          "go_to_flour_store": 0.92,
+          "go_to_delivery_van": 0.0,
+          "go_to_pantry": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 470,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d62ff17e9b988b9159fbea06e7",
+    "variant": "false_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "bakery_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 0.94,
+        "probabilities": {
+          "go_to_flour_store": 0.04,
+          "go_to_cold_room": 0.96,
+          "go_to_pantry": 0.0,
+          "go_to_delivery_van": 0.0,
+          "go_to_back_bench": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 444,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d6306070eea1d14ce7c366fd87",
+    "variant": "false_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_delivery_van": 0.0,
+          "go_to_cold_room": 0.0,
+          "go_to_pantry": 0.0,
+          "go_to_flour_store": 1.0,
+          "go_to_back_bench": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 420,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d631177bd2afe15ea6e797c63d",
+    "variant": "true_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_flour_store": 1.0,
+          "go_to_back_bench": 0.0,
+          "go_to_cold_room": 0.0,
+          "go_to_delivery_van": 0.0,
+          "go_to_pantry": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 471,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d6318c7aaf9d37f888ed63f5ea",
+    "variant": "true_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_flour_store",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_pantry": 0.0,
+          "go_to_back_bench": 0.0,
+          "go_to_cold_room": 0.0,
+          "go_to_flour_store": 1.0,
+          "go_to_delivery_van": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 444,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d632197490a0b50edae120c430",
+    "variant": "true_negative",
+    "ground_truth": "go_to_flour_store",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_flour_store": 0.0,
+          "go_to_back_bench": 0.0,
+          "go_to_cold_room": 1.0,
+          "go_to_pantry": 0.0,
+          "go_to_delivery_van": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 420,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d63291740db59996d50430ad68",
+    "variant": "true_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_pantry": 0.0,
+          "go_to_back_bench": 0.0,
+          "go_to_cold_room": 1.0,
+          "go_to_flour_store": 0.0,
+          "go_to_delivery_van": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 471,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d63311791da4a72dd974410d6e",
+    "variant": "true_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "bakery_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_cold_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_delivery_van": 0.0,
+          "go_to_pantry": 0.0,
+          "go_to_back_bench": 0.0,
+          "go_to_flour_store": 0.0,
+          "go_to_cold_room": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 444,
+      "output_tokens": 76
+    },
+    "request_id": "req_01a0e4d633af78a79fe9586c07b708a6",
+    "variant": "true_positive",
+    "ground_truth": "go_to_cold_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_boat_store": 0.0,
+          "go_to_engine_shed": 0.0,
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d634247da49c21295131f02772",
+    "variant": "false_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": false
+  },
+  {
+    "scenario_id": "lighthouse_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 0.94,
+        "probabilities": {
+          "go_to_cellar": 0.0,
+          "go_to_engine_shed": 0.04,
+          "go_to_boat_store": 0.0,
+          "go_to_lamp_room": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d63491721585584eb37ce1ff49",
+    "variant": "false_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": false
+  },
+  {
+    "scenario_id": "lighthouse_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_cellar": 0.0,
+          "go_to_engine_shed": 0.97,
+          "go_to_lamp_room": 0.03,
+          "go_to_boat_store": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d635217fbe923b38a36084be54",
+    "variant": "false_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 0.0,
+          "go_to_engine_shed": 1.0,
+          "go_to_boat_store": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d6359a7064905b014703a45454",
+    "variant": "false_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "lighthouse_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 0.71,
+        "probabilities": {
+          "go_to_cellar": 0.0,
+          "go_to_engine_shed": 0.78,
+          "go_to_boat_store": 0.0,
+          "go_to_lamp_room": 0.22
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d6364779ab9ffbb9d1a3265342",
+    "variant": "false_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "lighthouse_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_engine_shed": 0.03,
+          "go_to_lamp_room": 0.97,
+          "go_to_cellar": 0.0,
+          "go_to_boat_store": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d636a77f55a6a162fba4b6f08d",
+    "variant": "false_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_boat_store": 0.0,
+          "go_to_engine_shed": 1.0,
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d6372d709ab9edd22a96c9fc96",
+    "variant": "true_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_boat_store": 0.0,
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 0.0,
+          "go_to_engine_shed": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d637a3705b81c3bfe3a38804a7",
+    "variant": "true_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_engine_shed",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_engine_shed": 1.0,
+          "go_to_boat_store": 0.0,
+          "go_to_lamp_room": 0.0,
+          "go_to_cellar": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d6380870a8b523abcc01951806",
+    "variant": "true_negative",
+    "ground_truth": "go_to_engine_shed",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_engine_shed": 0.0,
+          "go_to_lamp_room": 1.0,
+          "go_to_cellar": 0.0,
+          "go_to_boat_store": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d638687f6c930e2434a7410be3",
+    "variant": "true_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 1.0,
+          "go_to_boat_store": 0.0,
+          "go_to_engine_shed": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d638ca7b06816d3db6ecb516bc",
+    "variant": "true_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "lighthouse_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_lamp_room",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_boat_store": 0.0,
+          "go_to_engine_shed": 0.0,
+          "go_to_cellar": 0.0,
+          "go_to_lamp_room": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 65
+    },
+    "request_id": "req_01a0e4d639377cec917b68b6f23ebcc2",
+    "variant": "true_positive",
+    "ground_truth": "go_to_lamp_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_office": 1.0,
+          "go_to_conference_room": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 341,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d639a47cb497c13bd23b105f33",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_office": 0.98,
+          "go_to_conference_room": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 382,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d63a3c7283a1f089a924d03b38",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.7,
+        "probabilities": {
+          "go_to_office": 0.15,
+          "go_to_conference_room": 0.85
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 360,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63aba77b2bea87877b1300f4f",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_office": 0.0,
+          "go_to_conference_room": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 341,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63b41704d893cf885ff2d2bf9",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.65,
+        "probabilities": {
+          "go_to_office": 0.17,
+          "go_to_conference_room": 0.83
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63ba27ede96b49a3a0661f724",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "report_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.92,
+        "probabilities": {
+          "go_to_conference_room": 0.04,
+          "go_to_office": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 360,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d63c1475d2a65e1db59bad1360",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_conference_room": 1.0,
+          "go_to_office": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 341,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63c8a7b8d9a6769a147415f69",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_office": 0.02,
+          "go_to_conference_room": 0.98
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 382,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63d4d70e7ac32170f90131641",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.93,
+        "probabilities": {
+          "go_to_office": 0.03,
+          "go_to_conference_room": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 360,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d63dad7100bf1dfd4913211008",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_office": 1.0,
+          "go_to_conference_room": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 341,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d63e12748c9e63dd748b1be77c",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_office": 0.98,
+          "go_to_conference_room": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d63e9a7bef9e2f22c30ca92b59",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "report_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_office": 1.0,
+          "go_to_conference_room": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 360,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d63f5b78e6ad65e4361804b022",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_galley": 0.01,
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 374,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d63fbe7997bd58b799d58a94e6",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_galley": 0.06,
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 0.94
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 434,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d6402f74ceac7a091927e25fea",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_galley": 0.97,
+          "go_to_wheelhouse": 0.03,
+          "go_to_cargo_deck": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 402,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d640a47665b8dfcee2678dc0a5",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.96,
+        "probabilities": {
+          "go_to_cargo_deck": 0.02,
+          "go_to_wheelhouse": 0.97,
+          "go_to_galley": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 377,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d6411c71aaae4898c6c6f5f6e9",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_v2_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_galley": 0.01,
+          "go_to_wheelhouse": 0.98,
+          "go_to_cargo_deck": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 438,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d641e27dbc8ac9f968d53c8459",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_v2_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.54,
+        "probabilities": {
+          "go_to_galley": 0.7,
+          "go_to_cargo_deck": 0.04,
+          "go_to_wheelhouse": 0.26
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d642417268ac9fa66b6100dc22",
+    "variant": "false_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.9,
+        "probabilities": {
+          "go_to_wheelhouse": 0.06,
+          "go_to_galley": 0.94,
+          "go_to_cargo_deck": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 374,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d642a873b7b876da75f075b30a",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.67,
+        "probabilities": {
+          "go_to_wheelhouse": 0.22,
+          "go_to_galley": 0.78,
+          "go_to_cargo_deck": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 434,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d643797618bd595a718cbe5902",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_galley": 0.06,
+          "go_to_wheelhouse": 0.94,
+          "go_to_cargo_deck": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d643e27cf8baa2055b404492d4",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.79,
+        "probabilities": {
+          "go_to_wheelhouse": 0.87,
+          "go_to_cargo_deck": 0.03,
+          "go_to_galley": 0.1
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 377,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64450701db54e7c732373467f",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.69,
+        "probabilities": {
+          "go_to_cargo_deck": 0.02,
+          "go_to_wheelhouse": 0.8,
+          "go_to_galley": 0.18
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 438,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d644c3761ea988b6f17cad8711",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.98,
+        "probabilities": {
+          "go_to_wheelhouse": 0.98,
+          "go_to_galley": 0.01,
+          "go_to_cargo_deck": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d6453475ac9b351892e22b9e54",
+    "variant": "false_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.93,
+        "probabilities": {
+          "go_to_galley": 0.95,
+          "go_to_wheelhouse": 0.04,
+          "go_to_cargo_deck": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 374,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d645dd77f298b4a5c6fcbc5755",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_cargo_deck": 0.0,
+          "go_to_galley": 0.97,
+          "go_to_wheelhouse": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 434,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d646477a9fa57ee98df997eb56",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_wheelhouse": 0.0,
+          "go_to_cargo_deck": 0.0,
+          "go_to_galley": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 402,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d646b17a289ffbd546c57562ca",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.77,
+        "probabilities": {
+          "go_to_galley": 0.12,
+          "go_to_wheelhouse": 0.84,
+          "go_to_cargo_deck": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 377,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d6479a737b90b93dee48e72ef7",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": false
+  },
+  {
+    "scenario_id": "ferry_v2_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.35,
+        "probabilities": {
+          "go_to_wheelhouse": 0.41,
+          "go_to_galley": 0.57,
+          "go_to_cargo_deck": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 438,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d64801711289d5b10b397f0502",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_galley",
+        "confidence": 0.68,
+        "probabilities": {
+          "go_to_wheelhouse": 0.16,
+          "go_to_galley": 0.79,
+          "go_to_cargo_deck": 0.05
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 57
+    },
+    "request_id": "req_01a0e4d6485e753abc03f6ed2eb9cc95",
+    "variant": "true_negative",
+    "ground_truth": "go_to_galley",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_cargo_deck": 0.0,
+          "go_to_galley": 0.0,
+          "go_to_wheelhouse": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 374,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d648c67570ae564e78d5304843",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_galley": 0.06,
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 0.94
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 434,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64944764080bc0a00471e2a41",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 1.0,
+          "go_to_galley": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64a49760686e15c7ded11e64f",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_wheelhouse": 0.98,
+          "go_to_galley": 0.01,
+          "go_to_cargo_deck": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 377,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64ac6712991920b2436cd2805",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 0.98,
+        "probabilities": {
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 0.99,
+          "go_to_galley": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 438,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64b387abab09d4b88e82b0e89",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "ferry_v2_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_wheelhouse",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_cargo_deck": 0.0,
+          "go_to_wheelhouse": 1.0,
+          "go_to_galley": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 58
+    },
+    "request_id": "req_01a0e4d64ba97329912390c545d07e08",
+    "variant": "true_positive",
+    "ground_truth": "go_to_wheelhouse",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 0.93,
+        "probabilities": {
+          "go_to_mezzanine": 0.01,
+          "go_to_loading_bay": 0.01,
+          "go_to_atrium": 0.95,
+          "go_to_print_room": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 397,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64c3171cf9517343dc2b7f27a",
+    "variant": "false_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "gallery_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 0.85,
+        "probabilities": {
+          "go_to_mezzanine": 0.0,
+          "go_to_loading_bay": 0.0,
+          "go_to_atrium": 0.89,
+          "go_to_print_room": 0.11
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64cb676be92852a907a1bf481",
+    "variant": "false_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "gallery_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.93,
+        "probabilities": {
+          "go_to_mezzanine": 0.0,
+          "go_to_loading_bay": 0.0,
+          "go_to_print_room": 0.95,
+          "go_to_atrium": 0.05
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64d40733bb8988d437bd7ebc4",
+    "variant": "false_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.84,
+        "probabilities": {
+          "go_to_mezzanine": 0.01,
+          "go_to_atrium": 0.09,
+          "go_to_print_room": 0.89,
+          "go_to_loading_bay": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 397,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64db57178b24a0aa022d0a4e5",
+    "variant": "false_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": false
+  },
+  {
+    "scenario_id": "gallery_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.81,
+        "probabilities": {
+          "go_to_atrium": 0.14,
+          "go_to_mezzanine": 0.0,
+          "go_to_print_room": 0.86,
+          "go_to_loading_bay": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64e1f748e882bdb8dbf92baba",
+    "variant": "false_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": false
+  },
+  {
+    "scenario_id": "gallery_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_mezzanine": 0.0,
+          "go_to_loading_bay": 0.0,
+          "go_to_print_room": 0.07,
+          "go_to_atrium": 0.93
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64e837cd3be665b23a7a42111",
+    "variant": "false_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.76,
+        "probabilities": {
+          "go_to_atrium": 0.15,
+          "go_to_mezzanine": 0.02,
+          "go_to_loading_bay": 0.02,
+          "go_to_print_room": 0.8099999999999999
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 397,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64f10720ba926b7fda60a13e3",
+    "variant": "true_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.92,
+        "probabilities": {
+          "go_to_atrium": 0.06,
+          "go_to_mezzanine": 0.0,
+          "go_to_print_room": 0.94,
+          "go_to_loading_bay": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d64fb8789f981b95ca3f9a6f87",
+    "variant": "true_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_print_room",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_mezzanine": 0.0,
+          "go_to_atrium": 0.0,
+          "go_to_print_room": 1.0,
+          "go_to_loading_bay": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6503a7c47b27e60ac3adf4915",
+    "variant": "true_negative",
+    "ground_truth": "go_to_print_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_atrium": 0.96,
+          "go_to_loading_bay": 0.01,
+          "go_to_print_room": 0.02,
+          "go_to_mezzanine": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 397,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6509c7993a5d66a41bdb74374",
+    "variant": "true_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_mezzanine": 0.0,
+          "go_to_loading_bay": 0.0,
+          "go_to_atrium": 0.92,
+          "go_to_print_room": 0.08
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 458,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d6510771aeb4651f4ec18f8a94",
+    "variant": "true_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": true
+  },
+  {
+    "scenario_id": "gallery_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_atrium",
+        "confidence": 1.0,
+        "probabilities": {
+          "go_to_print_room": 0.0,
+          "go_to_atrium": 1.0,
+          "go_to_mezzanine": 0.0,
+          "go_to_loading_bay": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 64
+    },
+    "request_id": "req_01a0e4d651bd7acc847315bafe003b6f",
+    "variant": "true_positive",
+    "ground_truth": "go_to_atrium",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.87,
+        "probabilities": {
+          "go_to_office": 0.94,
+          "go_to_conference_room": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 344,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d6521c7ea0ba1f8b5708ef75fb",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_conference_room": 0.04,
+          "go_to_office": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d6529e7613bb81c02d989ba6ff",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.92,
+        "probabilities": {
+          "go_to_office": 0.04,
+          "go_to_conference_room": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 370,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6530070d995016e9926a5b6c3",
+    "variant": "false_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.94,
+        "probabilities": {
+          "go_to_office": 0.03,
+          "go_to_conference_room": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 344,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d65368713ab5075fcc926ef048",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.91,
+        "probabilities": {
+          "go_to_office": 0.04,
+          "go_to_conference_room": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d653dd7d5a9905bf0bb48af401",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": false
+  },
+  {
+    "scenario_id": "meeting_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_office": 0.94,
+          "go_to_conference_room": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 369,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d65456748e8acc09754e1a6055",
+    "variant": "false_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.95,
+        "probabilities": {
+          "go_to_office": 0.03,
+          "go_to_conference_room": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 344,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d654c577a19e1bbeebf8c25515",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.97,
+        "probabilities": {
+          "go_to_office": 0.02,
+          "go_to_conference_room": 0.98
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6551d75909b657188015cbb7b",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_conference_room",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_office": 0.01,
+          "go_to_conference_room": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 370,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d65588759393b83e6f6f0dc2bb",
+    "variant": "true_negative",
+    "ground_truth": "go_to_conference_room",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.89,
+        "probabilities": {
+          "go_to_office": 0.94,
+          "go_to_conference_room": 0.06
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 344,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d6560170fc88bcb352963fc7ec",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.69,
+        "probabilities": {
+          "go_to_office": 0.85,
+          "go_to_conference_room": 0.15
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d6567b7f2d8d10f73893cbd1fc",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "meeting_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "action_prediction": {
+        "type": "choice",
+        "choice": "go_to_office",
+        "confidence": 0.99,
+        "probabilities": {
+          "go_to_conference_room": 0.0,
+          "go_to_office": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 369,
+      "output_tokens": 43
+    },
+    "request_id": "req_01a0e4d657037adda6953255dba269ec",
+    "variant": "true_positive",
+    "ground_truth": "go_to_office",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_false_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.72,
+        "probabilities": {
+          "consult_hale": 0.86,
+          "collect_chart": 0.14
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 368,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d6577a7966ac8c0e1949606653",
+    "variant": "false_false",
+    "ground_truth": "collect_chart",
+    "correct": false
+  },
+  {
+    "scenario_id": "clinic_false_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_chart",
+        "confidence": 0.09,
+        "probabilities": {
+          "collect_chart": 0.54,
+          "consult_hale": 0.46
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 453,
+      "output_tokens": 35
+    },
+    "request_id": "req_01a0e4d657f37fe28859952ea155c069",
+    "variant": "false_false",
+    "ground_truth": "collect_chart",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_false_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_chart",
+        "confidence": 0.64,
+        "probabilities": {
+          "collect_chart": 0.82,
+          "consult_hale": 0.18
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 35
+    },
+    "request_id": "req_01a0e4d6589579d8ad935dab71bf451d",
+    "variant": "false_false",
+    "ground_truth": "collect_chart",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_false_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.73,
+        "probabilities": {
+          "collect_chart": 0.13,
+          "consult_hale": 0.87
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 368,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d6590c71a1b2a8d77f27b33499",
+    "variant": "false_true",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_false_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_chart",
+        "confidence": 0.12,
+        "probabilities": {
+          "collect_chart": 0.56,
+          "consult_hale": 0.44
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 453,
+      "output_tokens": 35
+    },
+    "request_id": "req_01a0e4d6599d7bf49e0fc69e083d04f9",
+    "variant": "false_true",
+    "ground_truth": "consult_hale",
+    "correct": false
+  },
+  {
+    "scenario_id": "clinic_false_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_chart",
+        "confidence": 0.72,
+        "probabilities": {
+          "collect_chart": 0.86,
+          "consult_hale": 0.14
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 407,
+      "output_tokens": 35
+    },
+    "request_id": "req_01a0e4d65a107c519d51a3fa088f9774",
+    "variant": "false_true",
+    "ground_truth": "consult_hale",
+    "correct": false
+  },
+  {
+    "scenario_id": "clinic_true_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.73,
+        "probabilities": {
+          "consult_hale": 0.87,
+          "collect_chart": 0.13
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 368,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d65a8370b4bd8db8de6ad51b99",
+    "variant": "true_false",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_true_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "collect_chart",
+        "confidence": 0.02,
+        "probabilities": {
+          "consult_hale": 0.49,
+          "collect_chart": 0.51
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 453,
+      "output_tokens": 35
+    },
+    "request_id": "req_01a0e4d65af17f5dad29f1eaf0bd11b1",
+    "variant": "true_false",
+    "ground_truth": "consult_hale",
+    "correct": false
+  },
+  {
+    "scenario_id": "clinic_true_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.27,
+        "probabilities": {
+          "collect_chart": 0.36,
+          "consult_hale": 0.64
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d65b607c2eb49074e5ac193713",
+    "variant": "true_false",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_true_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.66,
+        "probabilities": {
+          "collect_chart": 0.17,
+          "consult_hale": 0.83
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 368,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d65c0b79ce904aeb033f46a162",
+    "variant": "true_true",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_true_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.11,
+        "probabilities": {
+          "collect_chart": 0.44,
+          "consult_hale": 0.56
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 453,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d65c957a4ab67655f8edd1b347",
+    "variant": "true_true",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "clinic_true_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_hale",
+        "confidence": 0.47,
+        "probabilities": {
+          "collect_chart": 0.27,
+          "consult_hale": 0.73
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 406,
+      "output_tokens": 36
+    },
+    "request_id": "req_01a0e4d65d387b488b7e5f21a69bf2e0",
+    "variant": "true_true",
+    "ground_truth": "consult_hale",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.22,
+        "probabilities": {
+          "meet_alex": 0.61,
+          "pick_up_package": 0.39
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 366,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d65da178d99a3410281acea61c",
+    "variant": "false_false",
+    "ground_truth": "pick_up_package",
+    "correct": false
+  },
+  {
+    "scenario_id": "mailroom_false_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.01,
+        "probabilities": {
+          "meet_alex": 0.51,
+          "pick_up_package": 0.49
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d65e267b53ab9b8a5d3daf8590",
+    "variant": "false_false",
+    "ground_truth": "pick_up_package",
+    "correct": false
+  },
+  {
+    "scenario_id": "mailroom_false_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "pick_up_package",
+        "confidence": 0.69,
+        "probabilities": {
+          "meet_alex": 0.16,
+          "pick_up_package": 0.84
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 401,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d65f14797687d6642acd8d0052",
+    "variant": "false_false",
+    "ground_truth": "pick_up_package",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.2,
+        "probabilities": {
+          "meet_alex": 0.6,
+          "pick_up_package": 0.4
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 366,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d65f817b6e828cd6371480ad8e",
+    "variant": "false_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.09,
+        "probabilities": {
+          "pick_up_package": 0.46,
+          "meet_alex": 0.54
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d6602178a197d70cc49a80ad0d",
+    "variant": "false_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_false_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "pick_up_package",
+        "confidence": 0.81,
+        "probabilities": {
+          "pick_up_package": 0.9,
+          "meet_alex": 0.1
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 400,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d66081722b964259c26c393a49",
+    "variant": "false_true",
+    "ground_truth": "meet_alex",
+    "correct": false
+  },
+  {
+    "scenario_id": "mailroom_true_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.25,
+        "probabilities": {
+          "meet_alex": 0.62,
+          "pick_up_package": 0.38
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 366,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d6611a7dbbb91c9161c7696fb0",
+    "variant": "true_false",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_true_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.0,
+        "probabilities": {
+          "meet_alex": 0.5,
+          "pick_up_package": 0.5
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d661a47d36b98c5c03dd84b7ec",
+    "variant": "true_false",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_true_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.67,
+        "probabilities": {
+          "pick_up_package": 0.17,
+          "meet_alex": 0.83
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 402,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d66230710c88e5cc3545fb330f",
+    "variant": "true_false",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_true_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.27,
+        "probabilities": {
+          "meet_alex": 0.64,
+          "pick_up_package": 0.36
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 366,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d662ad73dea5041da8286cc893",
+    "variant": "true_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_true_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.18,
+        "probabilities": {
+          "meet_alex": 0.59,
+          "pick_up_package": 0.41
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 449,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d6631f7c9eb7c0fedfacee2778",
+    "variant": "true_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "mailroom_true_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "meet_alex",
+        "confidence": 0.74,
+        "probabilities": {
+          "meet_alex": 0.87,
+          "pick_up_package": 0.13
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 401,
+      "output_tokens": 37
+    },
+    "request_id": "req_01a0e4d6639d7ddeb8c5984420514991",
+    "variant": "true_true",
+    "ground_truth": "meet_alex",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_false_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.93,
+        "probabilities": {
+          "retrieve_bicycle": 0.04,
+          "find_amara": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 379,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d6643e7e3990b4126dc1d016e4",
+    "variant": "false_false",
+    "ground_truth": "retrieve_bicycle",
+    "correct": false
+  },
+  {
+    "scenario_id": "station_false_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.16,
+        "probabilities": {
+          "retrieve_bicycle": 0.42,
+          "find_amara": 0.58
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 474,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d664bc78a68432b75600bbc5fb",
+    "variant": "false_false",
+    "ground_truth": "retrieve_bicycle",
+    "correct": false
+  },
+  {
+    "scenario_id": "station_false_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "retrieve_bicycle",
+        "confidence": 0.6,
+        "probabilities": {
+          "retrieve_bicycle": 0.8,
+          "find_amara": 0.2
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 421,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d665237e5d8562756bb679b8f1",
+    "variant": "false_false",
+    "ground_truth": "retrieve_bicycle",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_false_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.92,
+        "probabilities": {
+          "find_amara": 0.96,
+          "retrieve_bicycle": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 379,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d665807ccfb4a723d9b8125623",
+    "variant": "false_true",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_false_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.49,
+        "probabilities": {
+          "find_amara": 0.75,
+          "retrieve_bicycle": 0.25
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 475,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d666457f539b1ba91172655307",
+    "variant": "false_true",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_false_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "retrieve_bicycle",
+        "confidence": 0.82,
+        "probabilities": {
+          "find_amara": 0.09,
+          "retrieve_bicycle": 0.91
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 418,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d666c37e65b82055163121f41c",
+    "variant": "false_true",
+    "ground_truth": "find_amara",
+    "correct": false
+  },
+  {
+    "scenario_id": "station_true_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.92,
+        "probabilities": {
+          "retrieve_bicycle": 0.04,
+          "find_amara": 0.96
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 379,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d6673d71568dc5929eff5ca34d",
+    "variant": "true_false",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_true_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.6,
+        "probabilities": {
+          "find_amara": 0.8,
+          "retrieve_bicycle": 0.2
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 475,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d667de749a80b56debfd9272ab",
+    "variant": "true_false",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_true_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.58,
+        "probabilities": {
+          "find_amara": 0.79,
+          "retrieve_bicycle": 0.21
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 424,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d6684f702aaae26bd078448317",
+    "variant": "true_false",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_true_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.94,
+        "probabilities": {
+          "retrieve_bicycle": 0.03,
+          "find_amara": 0.97
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 379,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d668c17a4b94664db96b5cf43e",
+    "variant": "true_true",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_true_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.73,
+        "probabilities": {
+          "retrieve_bicycle": 0.14,
+          "find_amara": 0.86
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 476,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66941787ea492de4419d31dce",
+    "variant": "true_true",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "station_true_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "find_amara",
+        "confidence": 0.73,
+        "probabilities": {
+          "retrieve_bicycle": 0.14,
+          "find_amara": 0.86
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 421,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d669d177e49697beced7a9a051",
+    "variant": "true_true",
+    "ground_truth": "find_amara",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_false_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.63,
+        "probabilities": {
+          "consult_nils": 0.82,
+          "fetch_respirator": 0.18
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 371,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66aae79e3b88edddb052d6efe",
+    "variant": "false_false",
+    "ground_truth": "fetch_respirator",
+    "correct": false
+  },
+  {
+    "scenario_id": "workshop_false_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_respirator",
+        "confidence": 0.29,
+        "probabilities": {
+          "consult_nils": 0.36,
+          "fetch_respirator": 0.64
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 460,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d66b297abd89ae5ffd8cd5afa7",
+    "variant": "false_false",
+    "ground_truth": "fetch_respirator",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_false_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_respirator",
+        "confidence": 0.87,
+        "probabilities": {
+          "fetch_respirator": 0.93,
+          "consult_nils": 0.07
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 410,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d66b9470b18a3b2454f70084c0",
+    "variant": "false_false",
+    "ground_truth": "fetch_respirator",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_false_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.64,
+        "probabilities": {
+          "fetch_respirator": 0.18,
+          "consult_nils": 0.82
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 371,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66bf77f80bd47acd5ff63e838",
+    "variant": "false_true",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_false_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_respirator",
+        "confidence": 0.32,
+        "probabilities": {
+          "fetch_respirator": 0.66,
+          "consult_nils": 0.34
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 461,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d66c787a279dac2bb18ad5b84d",
+    "variant": "false_true",
+    "ground_truth": "consult_nils",
+    "correct": false
+  },
+  {
+    "scenario_id": "workshop_false_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_respirator",
+        "confidence": 0.91,
+        "probabilities": {
+          "fetch_respirator": 0.95,
+          "consult_nils": 0.05
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 409,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d66cd97b4f91ef679cc4fe60a5",
+    "variant": "false_true",
+    "ground_truth": "consult_nils",
+    "correct": false
+  },
+  {
+    "scenario_id": "workshop_true_false",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.66,
+        "probabilities": {
+          "consult_nils": 0.83,
+          "fetch_respirator": 0.17
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 371,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66d597a969751ec874ee94213",
+    "variant": "true_false",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_true_false",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "fetch_respirator",
+        "confidence": 0.06,
+        "probabilities": {
+          "fetch_respirator": 0.53,
+          "consult_nils": 0.47
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 461,
+      "output_tokens": 39
+    },
+    "request_id": "req_01a0e4d66e787cd8bd72707657b85b05",
+    "variant": "true_false",
+    "ground_truth": "consult_nils",
+    "correct": false
+  },
+  {
+    "scenario_id": "workshop_true_false",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.04,
+        "probabilities": {
+          "fetch_respirator": 0.48,
+          "consult_nils": 0.52
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 411,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66ef179b99779cee17f68f349",
+    "variant": "true_false",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_true_true",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.64,
+        "probabilities": {
+          "fetch_respirator": 0.18,
+          "consult_nils": 0.82
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 371,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66f547ea898d4de2da84241dd",
+    "variant": "true_true",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_true_true",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.16,
+        "probabilities": {
+          "fetch_respirator": 0.42,
+          "consult_nils": 0.58
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 462,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d66fe27b90a8f103a13ae6fbb6",
+    "variant": "true_true",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "workshop_true_true",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "consult_nils",
+        "confidence": 0.24,
+        "probabilities": {
+          "fetch_respirator": 0.38,
+          "consult_nils": 0.62
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 410,
+      "output_tokens": 38
+    },
+    "request_id": "req_01a0e4d6708571f0a90d0529c6a3c78c",
+    "variant": "true_true",
+    "ground_truth": "consult_nils",
+    "correct": true
+  },
+  {
+    "scenario_id": "coffee_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.96,
+        "probabilities": {
+          "get_coffee": 0.98,
+          "wash_mug": 0.02,
+          "get_food": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d670f4756a8e7894ecaa52ceec",
+    "variant": "false_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.94,
+        "probabilities": {
+          "get_food": 0.0,
+          "get_coffee": 0.96,
+          "wash_mug": 0.04
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6718d76f386dd563dab2b209e",
+    "variant": "false_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.91,
+        "probabilities": {
+          "get_food": 0.01,
+          "wash_mug": 0.05,
+          "get_coffee": 0.94
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d67220767682db6fcd164a0179",
+    "variant": "false_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_food",
+        "confidence": 0.51,
+        "probabilities": {
+          "get_coffee": 0.25,
+          "wash_mug": 0.08,
+          "get_food": 0.67
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 44
+    },
+    "request_id": "req_01a0e4d672bb7c09bd88e4eaaa893745",
+    "variant": "false_positive",
+    "ground_truth": "get_coffee",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.71,
+        "probabilities": {
+          "get_coffee": 0.81,
+          "wash_mug": 0.02,
+          "get_food": 0.17
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d673467de7b4a4bed8818aac90",
+    "variant": "false_positive",
+    "ground_truth": "get_coffee",
+    "correct": true
+  },
+  {
+    "scenario_id": "coffee_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.97,
+        "probabilities": {
+          "wash_mug": 0.01,
+          "get_coffee": 0.98,
+          "get_food": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d673d97c5d9dd2f18bfdeea43d",
+    "variant": "false_positive",
+    "ground_truth": "get_coffee",
+    "correct": true
+  },
+  {
+    "scenario_id": "coffee_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_food",
+        "confidence": 0.5,
+        "probabilities": {
+          "get_coffee": 0.24,
+          "get_food": 0.66,
+          "wash_mug": 0.1
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 44
+    },
+    "request_id": "req_01a0e4d674a077d69be7749161e21eb9",
+    "variant": "true_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.65,
+        "probabilities": {
+          "get_food": 0.21,
+          "get_coffee": 0.77,
+          "wash_mug": 0.02
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6759071148d2fdfeed594697d",
+    "variant": "true_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_food",
+        "confidence": 0.49,
+        "probabilities": {
+          "get_food": 0.66,
+          "wash_mug": 0.09,
+          "get_coffee": 0.25
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 44
+    },
+    "request_id": "req_01a0e4d676157f4298ea00fd583f978b",
+    "variant": "true_negative",
+    "ground_truth": "wash_mug",
+    "correct": false
+  },
+  {
+    "scenario_id": "coffee_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.97,
+        "probabilities": {
+          "get_coffee": 0.98,
+          "wash_mug": 0.02,
+          "get_food": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d676a879b1bbdb3d3d52eafabc",
+    "variant": "true_positive",
+    "ground_truth": "get_coffee",
+    "correct": true
+  },
+  {
+    "scenario_id": "coffee_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.98,
+        "probabilities": {
+          "get_coffee": 0.99,
+          "get_food": 0.0,
+          "wash_mug": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 426,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6771c7c89bae4976d45699134",
+    "variant": "true_positive",
+    "ground_truth": "get_coffee",
+    "correct": true
+  },
+  {
+    "scenario_id": "coffee_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "get_coffee",
+        "confidence": 0.99,
+        "probabilities": {
+          "get_coffee": 1.0,
+          "get_food": 0.0,
+          "wash_mug": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 403,
+      "output_tokens": 45
+    },
+    "request_id": "req_01a0e4d6778d765e8696a8033acab659",
+    "variant": "true_positive",
+    "ground_truth": "get_coffee",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "develop_film": 1.0,
+          "collect_prints": 0.0,
+          "clean_trays": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 381,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d6784c79dbbb5a05abf14b7dd9",
+    "variant": "false_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "develop_film": 1.0,
+          "collect_prints": 0.0,
+          "clean_trays": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 430,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d678b17d69afc24f13d63370e9",
+    "variant": "false_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "collect_prints": 0.0,
+          "develop_film": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d679227d1fbb944a90051f8ab4",
+    "variant": "false_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "develop_film": 1.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 381,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d6798a78758d8f9cb07a1c78d2",
+    "variant": "false_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "develop_film": 1.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 430,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67a1573a69acca5927f2e555a",
+    "variant": "false_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "develop_film": 1.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67ac07be7bc25af1e290c2b4c",
+    "variant": "false_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "develop_film": 1.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 381,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67b787bcdbdb786270573fb76",
+    "variant": "true_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "develop_film": 1.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 430,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67c0c76708d5f7293e43f7298",
+    "variant": "true_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 0.99,
+        "probabilities": {
+          "clean_trays": 0.0,
+          "collect_prints": 0.0,
+          "develop_film": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67c7975b1b138c4e4655d56f0",
+    "variant": "true_negative",
+    "ground_truth": "collect_prints",
+    "correct": false
+  },
+  {
+    "scenario_id": "darkroom_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "develop_film": 1.0,
+          "clean_trays": 0.0,
+          "collect_prints": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 381,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67cf471caadc37a70aaadba89",
+    "variant": "true_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "develop_film": 1.0,
+          "collect_prints": 0.0,
+          "clean_trays": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 430,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67d53721dbfa9cae89ca0fa92",
+    "variant": "true_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "darkroom_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "develop_film",
+        "confidence": 1.0,
+        "probabilities": {
+          "collect_prints": 0.0,
+          "clean_trays": 0.0,
+          "develop_film": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 405,
+      "output_tokens": 46
+    },
+    "request_id": "req_01a0e4d67dbb71ffa635dabc9fcc795f",
+    "variant": "true_positive",
+    "ground_truth": "develop_film",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_false_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.98,
+        "probabilities": {
+          "harvest_tomatoes": 0.01,
+          "fetch_twine": 0.0,
+          "water_seedlings": 0.99,
+          "repot_cuttings": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d67e1173d0885de143432e8c4b",
+    "variant": "false_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_false_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "repot_cuttings": 0.0,
+          "water_seedlings": 1.0,
+          "harvest_tomatoes": 0.0,
+          "fetch_twine": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 443,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d67e837b1a87fa912282f4d881",
+    "variant": "false_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_false_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "harvest_tomatoes": 0.0,
+          "repot_cuttings": 0.0,
+          "fetch_twine": 0.0,
+          "water_seedlings": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 419,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d67f13713793e161ea71f674b4",
+    "variant": "false_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_false_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.98,
+        "probabilities": {
+          "water_seedlings": 0.99,
+          "fetch_twine": 0.0,
+          "repot_cuttings": 0.0,
+          "harvest_tomatoes": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d67f99710391f754e38d6a1ad3",
+    "variant": "false_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_false_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "harvest_tomatoes": 0.01,
+          "repot_cuttings": 0.0,
+          "fetch_twine": 0.0,
+          "water_seedlings": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 443,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d67ffd711f9280082d5eed3473",
+    "variant": "false_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_false_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "water_seedlings": 1.0,
+          "fetch_twine": 0.0,
+          "repot_cuttings": 0.0,
+          "harvest_tomatoes": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 419,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d6807a745c8f64e36148a01d02",
+    "variant": "false_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_true_negative",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.97,
+        "probabilities": {
+          "harvest_tomatoes": 0.01,
+          "fetch_twine": 0.0,
+          "water_seedlings": 0.99,
+          "repot_cuttings": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d680e2798ab629bf406f87d0ae",
+    "variant": "true_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_true_negative",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.98,
+        "probabilities": {
+          "fetch_twine": 0.0,
+          "harvest_tomatoes": 0.01,
+          "water_seedlings": 0.99,
+          "repot_cuttings": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 443,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d6815b79938a64368f7b9ba16e",
+    "variant": "true_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_true_negative",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.95,
+        "probabilities": {
+          "harvest_tomatoes": 0.02,
+          "fetch_twine": 0.01,
+          "water_seedlings": 0.96,
+          "repot_cuttings": 0.01
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 419,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d681ba7063baa6e5b14f1ccb60",
+    "variant": "true_negative",
+    "ground_truth": "harvest_tomatoes",
+    "correct": false
+  },
+  {
+    "scenario_id": "greenhouse_true_positive",
+    "condition": "sparse",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.98,
+        "probabilities": {
+          "repot_cuttings": 0.0,
+          "fetch_twine": 0.0,
+          "harvest_tomatoes": 0.01,
+          "water_seedlings": 0.99
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 398,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d6824e7702a6aa95d39aeeadd8",
+    "variant": "true_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_true_positive",
+    "condition": "history_symbolic",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "water_seedlings": 1.0,
+          "fetch_twine": 0.0,
+          "harvest_tomatoes": 0.0,
+          "repot_cuttings": 0.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 443,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d682f779299e3b82dc8c5f3464",
+    "variant": "true_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  },
+  {
+    "scenario_id": "greenhouse_true_positive",
+    "condition": "rich",
+    "model": "jev-1.13.0",
+    "answers": {
+      "goal": {
+        "type": "choice",
+        "choice": "water_seedlings",
+        "confidence": 0.99,
+        "probabilities": {
+          "repot_cuttings": 0.0,
+          "harvest_tomatoes": 0.0,
+          "fetch_twine": 0.0,
+          "water_seedlings": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 419,
+      "output_tokens": 61
+    },
+    "request_id": "req_01a0e4d683577c3b90515fc23604fd95",
+    "variant": "true_positive",
+    "ground_truth": "water_seedlings",
+    "correct": true
+  }
+]
