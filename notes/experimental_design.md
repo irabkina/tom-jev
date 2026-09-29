@@ -6,6 +6,16 @@ Stated as they currently stand, newest understanding first. Each links to the
 section that establishes it; where a later section refines an earlier one, the
 later wording is the one to use.
 
+**The middle condition is worth more than the headline says, because the
+equal-length control costs a fifth of the gap.** Removing the padding from
+the 46 development scenarios that carry it moves acceptable mass 0.68 to
+0.80, and the share of the sparse → rich gap that the history closes goes
+from 17% to 39%. Four of the five cells that lose mass under `history` were
+losing it to the control rather than to the evidence. The belief is still
+worth more than the evidence for it, but the ratio is nearer five to two
+than five to one. See *The equal-length control costs the middle condition
+a fifth of the gap*.
+
 **Explicitness is not what the rich representation buys.** Beliefs derived
 from the epistemic history in the graph — never read from the file — give
 the same answers as stated ones, on 68 development scenarios, with zero
@@ -1406,3 +1416,85 @@ The drop is 0.05, under the 0.08 single-cell noise floor, so it may not
 survive a rerun. Recorded because it is the first time anything in this
 project has gone backwards under a richer representation by more than
 rounding, and because the cell was built for exactly that possibility.
+
+## The equal-length control costs the middle condition a fifth of the gap
+
+Five development cells lose more than the noise floor under `history`, and
+all five carry padding. Padding is the equal-length control: every belief
+contributes exactly two events, so a true belief is settled twice in view
+with the first sighting superseded, and event count cannot classify the
+condition. Without it every true-belief cell ran one event and every false
+one two, and a model could have scored well on `history` by counting.
+
+The padding is inert to the derivation — the agent's last witnessed event
+is still the belief the scenario states, and a test asserts that dropping
+it changes nothing entailed. Inert to the derivation is not inert to the
+model.
+
+Rendering the 46 padded scenarios with the superseded sightings removed,
+46 calls, each scenario against its own stored `history` pass:
+
+    n=46   influence 0.15   utility +0.12   mass 0.68 -> 0.80
+    5 corrections, 0 regressions
+    events 116 -> 66
+
+Each scenario is its own control here, which the observational split
+cannot be: padded and unpadded scenarios differ in template as well as in
+padding — 8 of the 11 padded conflicting-belief cells are discriminative
+goal recognition — so comparing the two populations reads composition as
+much as effect.
+
+### What it does to the headline
+
+| | mean acceptable mass | share of the sparse → rich gap |
+|---|---|---|
+| `sparse` | 0.51 | — |
+| `history`, as measured | 0.57 | 17% |
+| `history`, padding removed | 0.65 | **39%** |
+| `rich` | 0.87 | 100% |
+
+So *Evidence for a belief is worth less than the belief* is right in
+direction and overstated in degree. The measured sixth is a sixth of the
+gap **plus the cost of the control**; the evidence on its own closes
+something nearer two fifths. The belief is still worth more than the
+evidence for it — 39% is not 100% — but the ratio is about five to two
+rather than the five to one the headline figure implies.
+
+That also explains a coincidence that had been left alone. The mixed
+rendering closed about a third of the gap and was shown to be measuring
+its own formatting; the consistent rendering closed a sixth. Unpadded, the
+consistent rendering closes 39%, so the mixed figure was roughly right for
+the wrong reasons — formatting advantage happening to offset a control
+cost nobody had priced.
+
+### Four of the five cells recover
+
+| cell | sparse | history | unpadded |
+|---|---|---|---|
+| `clinic_true_true` | 0.83 | 0.56 | 0.83 |
+| `workshop_true_true` | 0.82 | 0.58 | 0.78 |
+| `station_true_true` | 0.97 | 0.86 | 0.95 |
+| `meeting_true_positive` | 0.94 | 0.85 | 1.00 |
+| `coffee_true_negative` | 0.76 | 0.23 | **0.53** |
+
+The first four were the control, not the scenarios. `coffee_true_negative`
+improves by 0.30 and is still 0.23 below where `sparse` had it, so
+something else is wrong there and the padding was only making it worse.
+It remains the one cell in the corpus where adding true information
+reliably makes the answer worse, and it is still unexplained.
+
+### What to do about it
+
+Nothing, for now. The control is doing its job and the alternative —
+letting event count classify the condition — is worse than paying 0.08 of
+mass for it. What changes is the reporting: the middle condition's value
+should be quoted as a range, 17% as measured and 39% as the control-free
+counterfactual, rather than as the single figure that has appeared in
+three release notes.
+
+A padding scheme with a smaller price is worth looking for. The current
+one shows the agent a sighting and then overturns it, which is the most
+confusing thing it could do while staying inert. Padding that adds an
+event about something irrelevant would keep the count even without
+planting a superseded belief — but it would be a design change, and it
+would need measuring rather than assuming.
